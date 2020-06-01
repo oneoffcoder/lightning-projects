@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <title>Slot Machine!</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+        <script>
+            function getRandomNumber() {
+                return Math.floor(Math.random() * 2) + 1;
+            }
+
+            function getElement(id) {
+                return document.getElementById(id);
+            }
+
+            function spin() {
+                const item1 = getElement('item1');
+                const item2 = getElement('item2');
+                const item3 = getElement('item3');
+
+                const num1 = getRandomNumber();
+                const num2 = getRandomNumber();
+                const num3 = getRandomNumber();
+
+                item1.innerHTML = `${num1}`;
+                item2.innerHTML = `${num2}`;
+                item3.innerHTML = `${num3}`;
+
+                if (num1 === num2 && num1 === num3) {
+                    playBoing();
+                    showMessage();
+                } else {
+                    hideMessage();
+                }
+            } 
+
+            function playBoing() {
+                const boing = document.getElementById("boing");
+                boing.play();
+            }
+
+            function showMessage() {
+                const msg = document.getElementById("message");
+                msg.style.display = "block";
+                msg.classList.add('animated', 'pulse')
+            }
+
+            function hideMessage() {
+                const msg = document.getElementById("message");
+                msg.style.display = "none";
+            }
+        </script>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            body {
+                background-color: lightblue;
+            }
+            .slot-number {
+                font-size: 100px;
+            }
+            .message {
+                text-align: center;
+                display: none;
+                font-size: xx-large;
+                color: red;
+            }
+            .center {
+                text-align: center;
+            }
+            .lever {
+                margin-top: 5px;
+            }
+            table.center {
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="center">Play Slot!</h1>
+        <div class="center lever">
+            <button onclick="spin()">Lever</button>
+        </div>
+        <table class="center">
+            <tbody>
+                <tr>
+                    <td>
+                        <span id="item1" class="slot-number">-</span>
+                    </td>
+                    <td>
+                        <span id="item2" class="slot-number">-</span>
+                    </td>
+                    <td>
+                        <span id="item3" class="slot-number">-</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="message" class="center message">
+            You Won!
+        </div>
+        <audio id="boing">
+            <source src="boing.mp3" type="audio/mpeg">
+        </audio>
+    </body>
+</html>

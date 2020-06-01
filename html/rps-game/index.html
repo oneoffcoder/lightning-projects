@@ -1,0 +1,243 @@
+<html>
+    <head>
+        <title>
+            Rock, Paper, Scissor!
+        </title>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            .title {
+                text-align: center;
+            }
+            .game-div {
+                text-align: center;
+            }
+            .rps-image {
+                text-align: center;
+            }
+            .game-table {
+                margin: auto;
+                border: 1px solid black;
+                width: 80%;
+                border-collapse: collapse;
+            }
+            .game-td {
+                border: 1px solid black;
+                width: 50%;
+                text-align: center;
+            }
+            .timer {
+                font-weight: bold;
+                font-size: xx-large;
+            }
+            .score {
+                font-weight: bold;
+                color: blueviolet;
+                font-size: 25px;
+            }
+        </style>
+        <script>
+            const maxSeconds = 15; // timer, max time for countdown
+            let curSeconds = 0; // the current time in the countdown
+            let timer; // the timer
+            let uScore = 0; // user's score
+            let cScore = 0; // computer's score
+
+            // initializes the game
+            function init() {
+                console.log('initializing');
+                updateScores();
+                countDown();
+            }
+
+            // starts the countdown 
+            function countDown() {
+                curSeconds = maxSeconds;
+                document.getElementById('timer').innerHTML = `${curSeconds}`;
+
+                function doTimer() {
+                    curSeconds = curSeconds - 1;
+                    if (curSeconds >= 0) {
+                        document.getElementById('timer').innerHTML = `${curSeconds}`;
+                    } else {
+                        playSound('lose');
+                        clearInterval(timer);
+
+                        cScore = cScore + 1;
+                        updateScores();
+
+                        const uImage = document.getElementById('player-image')                    
+                        const cImage = document.getElementById('computer-image');
+                        
+                        uImage.src = getImageSrc('');
+                        cImage.src = getImageSrc('');
+
+                        countDown();
+                    }
+                };
+
+                timer = setInterval(doTimer, 1000);
+            }
+
+            // updates the scores
+            function updateScores() {
+                const cElement = document.getElementById('computer-score');
+                const uElement = document.getElementById('player-score');
+
+                cElement.innerHTML = `${cScore}`
+                uElement.innerHTML = `${uScore}`
+            }
+
+            // clears all options the user selected
+            function clearOptions() {
+                const elements = document.getElementsByName('option');
+                for(var i=0; i < elements.length; i++) {
+                    elements[i].checked = false;
+                }
+            }
+
+            // triggers when the user clicks the "shoot" button
+            function optionSelected() {
+                const uOption = getUserOption();
+                const cOption = getComputerOption();
+
+                if (null === uOption) {
+                    return;
+                }
+
+                clearInterval(timer);
+                
+                console.log(`user ${uOption}, computer ${cOption}`);
+                
+                const uImage = document.getElementById('player-image')                    
+                const cImage = document.getElementById('computer-image');
+                
+                uImage.src = getImageSrc(uOption);
+                cImage.src = getImageSrc(cOption);
+
+                const winner = getWinner(uOption, cOption);
+                if (winner === 'user') {
+                    playSound('win');
+                    uScore = uScore + 1;
+                } else if (winner === 'computer') {
+                    playSound('lose');
+                    cScore = cScore + 1;
+                } else {
+                    playSound('tie');
+                }
+
+                clearOptions();
+                updateScores();
+                countDown();
+            }
+
+            // gets the winner, user or computer or tie
+            function getWinner(u, c) {
+                if (u === 'rock' && c === 'paper') {
+                    return 'computer';
+                } else if (u === 'rock' && c === 'scissor') {
+                    return 'user';
+                } else if (u === 'rock' && c === 'rock') {
+                    return 'tie';
+                } else if (u === 'paper' && c === 'paper') {
+                    return 'tie';
+                } else if (u === 'paper' && c === 'scissor') {
+                    return 'computer';
+                } else if (u === 'paper' && c === 'rock') {
+                    return 'user';
+                } else if (u === 'scissor' && c === 'paper') {
+                    return 'user';
+                } else if (u === 'scissor' && c === 'scissor') {
+                    return 'tie';
+                } else {
+                    return 'computer';
+                }
+            }
+
+            // gets the corresponding image based on what the user or computer selected
+            function getImageSrc(option) {
+                if (option == 'rock') {
+                    return 'images/rock.png';
+                } else if (option === 'paper') {
+                    return 'images/paper.png';
+                } else if (option == 'scissor') {
+                    return 'images/scissor.png';
+                } else {
+                    return 'images/start.png';
+                }
+            }
+
+            // plays a sound
+            function playSound(id) {
+                const sound = document.getElementById(id);
+                sound.play();
+            }
+
+            // gets what the user selected
+            function getUserOption() {
+                const element = document.querySelector('input[name="option"]:checked');
+                if (element === null) {
+                    return null;
+                } else {
+                    return element.value;
+                }
+            }
+
+            // gets what the computer selected
+            function getComputerOption() {
+                const options = ['rock', 'paper', 'scissor'];
+                const option = options[Math.floor(Math.random() * options.length)];
+                return option;
+            }
+        </script>
+    </head>
+    <body onload="init()">
+        <h1 class="title">Rock, Paper, Scissor SHOOT!</h1>
+        <table class="game-table">
+            <tbody>
+                <tr>
+                    <td class="game-td score">
+                        Player Score: <span id="player-score"></span>
+                    </td>
+                    <td class="game-td score">
+                        Computer Score: <span id="computer-score"></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="game-td">
+                        <div class="rps-image">
+                            <img id="player-image" src="images/start.png">
+                        </div>
+                    </td>
+                    <td class="game-td">
+                        <div class="rps-image">
+                            <img id="computer-image" src="images/start.png">
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="game-td">
+                        <input id="rock_option" type="radio" name="option" value="rock"> <label for="rock_option">Rock</label>
+                        <input id="paper_option" type="radio" name="option" value="paper"> <label for="paper_option">Paper</label>
+                        <input id="scissor_option" type="radio" name="option" value="scissor"> <label for="scissor_option">Scissor</label>
+                        <button onclick="optionSelected()">Shoot</button>
+                    </td>
+                    <td class="game-td">
+                        <div id="timer" class="timer"></div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <audio id="win">
+            <source src="audio/win.mp3" type="audio/mp3">
+        </audio>
+        <audio id="tie">
+            <source src="audio/tie.mp3" type="audio/mp3">
+        </audio>
+        <audio id="lose">
+            <source src="audio/lose.mp3" type="audio/mp3">
+        </audio>
+    </body>
+</html>
