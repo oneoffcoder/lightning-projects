@@ -22,7 +22,7 @@ month={Jun}}
 # Copyright Stuff
 
 ```
-Copyright 2020 Jee Vang
+Copyright 2020 One-Off Coder
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
