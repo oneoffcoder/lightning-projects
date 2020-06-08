@@ -61,12 +61,20 @@
                 '#B03A2E', '#884EA0', '#17A589'
             ];
             const cells = [];
+            let isWorking = false;
 
             function init() {
                 for (const id of ids) {
                     const e = document.getElementById(id);
                     cells.push(e);
                 }
+
+                const sound = document.getElementById('finished');
+                sound.addEventListener('ended', () => {
+                    sound.currentTime = 0;
+                    isWorking = false;
+                    console.log('finished playing sound');
+                });
 
                 updateColors();
             }
@@ -89,6 +97,11 @@
             }
 
             function scramble() {
+                if (isWorking) {
+                    return;
+                }
+                
+                isWorking = true;
                 playSound();
                 updateColors();
             }
