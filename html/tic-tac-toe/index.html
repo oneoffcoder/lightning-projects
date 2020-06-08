@@ -48,6 +48,9 @@
                 </tr>
             </tbody>
         </table>
+        <div id="result" class="center">
+
+        </div>
 
         <audio id="clicked">
             <source src="audio/fairy.mp3" type="audio/mp3">
@@ -95,11 +98,12 @@
                 }
 
                 let winner = getWinner();
+                const result = document.getElementById('result');
 
                 if (winner === 'none') {
                     if (isGridFull()) {
                         gameOver = true;
-                        console.log('draw');
+                        result.innerHTML = `Draw!`;
                     } else {
                         function doTimer() {
                             const position = getComputerPosition();
@@ -113,7 +117,7 @@
 
                             if (winner !== 'none') {
                                 gameOver = true;
-                                console.log(`winner = ${winner}`);
+                                result.innerHTML = `${winner} Win!`;
                             }
 
                             clearInterval(timer);
@@ -125,7 +129,7 @@
                     }
                 } else {
                     gameOver = true;
-                    console.log(`winner = ${winner}`);
+                    result.innerHTML = `${winner} Win!`;
                 }
             }
 
@@ -145,6 +149,9 @@
             }
 
             function restart() {
+                const result = document.getElementById('result');
+                result.innerHTML = '';
+
                 gameOver = false;
                 clearTable();
             }
@@ -188,9 +195,9 @@
 
                     if (v1 === v2 && v1 === v3 && v1 !== '') {
                         if (v1 === uSymbol) {
-                            return 'user';
+                            return 'You';
                         } else {
-                            return 'computer';
+                            return 'Computer';
                         }
                     }
                 }
