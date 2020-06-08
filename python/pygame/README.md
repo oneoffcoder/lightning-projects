@@ -1,6 +1,8 @@
 # Pygame
 
-Tutorials in [Pygame](https://www.pygame.org). The API documentation is [available](https://www.pygame.org/docs/).
+Tutorials in [Pygame](https://www.pygame.org). The API documentation is [available](https://www.pygame.org/docs/). All sound effects taken from [zapsplat](https://www.zapsplat.com/).
+
+# Basic
 
 * [Circles](draw-circles.py): learn how to draw circles
 * [Shapes](draw-shapes.py): learn how to draw shapes
