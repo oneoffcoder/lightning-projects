@@ -1,0 +1,94 @@
+<html>
+    <head>
+        <title>Colors</title>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            .center {
+                text-align: center;
+            }
+            .color-table {
+                margin: auto;
+                width: 80%;
+                border-collapse: collapse;
+            }
+            .color-cell {
+                width: 40px;
+                height: 80px;
+            }
+        </style>
+    </head>
+    <body onload="init()">
+        <div class="center">
+            <button onclick="scramble()">Scramble!</button>
+        </div>
+        <div>
+            &nbsp;
+        </div>
+        <table class="color-table">
+            <tbody>
+                <tr>
+                    <td id="c00" class="color-cell">&nbsp;</td>
+                    <td id="c01" class="color-cell">&nbsp;</td>
+                    <td id="c02" class="color-cell">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="c10" class="color-cell">&nbsp;</td>
+                    <td id="c11" class="color-cell">&nbsp;</td>
+                    <td id="c12" class="color-cell">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="c20" class="color-cell">&nbsp;</td>
+                    <td id="c21" class="color-cell">&nbsp;</td>
+                    <td id="c22" class="color-cell">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <audio id="finished">
+            <source src="audio/fairy.mp3" type="audio/mp3">
+        </audio>
+
+        <script>
+            const ids = ['c00', 'c01', 'c02', 'c11', 'c10', 'c11', 'c12', 'c20', 'c21', 'c22'];
+            const colors = [
+                '#F5B7B1', '#D2B4DE', '#AED6F1',
+                '#A9DFBF', '#FAD7A0', '#CCD1D1',
+                '#B03A2E', '#884EA0', '#17A589'
+            ];
+            const cells = [];
+
+            function init() {
+                for (const id of ids) {
+                    const e = document.getElementById(id);
+                    cells.push(e);
+                }
+
+                updateColors();
+            }
+
+            function updateColors() {
+                cells.forEach((e, i) => {
+                    e.style.background = getRandomColor();
+                });
+            }
+
+            function getRandomColor() {
+                const randomIndex = Math.floor(Math.random() * colors.length)
+                const color = colors[randomIndex];
+                return color;
+            }
+
+            function playSound() {
+                const sound = document.getElementById('finished');
+                sound.play();
+            }
+
+            function scramble() {
+                playSound();
+                updateColors();
+            }
+        </script>
+    </body>
+</html>
