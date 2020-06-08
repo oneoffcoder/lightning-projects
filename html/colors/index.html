@@ -61,7 +61,7 @@
                 '#B03A2E', '#884EA0', '#17A589'
             ];
             const cells = [];
-            let isWorking = false;
+            let isPlayingSound = false;
 
             function init() {
                 for (const id of ids) {
@@ -72,8 +72,7 @@
                 const sound = document.getElementById('finished');
                 sound.addEventListener('ended', () => {
                     sound.currentTime = 0;
-                    isWorking = false;
-                    console.log('finished playing sound');
+                    isPlayingSound = false;
                 });
 
                 updateColors();
@@ -97,11 +96,11 @@
             }
 
             function scramble() {
-                if (isWorking) {
+                if (isPlayingSound) {
                     return;
                 }
-                
-                isWorking = true;
+
+                isPlayingSound = true;
                 playSound();
                 updateColors();
             }
