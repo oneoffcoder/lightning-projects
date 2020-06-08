@@ -7,6 +7,14 @@ effective coding projects for children to learn and improve their coding skills.
 If you have any questions, please do not hesistate to contact us at 
 info@oneoffcoder.com.
 
+# HTML
+
+* [Guessing Game](guessing-game): Can you guess the number that the computer is thinking?
+* [Slot Machine](slot-machine-game): Will you hit the jackpot?
+* [Rock, Paper, Scissor](rps-game): Can you beat the computer at Rock, Paper, Scissor?
+* [Colors](colors): Colors, colors and more colors!
+* [Tic-Tac-Toe](tic-tac-toe): Can you beat the computer at Tic-Tac-Toe?
+
 # Citation
 
 ```
