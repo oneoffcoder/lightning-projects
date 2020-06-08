@@ -1,0 +1,214 @@
+<html>
+    <head>
+        <title>Tic-Tac-Toe</title>
+        <style>
+            * {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            }
+            .center {
+                text-align: center;
+            }
+            .ttt-table {
+                margin: auto;
+                width: 80%;
+            }
+            .ttt-cell {
+                text-align: center;
+                font-size: x-large;
+                background: lightblue;
+                width: 80px;
+                height: 80px;
+                padding: 15px;
+            }
+        </style>
+    </head>
+    <body onload="init()">
+        <div class="center">
+            <h1>Tic-Tac-Toe!</h1>
+        </div>
+        <div class="center">
+            <button onclick="restart()">restart</button>
+        </div>
+        <table class="ttt-table">
+            <tbody>
+                <tr>
+                    <td id="c00" class="ttt-cell" onclick="clicked(0, 0)">&nbsp;</td>
+                    <td id="c01" class="ttt-cell" onclick="clicked(0, 1)">&nbsp;</td>
+                    <td id="c02" class="ttt-cell" onclick="clicked(0, 2)">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="c10" class="ttt-cell" onclick="clicked(1, 0)">&nbsp;</td>
+                    <td id="c11" class="ttt-cell" onclick="clicked(1, 1)">&nbsp;</td>
+                    <td id="c12" class="ttt-cell" onclick="clicked(1, 2)">&nbsp;</td>
+                </tr>
+                <tr>
+                    <td id="c20" class="ttt-cell" onclick="clicked(2, 0)">&nbsp;</td>
+                    <td id="c21" class="ttt-cell" onclick="clicked(2, 1)">&nbsp;</td>
+                    <td id="c22" class="ttt-cell" onclick="clicked(2, 2)">&nbsp;</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <audio id="clicked">
+            <source src="audio/fairy.mp3" type="audio/mp3">
+        </audio>
+
+        <script>
+            const uSymbol = 'X';
+            const cSymbol = 'O';
+            const grid = [
+                ['', '', ''],
+                ['', '', ''],
+                ['', '', '']
+            ];
+            const nRows = 3;
+            const nCols = 3;
+            const winPaths = [
+                [[0, 0], [0, 1], [0, 2]], // horizontals
+                [[1, 0], [1, 1], [1, 2]],
+                [[2, 0], [2, 1], [2, 2]],
+                [[0, 0], [1, 0], [2, 0]], // verticals
+                [[0, 1], [1, 1], [2, 1]],
+                [[0, 2], [1, 2], [2, 2]],
+                [[0, 0], [1, 1], [2, 2]], // diagonals
+                [[0, 2], [1, 1], [2, 0]]
+            ];
+            let gameOver = false;
+            let timer;
+            let isThinking = false;
+
+            function init() {
+                console.log('hi');
+                updateTable();
+            }
+
+            function clicked(row, col) {
+                if (gameOver || isThinking) {
+                    return;
+                }
+
+                if (grid[row][col] === '') {
+                    grid[row][col] = uSymbol;
+                    playSound();
+                    updateTable();
+                } else {
+                    return;
+                }
+
+                let winner = getWinner();
+
+                if (winner === 'none') {
+                    if (isGridFull()) {
+                        gameOver = true;
+                        console.log('draw');
+                    } else {
+                        function doTimer() {
+                            const position = getComputerPosition();
+                            const row = position.row;
+                            const col = position.col;
+                            grid[row][col] = cSymbol;
+
+                            updateTable();
+
+                            winner = getWinner();
+
+                            if (winner !== 'none') {
+                                gameOver = true;
+                                console.log(`winner = ${winner}`);
+                            }
+
+                            clearInterval(timer);
+                            isThinking = false;
+                        };
+
+                        isThinking = true;
+                        timer = setInterval(doTimer, 1000);
+                    }
+                } else {
+                    gameOver = true;
+                    console.log(`winner = ${winner}`);
+                }
+            }
+
+            function playSound() {
+                const sound = document.getElementById('clicked');
+                sound.play();
+            }
+
+            function updateTable() {
+                for (let row = 0; row < nRows; row++) {
+                    for (let col = 0; col < nCols; col++) {
+                        const cellId = `c${row}${col}`;
+                        const cell = document.getElementById(cellId);
+                        cell.innerHTML = grid[row][col];
+                    }
+                }
+            }
+
+            function restart() {
+                gameOver = false;
+                clearTable();
+            }
+
+            function clearTable() {
+                for (let row = 0; row < nRows; row++) {
+                    for (let col = 0; col < nCols; col++) {
+                        grid[row][col] = '';
+                    }
+                }
+
+                updateTable();
+            }
+
+            function getComputerPosition() {
+                while (true) {
+                    const r = Math.floor(Math.random() * nRows);
+                    const c = Math.floor(Math.random() * nCols);
+                    if (grid[r][c] === '') {
+                        return {
+                            row: r,
+                            col: c
+                        }
+                    }
+                }
+            }
+
+            function getWinner() {
+                for (const path of winPaths) {
+                    const r0 = path[0][0];
+                    const r1 = path[1][0];
+                    const r2 = path[2][0];
+
+                    const c0 = path[0][1];
+                    const c1 = path[1][1];
+                    const c2 = path[2][1];
+
+                    const v1 = grid[r0][c0];
+                    const v2 = grid[r1][c1];
+                    const v3 = grid[r2][c2];
+
+                    if (v1 === v2 && v1 === v3 && v1 !== '') {
+                        if (v1 === uSymbol) {
+                            return 'user';
+                        } else {
+                            return 'computer';
+                        }
+                    }
+                }
+
+                return 'none';
+            }
+
+            function isGridFull() {
+                for (let row = 0; row < nRows; row++) {
+                    for (let col = 0; col < nCols; col++) {
+                        if (grid[row][col] === '') {
+                            return false;
+                        }
+                    }
+                }
+                return true;
+            }
+        </script>
+    </body>
+</html>
