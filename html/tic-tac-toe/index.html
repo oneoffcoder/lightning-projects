@@ -79,13 +79,20 @@
             let gameOver = false;
             let timer;
             let isThinking = false;
+            let isPlayingSound = false;
 
             function init() {
+                const sound = document.getElementById('clicked');
+                sound.addEventListener('ended', () => {
+                    sound.currentTime = 0;
+                    isPlayingSound = false;
+                });
+
                 updateTable();
             }
 
             function clicked(row, col) {
-                if (gameOver || isThinking) {
+                if (gameOver || isThinking || isPlayingSound) {
                     return;
                 }
 
@@ -134,6 +141,7 @@
             }
 
             function playSound() {
+                isPlayingSound = true;
                 const sound = document.getElementById('clicked');
                 sound.play();
             }
