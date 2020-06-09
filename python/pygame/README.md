@@ -10,3 +10,4 @@ Tutorials in [Pygame](https://www.pygame.org). The API documentation is [availab
 * [Bouncing Images](bouncing-image.py): learn how to animate images
 * [Image Rotation](image-rotation.py): learn how to rotate an image
 * [Sound](bouncing-image-with-sound.py): learn how to play sound
+* [Key Detection](key-movement.py): learn how to listen for key events
