@@ -1,6 +1,8 @@
 # Pygame
 
-Tutorials in [Pygame](https://www.pygame.org). The API documentation is [available](https://www.pygame.org/docs/). All sound effects taken from [zapsplat](https://www.zapsplat.com/).
+Tutorials in [Pygame](https://www.pygame.org). The API documentation is [available](https://www.pygame.org/docs/). 
+All sound effects taken from [zapsplat](https://www.zapsplat.com/).
+All images take from [craftpix](https://craftpix.net/).
 
 # Basic
 
