@@ -348,6 +348,31 @@
                             cell.addEventListener('dragend', handleCellDragEnd, false);
                         } else {
                             cell.addEventListener('dragstart', (e) => { e.preventDefault(); }, false);
+                            cell.addEventListener('dragenter', (e) => { 
+                                e.preventDefault(); 
+                                if (e.srcElement.id.startsWith('cell'))
+                                    e.srcElement.classList.add('over-illegal'); 
+                                }, false);
+                            cell.addEventListener('dragover', (e) => { 
+                                e.preventDefault(); 
+                                if (e.srcElement.id.startsWith('cell'))
+                                    e.srcElement.classList.add('over-illegal'); 
+                                }, false);
+                            cell.addEventListener('dragleave', (e) => { 
+                                e.preventDefault(); 
+                                if (e.srcElement.id.startsWith('cell'))
+                                    e.srcElement.classList.remove('over-illegal'); 
+                                }, false);
+                            cell.addEventListener('drop', (e) => { 
+                                e.preventDefault(); 
+                                if (e.srcElement.id.startsWith('cell'))
+                                    e.srcElement.classList.remove('over-illegal'); 
+                                }, false);
+                            cell.addEventListener('dragend', (e) => { 
+                                e.preventDefault(); 
+                                if (e.srcElement.id.startsWith('cell'))
+                                    e.srcElement.classList.remove('over-illegal'); 
+                                }, false);
                         }
                         
                     }
