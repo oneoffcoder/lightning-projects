@@ -1,0 +1,218 @@
+<html>
+    <head>
+        <title>Checkers</title>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            .checker-board {
+                border-collapse:collapse;
+                border:1px solid #000000; 
+            }
+            .checker-cell {
+                border:1px solid #000000;
+                width: 75px;
+                height: 75px;
+                text-align: center;
+            }
+            .checker-cell.over-legal {
+                border: 2px dashed #00FF00;
+            }
+            .checker-cell.over-illegal {
+                border: 2px dashed #FF0000;
+            }
+            .brown-cell {
+                background: brown;
+            }
+            .red-cell {
+                background: lightgray;
+            }
+            .piece {
+                width: 50px;
+                height: 50px;
+            }
+        </style>
+    </head>
+    <body onload="init()">
+        <h1>Checkers</h1>
+        <table id="board" class="checker-board">
+            
+        </table>
+
+        <script>
+            const nRows = 8;
+            const nCols = 8;
+            let board;
+            let pieces;
+
+            function init() {
+                board = initBoard();
+                pieces = initPieces();
+
+                initTable(board);
+                initCell(pieces);
+
+                console.log(board);
+                console.log(pieces);
+            }
+
+            function handlePieceDragStart(e) {
+                const img = e.srcElement;
+                img.style.opacity = '0.1';
+            }
+
+            function handlePieceDragEnd(e) {
+                const img = e.srcElement;
+                img.style.opacity = '1.0';
+            }
+
+            function initCell(pieces) {
+                for (const piece of pieces) {
+                    const id = `img-${piece.row}-${piece.col}`
+                    const img = document.createElement('img');
+                    img.id = id;
+                    img.src = piece.image;
+                    img.className = 'piece';
+                    img.setAttribute('draggable', 'true');
+                    img.addEventListener('dragstart', handlePieceDragStart, false);
+                    img.addEventListener('dragend', handlePieceDragEnd, false);
+
+                    const cellId = `cell-${piece.row}-${piece.col}`;
+                    const cell = document.getElementById(cellId);
+                    cell.appendChild(img);
+                }
+            }
+
+            function handleCellDragEnter(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+
+                e.dataTransfer.dropEffect = 'move';
+
+                return false;
+            }
+
+            function handleCellDragOver(e) {
+                const td = e.srcElement;
+                //td.classList.add('over');
+                const id = td.id;
+                if (id.startsWith('cell')) {
+                    const tokens = id.split('-');
+                    const r = +tokens[1];
+                    const c = +tokens[2];
+                    // FIXME: legality
+                    console.log(r, c);
+                }
+                
+            }
+
+            function handleCellDragLeave(e) {
+                const td = e.srcElement;
+                //td.classList.remove('over');
+            }
+
+            function initTable(board) {
+                const table = document.getElementById('board');
+                for (let r = 0; r < nRows; r++) {
+                    const row = table.insertRow(r);
+                    for (let c = 0; c < nCols; c++) {
+                        const cell = row.insertCell(c);
+                        cell.id = `cell-${r}-${c}`;
+                        cell.classList.add('checker-cell');
+                        cell.classList.add(board[r][c].color === 'brown' ? 'brown-cell' : 'red-cell');
+                        cell.addEventListener('dragenter', handleCellDragEnter, false);
+                        cell.addEventListener('dragover', handleCellDragOver, false);
+                        cell.addEventListener('dragleave', handleCellDragLeave, false);
+                    }
+                }
+            }
+
+            function initPieces() {
+                const pieces = new Array();
+                for (let r = 0; r < nRows; r++) {
+                    for (let c = 0; c < nCols; c++) {
+                        const piece = getPiece(r, c);
+                        if (piece) {
+                            pieces.push(piece);
+                        }
+                    }
+                }
+                return pieces;
+            }
+
+            function initBoard() {
+                const board = getBoard();
+                return board;
+            }
+
+            function getBoard() {
+                const board = Array(nRows);
+                for (let r = 0; r < nRows; r++) {
+                    board[r] = new Array(nCols);
+                    for (let c = 0; c < nCols; c++) {
+                        board[r][c] = getCell(r, c);
+                    }
+                }
+                return board;
+            }
+
+            function getCell(r, c) {
+                return {
+                    row: r,
+                    col: c,
+                    color: getCellColor(r, c)
+                }
+            }
+
+            function getCellColor(r, c) {
+                if (r % 2 === 0 && c % 2 === 0) {
+                    return 'white';
+                } else if (r % 2 === 0 && c % 2 !== 0) {
+                    return 'brown';
+                } else if (r % 2 !== 0 && c % 2 === 0) {
+                    return 'brown';
+                } else {
+                    return 'white';
+                }
+            }
+
+            function getPiece(r, c) {
+                const cellColor = getCellColor(r, c);
+                let color = undefined;
+                let image = undefined;
+
+                if (r < 2 && cellColor === 'white') {
+                    color = 'black';
+                    image = 'images/black.png';
+                } else if (r > 5 && cellColor === 'white') {
+                    color = 'red';
+                    image = 'images/red.png';
+                }
+                
+                if (color && image) {
+                    return {
+                        row: r,
+                        col: c,
+                        isCrowned: false,
+                        color: color,
+                        image: image,
+                        isLegalMove: function(r, c) {
+                            const cellColor = getCellColor(r, c);
+                            if (cellColor === 'brown') {
+                                return false;
+                            }
+                            if (this.color === 'black' && this.row + 1 === r) {
+                                return true;
+                            } else if(this.color === 'red' && this.row - 1 === r) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return undefined;
+            }
+        </script>
+    </body>
+</html>
