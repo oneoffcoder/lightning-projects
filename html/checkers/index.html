@@ -533,10 +533,10 @@
                                 return false;
                             }
 
-                            if (this.color === 'black' && this.row + 1 === r) {
+                            if (this.color === 'black' && this.row + 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
                                 // black can move down
                                 return true;
-                            } else if (this.color === 'red' && this.row - 1 === r) {
+                            } else if (this.color === 'red' && this.row - 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
                                 // red can move up
                                 return true;
                             } else if (isCaptureMove(this.color, this.row, this.col, r, c)) {
