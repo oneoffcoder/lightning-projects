@@ -94,16 +94,25 @@
                 if (r < nRows && c < nCols) {
                     movingPiece = pMap[r][c];
                 }
+
+                const td = getImageCell(img.id);
+                const data = td.innerHTML;
+                e.dataTransfer.setData('text/html', data);
+                console.log('START handlePieceDragStart');
+                console.log(e);
+                console.log(data);
+                console.log(e.dataTransfer.getData('text/html'));
+                console.log('STOP handlePieceDragStart');
             }
 
             function handlePieceDragEnter(e) {
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
+                // if (e.preventDefault) {
+                //     e.preventDefault();
+                // }
 
-                e.dataTransfer.dropEffect = 'move';
+                // e.dataTransfer.dropEffect = 'move';
 
-                return false;
+                // return false;
             }
 
             function handlePieceDragOver(e) {
@@ -145,16 +154,22 @@
             }
 
             function handleCellDragEnter(e) {
+                // if (e.preventDefault) {
+                //     e.preventDefault();
+                // }
+
+                // e.dataTransfer.dropEffect = 'move';
+
+                // return false;
+            }
+
+            function handleCellDragOver(e) {
                 if (e.preventDefault) {
                     e.preventDefault();
                 }
 
                 e.dataTransfer.dropEffect = 'move';
 
-                return false;
-            }
-
-            function handleCellDragOver(e) {
                 const td = e.srcElement;
                 const id = td.id;
                 if (id.startsWith('cell')) {
@@ -165,13 +180,37 @@
                         td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
                     }
                 }
-                
             }
 
             function handleCellDragLeave(e) {
                 const td = e.srcElement;
                 td.classList.remove('over-legal');
                 td.classList.remove('over-illegal');
+            }
+
+            function handleCellDrop(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+
+                const td = e.srcElement;
+                console.log('START handleCellDrop');
+                console.log(td);
+                console.log(e.dataTransfer.getData('text/html'))
+                console.log('STOP handleCellDrop');
+
+                return false;
+            }
+
+            function handleCellDragEnd(e) {
+                console.log('START handleCellDragEnd');
+                const td = getImageCell(e.srcElement.id);
+                console.log(td.id);
+                console.log(td.classList);
+                td.classList.remove('over-legal');
+                td.classList.remove('over-illegal');
+                console.log(td.classList);
+                console.log('STOP handleCellDragEnd');
             }
 
             function initTable(board) {
@@ -186,6 +225,8 @@
                         cell.addEventListener('dragenter', handleCellDragEnter, false);
                         cell.addEventListener('dragover', handleCellDragOver, false);
                         cell.addEventListener('dragleave', handleCellDragLeave, false);
+                        cell.addEventListener('drop', handleCellDrop, false);
+                        cell.addEventListener('dragend', handleCellDragEnd, false);
                     }
                 }
             }
