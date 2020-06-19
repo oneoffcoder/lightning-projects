@@ -1,0 +1,326 @@
+<html>
+    <head>
+        <title>Checkers</title>
+        <style>
+            * {
+                font-family: monospace;
+            }
+            .checker-board {
+                border-collapse:collapse;
+                border:1px solid #000000; 
+            }
+            .checker-cell {
+                border:1px solid #000000;
+                width: 75px;
+                height: 75px;
+                text-align: center;
+            }
+            .checker-cell.over-legal {
+                border: 2px dashed #00FF00;
+            }
+            .checker-cell.over-illegal {
+                border: 2px dashed #FF0000;
+            }
+            .brown-cell {
+                background: brown;
+            }
+            .red-cell {
+                background: lightgray;
+            }
+            .piece {
+                width: 50px;
+                height: 50px;
+            }
+        </style>
+    </head>
+    <body onload="init()">
+        <h1>Checkers</h1>
+        <table id="board" class="checker-board">
+            
+        </table>
+
+        <script>
+            const nRows = 8;
+            const nCols = 8;
+            let board;
+            let movingPiece = undefined;
+            let pieces;
+            let pMap;
+
+            function init() {
+                board = initBoard();
+                pieces = initPieces();
+                pMap = toMap(pieces);
+
+                initTable(board);
+                initCell(pieces);
+
+                console.log(board);
+                console.log(pieces);
+            }
+
+            function toMap(pieces) {
+                const m = {};
+                for (const piece of pieces) {
+                    const row = piece.row;
+                    const col = piece.col;
+
+                    if (!m.hasOwnProperty(row)) {
+                        m[row] = {}
+                    }
+                    if (!m[row].hasOwnProperty(col)) {
+                        m[row][col] = piece;
+                    }
+                }
+                return m;
+            }
+
+            function getImageCell(imageId) {
+                const tokens = imageId.split('-');
+                const r = +tokens[1];
+                const c = +tokens[2];
+                const cellId = `cell-${r}-${c}`
+                const td = document.getElementById(cellId);
+                return td;
+            }
+
+            function handlePieceDragStart(e) {
+                const img = e.srcElement;
+                img.style.opacity = '0.1';
+
+                const tokens = img.id.split('-');
+                const r = +tokens[1];
+                const c = +tokens[2];
+                if (r < nRows && c < nCols) {
+                    movingPiece = pMap[r][c];
+                }
+
+                const td = getImageCell(img.id);
+                const data = td.innerHTML;
+                e.dataTransfer.setData('text/html', data);
+                console.log('START handlePieceDragStart');
+                console.log(e);
+                console.log(data);
+                console.log(e.dataTransfer.getData('text/html'));
+                console.log('STOP handlePieceDragStart');
+            }
+
+            function handlePieceDragEnter(e) {
+                // if (e.preventDefault) {
+                //     e.preventDefault();
+                // }
+
+                // e.dataTransfer.dropEffect = 'move';
+
+                // return false;
+            }
+
+            function handlePieceDragOver(e) {
+                const img = e.srcElement;
+                const td = getImageCell(img.id);
+                td.classList.add('over-illegal');
+            }
+
+            function handlePieceDragLeave(e) {
+                const img = e.srcElement;
+                const td = getImageCell(img.id);
+                td.classList.remove('over-illegal');
+            }
+
+            function handlePieceDragEnd(e) {
+                const img = e.srcElement;
+                img.style.opacity = '1.0';
+                movingPiece = undefined;
+            }
+
+            function initCell(pieces) {
+                for (const piece of pieces) {
+                    const id = `img-${piece.row}-${piece.col}`
+                    const img = document.createElement('img');
+                    img.id = id;
+                    img.src = piece.image;
+                    img.className = 'piece';
+                    img.setAttribute('draggable', 'true');
+                    img.addEventListener('dragstart', handlePieceDragStart, false);
+                    img.addEventListener('dragenter', handlePieceDragEnter, false);
+                    img.addEventListener('dragover', handlePieceDragOver, false);
+                    img.addEventListener('dragleave', handlePieceDragLeave, false);
+                    img.addEventListener('dragend', handlePieceDragEnd, false);
+
+                    const cellId = `cell-${piece.row}-${piece.col}`;
+                    const cell = document.getElementById(cellId);
+                    cell.appendChild(img);
+                }
+            }
+
+            function handleCellDragEnter(e) {
+                // if (e.preventDefault) {
+                //     e.preventDefault();
+                // }
+
+                // e.dataTransfer.dropEffect = 'move';
+
+                // return false;
+            }
+
+            function handleCellDragOver(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+
+                e.dataTransfer.dropEffect = 'move';
+
+                const td = e.srcElement;
+                const id = td.id;
+                if (id.startsWith('cell')) {
+                    const tokens = id.split('-');
+                    const r = +tokens[1];
+                    const c = +tokens[2];
+                    if (movingPiece) {
+                        td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
+                    }
+                }
+            }
+
+            function handleCellDragLeave(e) {
+                const td = e.srcElement;
+                td.classList.remove('over-legal');
+                td.classList.remove('over-illegal');
+            }
+
+            function handleCellDrop(e) {
+                if (e.stopPropagation) {
+                    e.stopPropagation();
+                }
+
+                const td = e.srcElement;
+                console.log('START handleCellDrop');
+                console.log(td);
+                console.log(e.dataTransfer.getData('text/html'))
+                console.log('STOP handleCellDrop');
+
+                return false;
+            }
+
+            function handleCellDragEnd(e) {
+                console.log('START handleCellDragEnd');
+                const td = getImageCell(e.srcElement.id);
+                console.log(td.id);
+                console.log(td.classList);
+                td.classList.remove('over-legal');
+                td.classList.remove('over-illegal');
+                console.log(td.classList);
+                console.log('STOP handleCellDragEnd');
+            }
+
+            function initTable(board) {
+                const table = document.getElementById('board');
+                for (let r = 0; r < nRows; r++) {
+                    const row = table.insertRow(r);
+                    for (let c = 0; c < nCols; c++) {
+                        const cell = row.insertCell(c);
+                        cell.id = `cell-${r}-${c}`;
+                        cell.classList.add('checker-cell');
+                        cell.classList.add(board[r][c].color === 'brown' ? 'brown-cell' : 'red-cell');
+                        cell.addEventListener('dragenter', handleCellDragEnter, false);
+                        cell.addEventListener('dragover', handleCellDragOver, false);
+                        cell.addEventListener('dragleave', handleCellDragLeave, false);
+                        cell.addEventListener('drop', handleCellDrop, false);
+                        cell.addEventListener('dragend', handleCellDragEnd, false);
+                    }
+                }
+            }
+
+            function initPieces() {
+                const pieces = new Array();
+                for (let r = 0; r < nRows; r++) {
+                    for (let c = 0; c < nCols; c++) {
+                        const piece = getPiece(r, c);
+                        if (piece) {
+                            pieces.push(piece);
+                        }
+                    }
+                }
+                return pieces;
+            }
+
+            function initBoard() {
+                const board = getBoard();
+                return board;
+            }
+
+            function getBoard() {
+                const board = Array(nRows);
+                for (let r = 0; r < nRows; r++) {
+                    board[r] = new Array(nCols);
+                    for (let c = 0; c < nCols; c++) {
+                        board[r][c] = getCell(r, c);
+                    }
+                }
+                return board;
+            }
+
+            function getCell(r, c) {
+                return {
+                    row: r,
+                    col: c,
+                    color: getCellColor(r, c)
+                }
+            }
+
+            function getCellColor(r, c) {
+                if (r % 2 === 0 && c % 2 === 0) {
+                    return 'white';
+                } else if (r % 2 === 0 && c % 2 !== 0) {
+                    return 'brown';
+                } else if (r % 2 !== 0 && c % 2 === 0) {
+                    return 'brown';
+                } else {
+                    return 'white';
+                }
+            }
+
+            function getPiece(r, c) {
+                const cellColor = getCellColor(r, c);
+                let color = undefined;
+                let image = undefined;
+
+                if (r < 2 && cellColor === 'white') {
+                    color = 'black';
+                    image = 'images/black.png';
+                } else if (r > 5 && cellColor === 'white') {
+                    color = 'red';
+                    image = 'images/red.png';
+                }
+                
+                if (color && image) {
+                    return {
+                        row: r,
+                        col: c,
+                        isCrowned: false,
+                        color: color,
+                        image: image,
+                        isLegalMove: function(r, c) {
+                            const cellColor = getCellColor(r, c);
+                            if (cellColor === 'brown') {
+                                return false;
+                            }
+                            if (pMap.hasOwnProperty(r)) {
+                                if (pMap[r].hasOwnProperty(c)) {
+                                    return false;
+                                }
+                            }
+                            if (this.color === 'black' && this.row + 1 === r) {
+                                return true;
+                            } else if(this.color === 'red' && this.row - 1 === r) {
+                                return true;
+                            }
+                            return false;
+                        }
+                    }
+                }
+                return undefined;
+            }
+        </script>
+    </body>
+</html>
