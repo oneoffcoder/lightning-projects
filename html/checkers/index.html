@@ -269,6 +269,7 @@
                     const r = coordinate[0];
                     const c = coordinate[1];
                     if (pMap.hasOwnProperty(r) && pMap[r].hasOwnProperty(c)) {
+                        pieces.splice(pMap[r][c].index, 1);
                         delete pMap[r][c];
                     }
                     const cellCapture = document.getElementById(`cell-${r}-${c}`);
@@ -347,9 +348,10 @@
 
             function initPieces() {
                 const pieces = new Array();
+                let i = 0;
                 for (let r = 0; r < nRows; r++) {
                     for (let c = 0; c < nCols; c++) {
-                        const piece = getPiece(r, c);
+                        const piece = getPiece(i, r, c);
                         if (piece) {
                             pieces.push(piece);
                         }
@@ -480,7 +482,7 @@
                 return false;
             }
 
-            function getPiece(r, c) {
+            function getPiece(i, r, c) {
                 const cellColor = getCellColor(r, c);
                 let color = undefined;
                 let image = undefined;
@@ -495,6 +497,7 @@
                 
                 if (color && image) {
                     return {
+                        index: i,
                         row: r,
                         col: c,
                         isCrowned: false,
