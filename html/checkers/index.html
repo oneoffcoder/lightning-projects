@@ -519,13 +519,16 @@
                 const cellColor = getCellColor(r, c);
                 let color = undefined;
                 let image = undefined;
+                let queenImage = undefined;
 
                 if (r < 2 && cellColor === 'white') {
                     color = 'black';
                     image = 'images/black.png';
+                    queenImage = 'images/black-queen.png';
                 } else if (r > 5 && cellColor === 'white') {
                     color = 'red';
                     image = 'images/red.png';
+                    queenImage = 'images/red-queen.png';
                 }
                 
                 if (color && image) {
@@ -536,6 +539,7 @@
                         isCrowned: false,
                         color: color,
                         image: image,
+                        queenImage: queenImage,
                         isLegalMove: function(r, c) {
                             // wait your turn
                             if (this.color !== playerTurn) {
