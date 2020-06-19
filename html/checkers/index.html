@@ -156,7 +156,6 @@
                 const img = e.srcElement;
                 img.style.opacity = '1.0';
                 movingPiece = undefined;
-                dragOverTd = undefined;
                 cellSource = undefined;
                 // console.log('handlePieceDragEnd');
             }
@@ -340,12 +339,22 @@
                         cell.id = `cell-${r}-${c}`;
                         cell.classList.add('checker-cell');
                         cell.classList.add(board[r][c].color === 'brown' ? 'brown-cell' : 'red-cell');
-                        cell.addEventListener('dragstart', handleCellDragStart, false);
-                        cell.addEventListener('dragenter', handleCellDragEnter, false);
-                        cell.addEventListener('dragover', handleCellDragOver, false);
-                        cell.addEventListener('dragleave', handleCellDragLeave, false);
-                        cell.addEventListener('drop', handleCellDrop, false);
-                        cell.addEventListener('dragend', handleCellDragEnd, false);
+                        if (board[r][c].color !== 'brown') {
+                            cell.addEventListener('dragstart', handleCellDragStart, false);
+                            cell.addEventListener('dragenter', handleCellDragEnter, false);
+                            cell.addEventListener('dragover', handleCellDragOver, false);
+                            cell.addEventListener('dragleave', handleCellDragLeave, false);
+                            cell.addEventListener('drop', handleCellDrop, false);
+                            cell.addEventListener('dragend', handleCellDragEnd, false);
+                        } else {
+                            cell.addEventListener('dragstart', (e) => { e.preventDefault(); }, false);
+                            // cell.addEventListener('dragenter', handleCellDragEnter, false);
+                            // cell.addEventListener('dragover', handleCellDragOver, false);
+                            // cell.addEventListener('dragleave', handleCellDragLeave, false);
+                            // cell.addEventListener('drop', handleCellDrop, false);
+                            // cell.addEventListener('dragend', handleCellDragEnd, false);
+                        }
+                        
                     }
                 }
             }
