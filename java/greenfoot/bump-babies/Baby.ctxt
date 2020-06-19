@@ -1,0 +1,15 @@
+#BlueJ class context
+comment0.target=Baby
+comment0.text=\n\ Write\ a\ description\ of\ class\ Baby\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=id\ x\ y
+comment1.target=Baby(int,\ int,\ int)
+comment2.params=
+comment2.target=int\ getId()
+comment3.params=
+comment3.target=int\ getX()
+comment4.params=
+comment4.target=int\ getY()
+comment5.params=
+comment5.target=void\ act()
+comment5.text=\n\ Act\ -\ do\ whatever\ the\ Baby\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+numComments=6

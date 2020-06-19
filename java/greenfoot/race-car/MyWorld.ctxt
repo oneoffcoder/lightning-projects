@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.target=MyWorld
+comment0.text=\n\ Write\ a\ description\ of\ class\ MyWorld\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=
+comment1.target=MyWorld()
+comment1.text=\n\ Constructor\ for\ objects\ of\ class\ MyWorld.\n\ \n
+comment2.params=
+comment2.target=void\ act()
+comment3.params=
+comment3.target=void\ addRedCar()
+comment4.params=redCar
+comment4.target=void\ removeRedCar(RedCar)
+comment5.params=
+comment5.target=long\ getScore()
+comment6.params=
+comment6.target=int\ getLevel()
+comment7.params=
+comment7.target=int\ getRandomXPosition()
+comment8.params=
+comment8.target=java.util.List\ getXPositions()
+numComments=9

@@ -1,0 +1,21 @@
+#BlueJ class context
+comment0.target=RedCar
+comment0.text=\n\ Write\ a\ description\ of\ class\ RedCar\ here.\n\ \n\ @author\ (your\ name)\ \n\ @version\ (a\ version\ number\ or\ a\ date)\n
+comment1.params=
+comment1.target=RedCar()
+comment2.params=x
+comment2.target=RedCar(int)
+comment3.params=world
+comment3.target=RedCar(greenfoot.World)
+comment4.params=
+comment4.target=void\ act()
+comment4.text=\n\ Act\ -\ do\ whatever\ the\ RedCar\ wants\ to\ do.\ This\ method\ is\ called\ whenever\n\ the\ 'Act'\ or\ 'Run'\ button\ gets\ pressed\ in\ the\ environment.\n
+comment5.params=
+comment5.target=int\ getX()
+comment6.params=
+comment6.target=int\ getY()
+comment7.params=
+comment7.target=int\ getWidth()
+comment8.params=
+comment8.target=int\ getHeight()
+numComments=9
