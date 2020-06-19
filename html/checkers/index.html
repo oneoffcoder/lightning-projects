@@ -234,7 +234,13 @@
                 const sC = sourceCoord[1];
                 const tC = targetCoord[1];
 
+                if (sR === tR && sC === tC) {
+                    // source and target are the same
+                    return;
+                }
+
                 if (!movingPiece.isLegalMove(tR, tC)) {
+                    // illegal move
                     return;
                 }
 
