@@ -46,6 +46,7 @@
             let movingPiece = undefined;
             let dragOverTd = undefined;
             let cellSource = undefined;
+            let playerTurn = 'red';
             let pieces;
             let pMap;
 
@@ -267,6 +268,8 @@
                     pMap[tR] = {};
                 }
                 pMap[tR][tC] = piece;
+
+                playerTurn = 'red' === playerTurn ? 'black' : 'red';
             }
 
             function handleCellDragLeave(e) {
@@ -438,6 +441,11 @@
                         color: color,
                         image: image,
                         isLegalMove: function(r, c) {
+                            // wait your turn
+                            if (this.color !== playerTurn) {
+                                return false;
+                            }
+
                             // there can be no pieces on the brown squares
                             const cellColor = getCellColor(r, c);
                             if (cellColor === 'brown') {
