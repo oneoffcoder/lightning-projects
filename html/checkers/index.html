@@ -257,6 +257,7 @@
                 img.addEventListener('dragend', handlePieceDragEnd, false);
 
                 const piece = pMap[sR][sC];
+
                 piece.row = tR;
                 piece.col = tC;
 
@@ -383,22 +384,50 @@
                 return false;
             }
 
-            function isLeftCapture(color, sR, sC, tR, tC) {
-                let dR = color === 'black'? 2 : -2;
-                let lcR = sR + dR;
-                let lcC = sC - 2;
+            function getLeftCaptureMoveCoordinate(color, sR, sC) {
+                const dR = color === 'black'? 2 : -2;
+                const r = sR + dR;
+                const c = sC - 2;
+                return [r, c];
+            }
 
-                const isValidMove = tR === lcR && tC === lcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+            function getRightCaptureMoveCoordinate(color, sR, sC) {
+                const dR = color === 'black'? 2 : -2;
+                const r = sR + dR;
+                const c = sC + 2;
+                return [r, c];
+            }
+
+            function getLeftCaptureCoordinate(color, sR, sC) {
+                const dR = color === 'black'? 1 : -1;
+                const r = sR + dR;
+                const c = sC - 1;
+                return [r, c];
+            }
+
+            function getRightCaptureCoordinate(color, sR, sC) {
+                const dR = color === 'black'? 1 : -1;
+                const r = sR + dR;
+                const c = sC + 1;
+                return [r, c];
+            }
+
+            function isLeftCapture(color, sR, sC, tR, tC) {
+                let coordinate = getLeftCaptureMoveCoordinate(color, sR, sC);
+                let r = coordinate[0];
+                let c = coordinate[1];
+
+                const isValidMove = tR === r && tC === c && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
                 
                 if (!isValidMove) {
                     return false;
                 }
 
-                dR = color === 'black'? 1 : -1;
-                lcR = sR + dR;
-                lcC = sC - 1;
+                coordinate = getLeftCaptureCoordinate(color, sR, sC);
+                r = coordinate[0];
+                c = coordinate[1];
 
-                if (isCellOccupied(lcR, lcC)) {
+                if (isCellOccupied(r, c)) {
                     return true;
                 }
 
@@ -406,21 +435,21 @@
             }
 
             function isRightCapture(color, sR, sC, tR, tC) {
-                let dR = color === 'black'? 2 : -2;
-                let rcR = sR + dR;
-                let rcC = sC + 2;
+                let coordinate = getRightCaptureMoveCoordinate(color, sR, sC);
+                let r = coordinate[0];
+                let c = coordinate[1];
 
-                const isValidMove = tR === rcR && tC === rcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+                const isValidMove = tR === r && tC === c && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
 
                 if (!isValidMove) {
                     return false;
                 }
 
-                dR = color === 'black'? 1 : -1;
-                rcR = sR + dR;
-                rcC = sC + 1;
+                coordinate = getRightCaptureCoordinate(color, sR, sC);
+                r = coordinate[0];
+                c = coordinate[1];
                 
-                if (isCellOccupied(rcR, rcC)) {
+                if (isCellOccupied(r, c)) {
                     return true;
                 }
 
