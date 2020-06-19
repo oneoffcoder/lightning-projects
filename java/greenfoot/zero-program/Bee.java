@@ -16,41 +16,19 @@ public class Bee extends Actor
     public void act() 
     {
         // Add your action code here.
-        /*if (Greenfoot.isKeyDown("w")) {
-            setLocation(getX(), getY() - 1);
-        } else if (Greenfoot.isKeyDown("s")) {
-            setLocation(getX(), getY() + 1);
-        } else if (Greenfoot.isKeyDown("a")) {
-            setLocation(getX() - 1, getY());
-        } else if (Greenfoot.isKeyDown("d")) {
-            setLocation(getX() + 1, getY());
-        }*/
-        if (Greenfoot.isKeyDown("w")) {
+        if (Greenfoot.isKeyDown("w") || Greenfoot.isKeyDown("up")) {
             setRotation(-90);
             move(5);
-        } else if (Greenfoot.isKeyDown("s")) {
+        } else if (Greenfoot.isKeyDown("s") || Greenfoot.isKeyDown("down")) {
             setRotation(90);
             move(5);
-        } else if (Greenfoot.isKeyDown("a")) {
+        } else if (Greenfoot.isKeyDown("a") || Greenfoot.isKeyDown("left")) {
             setRotation(180);
             move(5);
-        } else if (Greenfoot.isKeyDown("d")) {
+        } else if (Greenfoot.isKeyDown("d") || Greenfoot.isKeyDown("right")) {
             setRotation(0);
             move(5);
         }
-        /*if (Greenfoot.isKeyDown("w")) {
-            turn(-1);
-            move(5);
-        } else if (Greenfoot.isKeyDown("s")) {
-            turn(1);
-            move(5);
-        } else if (Greenfoot.isKeyDown("a")) {
-            turn(-1);
-            move(5);
-        } else if (Greenfoot.isKeyDown("d")) {
-            turn(1);
-            move(5);
-        }*/
         this.x = getX();
         this.y = getY();
     }    

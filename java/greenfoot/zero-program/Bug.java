@@ -25,20 +25,22 @@ public class Bug extends Actor
     }    
      
     public void movement() {
-        move((int)(Math.random() * 5) + 1);
+        int dx = 2;
+        int dy = 2;
+        
         if (getX() < Bee.x) {
             setRotation(0);
-            move((int)(Math.random() * 5) + 1);
+            move((int)(Math.random() * dx) + 1);
         } else if (getX() > Bee.x) {
             setRotation(180);
-            move((int)(Math.random() * 5) + 1);
+            move((int)(Math.random() * dx) + 1);
         } 
         if (getY() < Bee.y) {
             setRotation(90);
-            move((int)(Math.random() * 5) + 1);
+            move((int)(Math.random() * dy) + 1);
         } else if (getY() > Bee.y) {
             setRotation(270);
-            move((int)(Math.random() * 5) + 1);
+            move((int)(Math.random() * dy) + 1);
         }
     }
 }
