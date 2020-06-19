@@ -43,11 +43,14 @@
             const nRows = 8;
             const nCols = 8;
             let board;
+            let movingPiece = undefined;
             let pieces;
+            let pMap;
 
             function init() {
                 board = initBoard();
                 pieces = initPieces();
+                pMap = toMap(pieces);
 
                 initTable(board);
                 initCell(pieces);
@@ -56,14 +59,69 @@
                 console.log(pieces);
             }
 
+            function toMap(pieces) {
+                const m = {};
+                for (const piece of pieces) {
+                    const row = piece.row;
+                    const col = piece.col;
+
+                    if (!m.hasOwnProperty(row)) {
+                        m[row] = {}
+                    }
+                    if (!m[row].hasOwnProperty(col)) {
+                        m[row][col] = piece;
+                    }
+                }
+                return m;
+            }
+
+            function getImageCell(imageId) {
+                const tokens = imageId.split('-');
+                const r = +tokens[1];
+                const c = +tokens[2];
+                const cellId = `cell-${r}-${c}`
+                const td = document.getElementById(cellId);
+                return td;
+            }
+
             function handlePieceDragStart(e) {
                 const img = e.srcElement;
                 img.style.opacity = '0.1';
+
+                const tokens = img.id.split('-');
+                const r = +tokens[1];
+                const c = +tokens[2];
+                if (r < nRows && c < nCols) {
+                    movingPiece = pMap[r][c];
+                }
+            }
+
+            function handlePieceDragEnter(e) {
+                if (e.preventDefault) {
+                    e.preventDefault();
+                }
+
+                e.dataTransfer.dropEffect = 'move';
+
+                return false;
+            }
+
+            function handlePieceDragOver(e) {
+                const img = e.srcElement;
+                const td = getImageCell(img.id);
+                td.classList.add('over-illegal');
+            }
+
+            function handlePieceDragLeave(e) {
+                const img = e.srcElement;
+                const td = getImageCell(img.id);
+                td.classList.remove('over-illegal');
             }
 
             function handlePieceDragEnd(e) {
                 const img = e.srcElement;
                 img.style.opacity = '1.0';
+                movingPiece = undefined;
             }
 
             function initCell(pieces) {
@@ -75,6 +133,9 @@
                     img.className = 'piece';
                     img.setAttribute('draggable', 'true');
                     img.addEventListener('dragstart', handlePieceDragStart, false);
+                    img.addEventListener('dragenter', handlePieceDragEnter, false);
+                    img.addEventListener('dragover', handlePieceDragOver, false);
+                    img.addEventListener('dragleave', handlePieceDragLeave, false);
                     img.addEventListener('dragend', handlePieceDragEnd, false);
 
                     const cellId = `cell-${piece.row}-${piece.col}`;
@@ -95,21 +156,22 @@
 
             function handleCellDragOver(e) {
                 const td = e.srcElement;
-                //td.classList.add('over');
                 const id = td.id;
                 if (id.startsWith('cell')) {
                     const tokens = id.split('-');
                     const r = +tokens[1];
                     const c = +tokens[2];
-                    // FIXME: legality
-                    console.log(r, c);
+                    if (movingPiece) {
+                        td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
+                    }
                 }
                 
             }
 
             function handleCellDragLeave(e) {
                 const td = e.srcElement;
-                //td.classList.remove('over');
+                td.classList.remove('over-legal');
+                td.classList.remove('over-illegal');
             }
 
             function initTable(board) {
@@ -201,6 +263,11 @@
                             const cellColor = getCellColor(r, c);
                             if (cellColor === 'brown') {
                                 return false;
+                            }
+                            if (pMap.hasOwnProperty(r)) {
+                                if (pMap[r].hasOwnProperty(c)) {
+                                    return false;
+                                }
                             }
                             if (this.color === 'black' && this.row + 1 === r) {
                                 return true;
