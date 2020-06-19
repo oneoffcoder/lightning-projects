@@ -99,7 +99,7 @@
                 const td = getImageCell(img.id);
                 const data = td.innerHTML;
                 e.dataTransfer.setData('text/html', data);
-                console.log('handlePieceDragStart');
+                // console.log('handlePieceDragStart');
             }
 
             function handlePieceDragEnter(e) {
@@ -114,9 +114,8 @@
                     const clazz = isLegalMove ? 'over-legal' : 'over-illegal';
                     td.classList.add(clazz);
                     dragOverTd = td;
-                    console.log(isLegalMove, clazz, td.classList, dragOverTd);
                 }
-                console.log(`handlePieceDragEnter ${td.id}`);
+                // console.log(`handlePieceDragEnter ${td.id}`);
             }
 
             function handlePieceDragOver(e) {
@@ -130,21 +129,21 @@
                     td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
                     dragOverTd = td;
                 }
-                console.log(`handlePieceDragOver ${td.id}`);
+                // console.log(`handlePieceDragOver ${td.id}`);
             }
 
             function handlePieceDragLeave(e) {
                 const img = e.srcElement;
                 const td = getImageCell(img.id);
                 td.classList.remove('over-illegal');
-                console.log('handlePieceDragLeave');
+                // console.log('handlePieceDragLeave');
             }
 
             function handlePieceDragEnd(e) {
                 const img = e.srcElement;
                 img.style.opacity = '1.0';
                 movingPiece = undefined;
-                console.log('handlePieceDragEnd');
+                // console.log('handlePieceDragEnd');
             }
 
             function initCell(pieces) {
