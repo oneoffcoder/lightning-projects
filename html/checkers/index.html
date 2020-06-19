@@ -238,11 +238,29 @@
                     return;
                 }
 
-                console.log('START handleDrop');
-                console.log(movingPiece);
-                console.log(cellSource);
-                console.log(cellTarget);
-                console.log('STOP handleDrop');
+                cellTarget.innerHTML = cellSource.innerHTML;
+                cellTarget.classList.remove('over-legal');
+                cellSource.innerHTML = '';
+
+                const img = document.getElementById(`img-${sR}-${sC}`);
+                img.style.opacity = '1.0';
+                img.id = `img-${tR}-${tC}`;
+                img.addEventListener('dragstart', handlePieceDragStart, false);
+                img.addEventListener('dragenter', handlePieceDragEnter, false);
+                img.addEventListener('dragover', handlePieceDragOver, false);
+                img.addEventListener('dragleave', handlePieceDragLeave, false);
+                img.addEventListener('drop', handlePieceDragDrop, false);
+                img.addEventListener('dragend', handlePieceDragEnd, false);
+
+                const piece = pMap[sR][sC];
+                piece.row = tR;
+                piece.col = tC;
+
+                delete pMap[sR][sC];
+                if (!pMap.hasOwnProperty(tR)) {
+                    pMap[tR] = {};
+                }
+                pMap[tR][tC] = piece;
             }
 
             function handleCellDragLeave(e) {
