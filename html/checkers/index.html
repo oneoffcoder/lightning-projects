@@ -257,6 +257,23 @@
                 img.addEventListener('dragend', handlePieceDragEnd, false);
 
                 const piece = pMap[sR][sC];
+                
+                let coordinate = undefined;
+                if (isLeftCapture(piece.color, sR, sC, tR, tC)) {
+                    coordinate = getLeftCaptureCoordinate(piece.color, sR, sC);
+                } else if (isRightCapture(piece.color, sR, sC, tR, tC)) {
+                    coordinate = getRightCaptureCoordinate(piece.color, sR, sC);
+                }
+
+                if (coordinate) {
+                    const r = coordinate[0];
+                    const c = coordinate[1];
+                    if (pMap.hasOwnProperty(r) && pMap[r].hasOwnProperty(c)) {
+                        delete pMap[r][c];
+                    }
+                    const cellCapture = document.getElementById(`cell-${r}-${c}`);
+                    cellCapture.innerHTML = '';
+                }
 
                 piece.row = tR;
                 piece.col = tC;
