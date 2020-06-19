@@ -44,6 +44,7 @@
             const nCols = 8;
             let board;
             let movingPiece = undefined;
+            let dragOverTd = undefined;
             let pieces;
             let pMap;
 
@@ -98,39 +99,52 @@
                 const td = getImageCell(img.id);
                 const data = td.innerHTML;
                 e.dataTransfer.setData('text/html', data);
-                console.log('START handlePieceDragStart');
-                console.log(e);
-                console.log(data);
-                console.log(e.dataTransfer.getData('text/html'));
-                console.log('STOP handlePieceDragStart');
+                console.log('handlePieceDragStart');
             }
 
             function handlePieceDragEnter(e) {
-                // if (e.preventDefault) {
-                //     e.preventDefault();
-                // }
+                const img = e.srcElement;
+                const td = getImageCell(img.id);
+                if (movingPiece) {
+                    const tokens = td.id.split('-');
+                    const r = +tokens[1];
+                    const c = +tokens[2];
 
-                // e.dataTransfer.dropEffect = 'move';
-
-                // return false;
+                    const isLegalMove = movingPiece.isLegalMove(r, c);
+                    const clazz = isLegalMove ? 'over-legal' : 'over-illegal';
+                    td.classList.add(clazz);
+                    dragOverTd = td;
+                    console.log(isLegalMove, clazz, td.classList, dragOverTd);
+                }
+                console.log(`handlePieceDragEnter ${td.id}`);
             }
 
             function handlePieceDragOver(e) {
                 const img = e.srcElement;
                 const td = getImageCell(img.id);
-                td.classList.add('over-illegal');
+                if (movingPiece) {
+                    const tokens = td.id.split('-');
+                    const r = +tokens[1];
+                    const c = +tokens[2];
+
+                    td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
+                    dragOverTd = td;
+                }
+                console.log(`handlePieceDragOver ${td.id}`);
             }
 
             function handlePieceDragLeave(e) {
                 const img = e.srcElement;
                 const td = getImageCell(img.id);
                 td.classList.remove('over-illegal');
+                console.log('handlePieceDragLeave');
             }
 
             function handlePieceDragEnd(e) {
                 const img = e.srcElement;
                 img.style.opacity = '1.0';
                 movingPiece = undefined;
+                console.log('handlePieceDragEnd');
             }
 
             function initCell(pieces) {
@@ -154,13 +168,11 @@
             }
 
             function handleCellDragEnter(e) {
-                // if (e.preventDefault) {
-                //     e.preventDefault();
-                // }
-
-                // e.dataTransfer.dropEffect = 'move';
-
-                // return false;
+                const td = e.srcElement;
+                if (!td.id.startsWith('cell')) {
+                    return;
+                }
+                // console.log(`handleCellDragEnter ${td.id}`);
             }
 
             function handleCellDragOver(e) {
@@ -171,21 +183,28 @@
                 e.dataTransfer.dropEffect = 'move';
 
                 const td = e.srcElement;
-                const id = td.id;
-                if (id.startsWith('cell')) {
-                    const tokens = id.split('-');
-                    const r = +tokens[1];
-                    const c = +tokens[2];
-                    if (movingPiece) {
-                        td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
-                    }
+                if (!td.id.startsWith('cell')) {
+                    return;
                 }
+
+                const tokens = td.id.split('-');
+                const r = +tokens[1];
+                const c = +tokens[2];
+                if (movingPiece) {
+                    td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
+                    dragOverTd = td;
+                }
+                // console.log(`handleCellDragOver ${td.id}`);
             }
 
             function handleCellDragLeave(e) {
                 const td = e.srcElement;
+                if (!td.id.startsWith('cell')) {
+                    return;
+                }
                 td.classList.remove('over-legal');
                 td.classList.remove('over-illegal');
+                // console.log(`handleCellDragLeave ${td.id}`);
             }
 
             function handleCellDrop(e) {
@@ -194,23 +213,30 @@
                 }
 
                 const td = e.srcElement;
-                console.log('START handleCellDrop');
-                console.log(td);
-                console.log(e.dataTransfer.getData('text/html'))
-                console.log('STOP handleCellDrop');
+                if (!td.id.startsWith('cell')) {
+                    return;
+                }
+                // console.log('START handleCellDrop');
+                // console.log(td);
+                // console.log(e.dataTransfer.getData('text/html'))
+                // console.log('STOP handleCellDrop');
+                // console.log('handlePieceDragEnd');
 
                 return false;
             }
 
             function handleCellDragEnd(e) {
-                console.log('START handleCellDragEnd');
+                if (dragOverTd) {
+                    dragOverTd.classList.remove('over-legal');
+                    dragOverTd.classList.remove('over-illegal');
+                    dragOverTd = undefined;
+                }
+
                 const td = getImageCell(e.srcElement.id);
-                console.log(td.id);
-                console.log(td.classList);
-                td.classList.remove('over-legal');
-                td.classList.remove('over-illegal');
-                console.log(td.classList);
-                console.log('STOP handleCellDragEnd');
+                if (!td.id.startsWith('cell')) {
+                    return;
+                }
+                // console.log(`handlePieceDragEnd ${td.id}`);
             }
 
             function initTable(board) {
