@@ -286,6 +286,9 @@
                 pMap[tR][tC] = piece;
 
                 playerTurn = 'red' === playerTurn ? 'black' : 'red';
+                movingPiece = undefined;
+                dragOverTd = undefined;
+                cellSource = undefined;
             }
 
             function handleCellDragLeave(e) {
