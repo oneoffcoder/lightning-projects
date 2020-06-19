@@ -285,10 +285,34 @@
                 }
                 pMap[tR][tC] = piece;
 
+                handleCrowning(piece);
+
                 playerTurn = 'red' === playerTurn ? 'black' : 'red';
                 movingPiece = undefined;
                 dragOverTd = undefined;
                 cellSource = undefined;
+            }
+
+            function handleCrowning(piece) {
+                // already crowned
+                if (piece.isCrowned === true) {
+                    return;
+                }
+
+                if (piece.color === 'red') {
+                    if (piece.row === 0) {
+                        piece.isCrowned = true;
+                    }
+                } else if (piece.color === 'black') {
+                    if (piece.row === nRows - 1) {
+                        piece.isCrowned = true;
+                    }
+                }
+
+                if (piece.isCrowned === true) {
+                    const id = `img-${piece.row}-${piece.col}`;
+                    document.getElementById(id).src = piece.queenImage;
+                }                
             }
 
             function handleCellDragLeave(e) {
