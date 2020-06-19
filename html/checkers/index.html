@@ -45,6 +45,7 @@
             let board;
             let movingPiece = undefined;
             let dragOverTd = undefined;
+            let cellSource = undefined;
             let pieces;
             let pMap;
 
@@ -76,10 +77,17 @@
                 return m;
             }
 
-            function getImageCell(imageId) {
-                const tokens = imageId.split('-');
+            function getCoordinate(id) {
+                const tokens = id.split('-');
                 const r = +tokens[1];
                 const c = +tokens[2];
+                return [r, c];
+            }
+
+            function getImageCell(imageId) {
+                const coord = getCoordinate(imageId);
+                const r = coord[0];
+                const c = coord[1];
                 const cellId = `cell-${r}-${c}`
                 const td = document.getElementById(cellId);
                 return td;
@@ -99,7 +107,8 @@
                 const td = getImageCell(img.id);
                 const data = td.innerHTML;
                 e.dataTransfer.setData('text/html', data);
-                // console.log('handlePieceDragStart');
+                cellSource = td;
+                // console.log(`handlePieceDragStart ${td.id} ${img.id}`);
             }
 
             function handlePieceDragEnter(e) {
@@ -139,10 +148,17 @@
                 // console.log('handlePieceDragLeave');
             }
 
+            function handlePieceDragDrop(e) {
+                const img = e.srcElement;
+                const td = getImageCell(img.id);
+                handleDrop(td);
+            }
+
             function handlePieceDragEnd(e) {
                 const img = e.srcElement;
                 img.style.opacity = '1.0';
                 movingPiece = undefined;
+                cellSource = undefined;
                 // console.log('handlePieceDragEnd');
             }
 
@@ -158,11 +174,19 @@
                     img.addEventListener('dragenter', handlePieceDragEnter, false);
                     img.addEventListener('dragover', handlePieceDragOver, false);
                     img.addEventListener('dragleave', handlePieceDragLeave, false);
+                    img.addEventListener('drop', handlePieceDragDrop, false);
                     img.addEventListener('dragend', handlePieceDragEnd, false);
 
                     const cellId = `cell-${piece.row}-${piece.col}`;
                     const cell = document.getElementById(cellId);
                     cell.appendChild(img);
+                }
+            }
+
+            function handleCellDragStart(e) {
+                const td = e.srcElement;
+                if (!td.id.startsWith('cell')) {
+                    return;
                 }
             }
 
@@ -196,6 +220,31 @@
                 // console.log(`handleCellDragOver ${td.id}`);
             }
 
+            function handleDrop(cellTarget) {
+                if (!(movingPiece && cellSource && cellTarget)) {
+                    return;
+                }
+
+                const sourceCoord = getCoordinate(cellSource.id);
+                const targetCoord = getCoordinate(cellTarget.id);
+
+                const sR = sourceCoord[0];
+                const tR = targetCoord[0];
+
+                const sC = sourceCoord[1];
+                const tC = targetCoord[1];
+
+                if (!movingPiece.isLegalMove(tR, tC)) {
+                    return;
+                }
+
+                console.log('START handleDrop');
+                console.log(movingPiece);
+                console.log(cellSource);
+                console.log(cellTarget);
+                console.log('STOP handleDrop');
+            }
+
             function handleCellDragLeave(e) {
                 const td = e.srcElement;
                 if (!td.id.startsWith('cell')) {
@@ -215,11 +264,8 @@
                 if (!td.id.startsWith('cell')) {
                     return;
                 }
-                // console.log('START handleCellDrop');
-                // console.log(td);
-                // console.log(e.dataTransfer.getData('text/html'))
-                // console.log('STOP handleCellDrop');
-                // console.log('handlePieceDragEnd');
+                
+                handleDrop(td);
 
                 return false;
             }
@@ -247,6 +293,7 @@
                         cell.id = `cell-${r}-${c}`;
                         cell.classList.add('checker-cell');
                         cell.classList.add(board[r][c].color === 'brown' ? 'brown-cell' : 'red-cell');
+                        cell.addEventListener('dragstart', handleCellDragStart, false);
                         cell.addEventListener('dragenter', handleCellDragEnter, false);
                         cell.addEventListener('dragover', handleCellDragOver, false);
                         cell.addEventListener('dragleave', handleCellDragLeave, false);
