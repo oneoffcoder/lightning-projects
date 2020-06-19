@@ -259,10 +259,19 @@
                 const piece = pMap[sR][sC];
                 
                 let coordinate = undefined;
-                if (isLeftCapture(piece.color, sR, sC, tR, tC)) {
-                    coordinate = getLeftCaptureCoordinate(piece.color, sR, sC);
-                } else if (isRightCapture(piece.color, sR, sC, tR, tC)) {
-                    coordinate = getRightCaptureCoordinate(piece.color, sR, sC);
+                if (piece.isCrowned === false) {
+                    if (isLeftCapture(piece.color, sR, sC, tR, tC)) {
+                        coordinate = getLeftCaptureCoordinate(piece.color, sR, sC);
+                    } else if (isRightCapture(piece.color, sR, sC, tR, tC)) {
+                        coordinate = getRightCaptureCoordinate(piece.color, sR, sC);
+                    }
+                } else {
+                    let coords = getQueenCaptureCoordinates(sR, sC);
+                    Object.keys(coords).forEach((k) => {
+                        if (coords[k].coord.r === tR && coords[k].coord.c === tC) {
+                            coordinate = [coords[k].capture.r, coords[k].capture.c];
+                        }
+                    });
                 }
 
                 if (coordinate) {
@@ -274,7 +283,7 @@
                     }
                     const cellCapture = document.getElementById(`cell-${r}-${c}`);
                     cellCapture.innerHTML = '';
-                }
+                }                
 
                 piece.row = tR;
                 piece.col = tC;
@@ -539,6 +548,34 @@
                 return false;
             }
 
+            function getQueenLegalMoveCoordinates(qR, qC) {
+                const delta = 1;
+                const tlR = qR - delta; const tlC = qC - delta;
+                const trR = qR - delta; const trC = qC + delta;
+                const blR = qR + delta; const blC = qC - delta;
+                const brR = qR + delta; const brC = qC + delta;
+                return {
+                    topL: {r: tlR, c: tlC}, 
+                    topR: {r: trR, c: trC}, 
+                    botL: {r: blR, c: blC}, 
+                    botR: {r: brR, c: brC}
+                };
+            }
+
+            function getQueenCaptureCoordinates(qR, qC) {
+                const delta = 2;
+                const tlR = qR - delta; const tlC = qC - delta;
+                const trR = qR - delta; const trC = qC + delta;
+                const blR = qR + delta; const blC = qC - delta;
+                const brR = qR + delta; const brC = qC + delta;
+                return {
+                    topL: {coord: {r: tlR, c: tlC}, capture: {r: qR - 1, c: qC - 1}},
+                    topR: {coord: {r: trR, c: trC}, capture: {r: qR - 1, c: qC + 1}},
+                    botL: {coord: {r: blR, c: blC}, capture: {r: qR + 1, c: qC - 1}},
+                    botR: {coord: {r: brR, c: brC}, capture: {r: qR + 1, c: qC + 1}}
+                }
+            }
+
             function getPiece(i, r, c) {
                 const cellColor = getCellColor(r, c);
                 let color = undefined;
@@ -581,16 +618,52 @@
                                 return false;
                             }
 
-                            if (this.color === 'black' && this.row + 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
-                                // black can move down
-                                return true;
-                            } else if (this.color === 'red' && this.row - 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
-                                // red can move up
-                                return true;
-                            } else if (isCaptureMove(this.color, this.row, this.col, r, c)) {
-                                // can capture
-                                return true;
+                            if (this.isCrowned === false) {
+                                if (this.color === 'black' && this.row + 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
+                                    // black can move down
+                                    return true;
+                                } else if (this.color === 'red' && this.row - 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
+                                    // red can move up
+                                    return true;
+                                } else if (isCaptureMove(this.color, this.row, this.col, r, c)) {
+                                    // can capture
+                                    return true;
+                                }
+                            } else {
+                                // check to see if a legal move was made
+                                let coords = getQueenLegalMoveCoordinates(this.row, this.col);
+                                let legalMove = false;
+                                Object.keys(coords).forEach((k) => {
+                                    if (0 <= coords[k].r && coords[k].r < nRows && 0 <= coords[k].c && coords[k].c < nCols) {
+                                        if (coords[k].r === r && coords[k].c === c) {
+                                            legalMove = true;
+                                        }
+                                    }
+                                });
+
+                                if (legalMove === true) {
+                                    return true;
+                                }
+
+                                // check to see if a capture move was made
+                                coords = getQueenCaptureCoordinates(this.row, this.col);
+                                Object.keys(coords).forEach((k) => {
+                                    if (0 <= coords[k].coord.r && coords[k].coord.r < nRows && 0 <= coords[k].coord.c && coords[k].coord.c < nCols) {
+                                        if (coords[k].coord.r === r && coords[k].coord.c === c) {
+                                            if (isCellOccupied(coords[k].capture.r, coords[k].capture.c)) {
+                                                legalMove = true;
+                                            } else {
+                                                legalMove = false;
+                                            }
+                                        }
+                                    }
+                                });
+
+                                if (legalMove === true) {
+                                    return true;
+                                }
                             }
+                            
                             return false;
                         }
                     }
