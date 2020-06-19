@@ -5,9 +5,13 @@
             * {
                 font-family: monospace;
             }
+            .center {
+                text-align: center;
+            }
             .checker-board {
                 border-collapse:collapse;
                 border:1px solid #000000; 
+                margin: auto;
             }
             .checker-cell {
                 border:1px solid #000000;
@@ -34,7 +38,9 @@
         </style>
     </head>
     <body onload="init()">
-        <h1>Checkers</h1>
+        <div class="center">
+            <h1>Checkers</h1>
+        </div>
         <table id="board" class="checker-board">
             
         </table>
