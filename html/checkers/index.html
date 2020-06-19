@@ -383,37 +383,54 @@
                 return false;
             }
 
-            function isCaptureMove(color, sR, sC, tR, tC) {
+            function isLeftCapture(color, sR, sC, tR, tC) {
                 let dR = color === 'black'? 2 : -2;
-                let rcR = sR + dR;
                 let lcR = sR + dR;
-                
-                let rcC = sC + 2;
                 let lcC = sC - 2;
 
                 const leftValid = tR === lcR && tC === lcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
-                const rightValid = tR === rcR && tC === rcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
-
-                if (!leftValid && !rightValid) {
-                    console.log('not left or right valid');
+                
+                if (!leftValid) {
                     return false;
                 }
 
                 dR = color === 'black'? 1 : -1;
-                rcR = sR + dR;
                 lcR = sR + dR;
-
-                rcC = sC + 1;
                 lcC = sC - 1;
-
-                if (isCellOccupied(rcR, rcC) && rightValid) {
-                    return true;
-                }
 
                 if (isCellOccupied(lcR, lcC) && leftValid) {
                     return true;
                 }
 
+                return false;
+            }
+
+            function isRightCapture(color, sR, sC, tR, tC) {
+                let dR = color === 'black'? 2 : -2;
+                let rcR = sR + dR;
+                let rcC = sC + 2;
+
+                const rightValid = tR === rcR && tC === rcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+
+                if (!rightValid) {
+                    return false;
+                }
+
+                dR = color === 'black'? 1 : -1;
+                rcR = sR + dR;
+                rcC = sC + 1;
+                
+                if (isCellOccupied(rcR, rcC) && rightValid) {
+                    return true;
+                }
+
+                return false;
+            }
+
+            function isCaptureMove(color, sR, sC, tR, tC) {
+                if (isLeftCapture(color, sR, sC, tR, tC) || isRightCapture(color, sR, sC, tR, tC)) {
+                    return true;
+                }
                 return false;
             }
 
