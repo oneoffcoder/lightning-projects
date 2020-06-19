@@ -388,9 +388,9 @@
                 let lcR = sR + dR;
                 let lcC = sC - 2;
 
-                const leftValid = tR === lcR && tC === lcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+                const isValidMove = tR === lcR && tC === lcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
                 
-                if (!leftValid) {
+                if (!isValidMove) {
                     return false;
                 }
 
@@ -398,7 +398,7 @@
                 lcR = sR + dR;
                 lcC = sC - 1;
 
-                if (isCellOccupied(lcR, lcC) && leftValid) {
+                if (isCellOccupied(lcR, lcC)) {
                     return true;
                 }
 
@@ -410,9 +410,9 @@
                 let rcR = sR + dR;
                 let rcC = sC + 2;
 
-                const rightValid = tR === rcR && tC === rcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+                const isValidMove = tR === rcR && tC === rcC && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
 
-                if (!rightValid) {
+                if (!isValidMove) {
                     return false;
                 }
 
@@ -420,7 +420,7 @@
                 rcR = sR + dR;
                 rcC = sC + 1;
                 
-                if (isCellOccupied(rcR, rcC) && rightValid) {
+                if (isCellOccupied(rcR, rcC)) {
                     return true;
                 }
 
