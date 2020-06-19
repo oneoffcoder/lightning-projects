@@ -208,9 +208,9 @@
                     return;
                 }
 
-                const tokens = td.id.split('-');
-                const r = +tokens[1];
-                const c = +tokens[2];
+                const coordinates = getCoordinate(td.id);
+                const r = coordinates[0];
+                const c = coordinates[1];
                 if (movingPiece) {
                     td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
                     dragOverTd = td;
