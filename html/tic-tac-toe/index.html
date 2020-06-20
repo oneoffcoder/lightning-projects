@@ -10,15 +10,18 @@
             }
             .ttt-table {
                 margin: auto;
-                width: 80%;
+                width: 300px;
             }
             .ttt-cell {
                 text-align: center;
                 font-size: x-large;
                 background: lightblue;
-                width: 80px;
-                height: 80px;
+                width: 100px;
+                height: 100px;
                 padding: 15px;
+            }
+            .restart-button {
+                margin-bottom: 5px;
             }
         </style>
     </head>
@@ -27,7 +30,7 @@
             <h1>Tic-Tac-Toe!</h1>
         </div>
         <div class="center">
-            <button onclick="restart()">restart</button>
+            <button id="restart-button" class="restart-button" onclick="restart()">restart</button>
         </div>
         <table class="ttt-table">
             <tbody>
