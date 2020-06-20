@@ -1,0 +1,30 @@
+{
+  "name": "checkers",
+  "version": "1.0.0",
+  "description": "Checkers",
+  "main": "main.js",
+  "dependencies": {
+    "electron": "^9.0.4"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oneoffcoder/lightning-projects.git"
+  },
+  "keywords": [
+    "html",
+    "css",
+    "javascript",
+    "checkers",
+    "games"
+  ],
+  "author": "One-Off Coder",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/oneoffcoder/lightning-projects/issues"
+  },
+  "homepage": "https://github.com/oneoffcoder/lightning-projects#readme"
+}
