@@ -94,6 +94,8 @@
             let dragOverTd = undefined;
             let cellSource = undefined;
             let playerTurn = 'red';
+            let redScore = 0;
+            let blackScore = 0;
             let pieces;
             let pMap;
 
@@ -330,6 +332,12 @@
                     }
                     const cellCapture = document.getElementById(`cell-${r}-${c}`);
                     cellCapture.innerHTML = '';
+
+                    if (piece.color === 'red') {
+                        redScore++;
+                    } else {
+                        blackScore++;
+                    }
                 }                
 
                 piece.row = tR;
@@ -349,6 +357,8 @@
                 cellSource = undefined;
 
                 document.getElementById('turn').innerText = playerTurn === 'red' ? 'Red\'s Turn' : 'Black\'s Turn';
+                document.getElementById('red-score').innerText = `${redScore}`;
+                document.getElementById('black-score').innerText = `${blackScore}`;
             }
 
             function handleCrowning(piece) {
