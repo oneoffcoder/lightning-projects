@@ -347,6 +347,8 @@
                 movingPiece = undefined;
                 dragOverTd = undefined;
                 cellSource = undefined;
+
+                document.getElementById('turn').innerText = playerTurn === 'red' ? 'Red\'s Turn' : 'Black\'s Turn';
             }
 
             function handleCrowning(piece) {
