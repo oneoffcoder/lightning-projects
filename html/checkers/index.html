@@ -35,10 +35,25 @@
                 width: 50px;
                 height: 50px;
             }
-            .meta-data {
-                border:1px solid #000000; 
+            .meta-table {
                 margin: auto;
                 width: 80%;
+            }
+            .meta-cell {
+                text-align: center;
+                width: 33%;
+            }
+            .score {
+                font-size: 30px;
+            }
+            .score.red {
+                color: red;
+            }
+            .score.black {
+                color: black;
+            }
+            .turn {
+                font-size: 30px;
             }
         </style>
     </head>
@@ -49,17 +64,23 @@
         <table id="board" class="checker-board">
             
         </table>
-        <table id="meta-data" class="meta-data">
+        <table id="meta-table" class="meta-table">
             <tbody>
                 <tr>
-                    <td>
-                        Red:
+                    <td class="meta-cell">
+                        Red Score
+                        <br/>
+                        <span id="red-score" class="score red">0</span>
                     </td>
-                    <td>
+                    <td class="meta-cell">
                         <img src="images/logo.png">
+                        <br/>
+                        <span id="turn" class="turn">Red's Turn</span>
                     </td>
-                    <td>
-                        Black:
+                    <td class="meta-cell">
+                        Black Score
+                        <br/>
+                        <span id="black-score" class="score black">0</span>
                     </td>
                 </tr>
             </tbody>
