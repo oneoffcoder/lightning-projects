@@ -14,3 +14,4 @@ All images take from [craftpix](https://craftpix.net/).
 * [Image Rotation](basic/image-rotation.py): learn how to rotate an image
 * [Sound](basic/bouncing-image-with-sound.py): learn how to play sound
 * [Key Events](basic/key-movement.py): learn how to listen for key events
+* [Mouse Movement](basic/mouse-movement.py): learn how to move a sprite with the mouse
