@@ -69,7 +69,7 @@ class Ball(object):
 
 def start():
     pygame.init()
-    
+
     FPS = 30
     width = 400
     height = 400
