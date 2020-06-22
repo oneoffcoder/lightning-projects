@@ -97,11 +97,14 @@ class Rectangle(Shape):
 
 def start():
     pygame.init()
+
+    FPS = 30
     width = 400
     height = 400
 
     DISPLAYSURF = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Shapes')
+    fps_clock = pygame.time.Clock()
 
     iters = 0
     while True:
@@ -125,6 +128,7 @@ def start():
         shape.draw(DISPLAYSURF)
 
         pygame.display.update()
+        fps_clock.tick(FPS)
 
         iters += 1
 
