@@ -1,3 +1,4 @@
+import os
 import sys
 
 import pygame
@@ -54,4 +55,5 @@ def start():
 
 
 if __name__ == '__main__':
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     start()

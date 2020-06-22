@@ -1,3 +1,4 @@
+import os
 import random
 import sys
 
@@ -103,4 +104,5 @@ def start():
 
 
 if __name__ == '__main__':
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     start()
