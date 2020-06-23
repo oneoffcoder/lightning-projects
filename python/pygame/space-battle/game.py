@@ -8,6 +8,25 @@ from pygame.constants import KEYUP, QUIT, K_SPACE
 from objects import Ship, Bullet, RockGenerator
 
 
+def get_remaining_objects(bullets, rocks, bullet_group, rock_group):
+    collisions = pygame.sprite.groupcollide(bullet_group, rock_group, True, True)
+    if len(collisions) > 0:
+        collided_bullets = set([b.uuid for b in collisions.keys()])
+        bullets = [b for b in bullets if b.uuid not in collided_bullets]
+
+        collided_rocks = set([r.uuid for r in itertools.chain(*collisions.values())])
+        rocks = [r for r in rocks if r.uuid not in collided_rocks]
+    return bullets, rocks
+
+
+def get_remaining_rocks(ship, rocks, rock_group):
+    collisions = pygame.sprite.spritecollide(ship, rock_group, True)
+    if len(collisions):
+        collided_rocks = set([r.uuid for r in collisions])
+        rocks = [r for r in rocks if r.uuid not in collided_rocks]
+    return rocks
+
+
 def start():
     pygame.init()
 
@@ -60,18 +79,8 @@ def start():
         for rock in rocks:
             rock.draw(DISPLAYSURF, **kwargs)
 
-        collisions = pygame.sprite.groupcollide(bullet_group, rock_group, True, True)
-        if len(collisions) > 0:
-            collided_bullets = set([b.uuid for b in collisions.keys()])
-            bullets = [b for b in bullets if b.uuid not in collided_bullets]
-
-            collided_rocks = set([r.uuid for r in itertools.chain(*collisions.values())])
-            rocks = [r for r in rocks if r.uuid not in collided_rocks]
-
-        collisions = pygame.sprite.spritecollide(ship, rock_group, True)
-        if len(collisions):
-            collided_rocks = set([r.uuid for r in collisions])
-            rocks = [r for r in rocks if r.uuid not in collided_rocks]
+        bullets, rocks = get_remaining_objects(bullets, rocks, bullet_group, rock_group)
+        rocks = get_remaining_rocks(ship, rocks, rock_group)
 
         pygame.display.update()
         fps_clock.tick(FPS)
