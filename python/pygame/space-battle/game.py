@@ -3,9 +3,9 @@ import sys
 import itertools
 
 import pygame
-from pygame.constants import KEYUP, QUIT, K_SPACE
+from pygame.constants import KEYUP, QUIT, K_SPACE, K_q, K_c
 
-from objects import Ship, Bullet, RockGenerator, GameInfo
+from objects import Ship, Bullet, RockGenerator, GameInfo, GameOverMessage
 
 
 def get_remaining_objects(bullets, rocks, bullet_group, rock_group):
@@ -57,6 +57,11 @@ def get_params():
     }
 
 
+def quit_game():
+    pygame.quit()
+    sys.exit()
+
+
 def start_game(**params):
     width, height = params['width'], params['height']
     ship = params['ship']
@@ -80,8 +85,7 @@ def start_game(**params):
 
         for event in pygame.event.get():
             if event.type == QUIT:
-                pygame.quit()
-                sys.exit()
+                quit_game()
             elif event.type == KEYUP and event.key == K_SPACE:
                 bullet = Bullet.instance(**kwargs)
                 bullet_group.add(bullet)
@@ -115,13 +119,56 @@ def start_game(**params):
         if lives <= 0:
             break
 
+    return score, lives
+
+
+def show_game_over(**params):
+    DISPLAYSURF = params['DISPLAYSURF']
+    fps_clock, FPS = params['fps_clock'], params['FPS']
+    width, height = params['width'], params['height']
+    score, lives = params['score'], params['lives']
+
+    message = GameOverMessage(width, height, score, lives)
+    do_continue = False
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == QUIT:
+                quit_game()
+            elif event.type == KEYUP:
+                if event.key == K_q:
+                    quit_game()
+                elif event.key == K_c:
+                    print('continue')
+                    do_continue = True
+                    break
+
+        if do_continue:
+            break
+
+        DISPLAYSURF.fill((255, 255, 255, 0))
+
+        message.draw(DISPLAYSURF)
+
+        pygame.display.update()
+        fps_clock.tick(FPS)
+
+    return do_continue
+
 
 def start():
     pygame.init()
     pygame.display.set_caption('Space Battle')
 
-    params = get_params()
-    start_game(**params)
+    while True:
+        params = get_params()
+        params['score'], params['lives'] = start_game(**params)
+
+        do_continue = show_game_over(**params)
+        if not do_continue:
+            break
+
+    quit_game()
 
 
 if __name__ == '__main__':

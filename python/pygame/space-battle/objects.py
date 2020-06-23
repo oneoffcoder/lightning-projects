@@ -136,3 +136,52 @@ class GameInfo(object):
 
         text_surface, rect = self.__get_drawing_objects__()
         surface.blit(text_surface, rect)
+
+
+class GameOverMessage(object):
+    def __init__(self, width, height, score, lives):
+        self.game_over_font = pygame.font.Font('freesansbold.ttf', 30)
+        self.game_info_font = pygame.font.Font('freesansbold.ttf', 20)
+        self.game_action_font = pygame.font.Font('freesansbold.ttf', 15)
+
+        self.game_over_color = (255, 0, 0)
+        self.game_info_color = (0, 0, 0)
+        self.game_action_color = (0, 0, 0)
+
+        self.center = width / 2.0, height / 2.0
+        self.score = score
+        self.lives = lives
+
+    def __get_game_over__(self):
+        text = 'Game Over'
+        text_surface = self.game_over_font.render(text, True, self.game_over_color)
+        rect = text_surface.get_rect()
+        rect.center = self.center
+
+        return text_surface, rect
+
+    def __get_game_info__(self):
+        text = f'Score: {self.score}, Lives: {self.lives}'
+        text_surface = self.game_info_font.render(text, True, self.game_info_color)
+        rect = text_surface.get_rect()
+        rect.center = self.center[0], self.center[1] + 30
+
+        return text_surface, rect
+
+    def __get_game_action__(self):
+        text = 'Hit "q" to quit. Hit "c" to continue.'
+        text_surface = self.game_action_font.render(text, True, self.game_action_color)
+        rect = text_surface.get_rect()
+        rect.center = self.center[0], self.center[1] + 60
+
+        return text_surface, rect
+
+    def draw(self, surface):
+        text_surface, rect = self.__get_game_over__()
+        surface.blit(text_surface, rect)
+
+        text_surface, rect = self.__get_game_info__()
+        surface.blit(text_surface, rect)
+
+        text_surface, rect = self.__get_game_action__()
+        surface.blit(text_surface, rect)
