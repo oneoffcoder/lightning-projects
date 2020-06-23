@@ -10,21 +10,23 @@ from objects import Ship, Bullet, RockGenerator
 
 def get_remaining_objects(bullets, rocks, bullet_group, rock_group):
     collisions = pygame.sprite.groupcollide(bullet_group, rock_group, True, True)
-    if len(collisions) > 0:
+    n_collisions = len(collisions)
+    if n_collisions > 0:
         collided_bullets = set([b.uuid for b in collisions.keys()])
         bullets = [b for b in bullets if b.uuid not in collided_bullets]
 
         collided_rocks = set([r.uuid for r in itertools.chain(*collisions.values())])
         rocks = [r for r in rocks if r.uuid not in collided_rocks]
-    return bullets, rocks
+    return bullets, rocks, n_collisions
 
 
 def get_remaining_rocks(ship, rocks, rock_group):
     collisions = pygame.sprite.spritecollide(ship, rock_group, True)
-    if len(collisions):
+    n_collisions = len(collisions)
+    if n_collisions > 0:
         collided_rocks = set([r.uuid for r in collisions])
         rocks = [r for r in rocks if r.uuid not in collided_rocks]
-    return rocks
+    return rocks, -n_collisions
 
 
 def start():
@@ -46,6 +48,9 @@ def start():
     ship = Ship((width / 2, height - 50), 0.5)
 
     rock_generator = RockGenerator(width, height)
+
+    score = 0
+    lives = 1
 
     while True:
         kwargs = {
@@ -79,8 +84,11 @@ def start():
         for rock in rocks:
             rock.draw(DISPLAYSURF, **kwargs)
 
-        bullets, rocks = get_remaining_objects(bullets, rocks, bullet_group, rock_group)
-        rocks = get_remaining_rocks(ship, rocks, rock_group)
+        bullets, rocks, points = get_remaining_objects(bullets, rocks, bullet_group, rock_group)
+        score += points
+
+        rocks, hits = get_remaining_rocks(ship, rocks, rock_group)
+        lives += hits
 
         pygame.display.update()
         fps_clock.tick(FPS)
