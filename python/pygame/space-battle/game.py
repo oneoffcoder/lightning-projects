@@ -29,29 +29,44 @@ def get_remaining_rocks(ship, rocks, rock_group):
     return rocks, -n_collisions
 
 
-def start():
-    pygame.init()
-
-    FPS = 30
+def get_params():
     width = 500
     height = 400
+
     DISPLAYSURF = pygame.display.set_mode((width, height))
     DISPLAYSURF.fill((255, 255, 255))
-    pygame.display.set_caption('Space Battle')
-    fps_clock = pygame.time.Clock()
 
     score = 0
     lives = 1
 
-    bullets = []
-    rocks = []
+    return {
+        'FPS': 30,
+        'width': width,
+        'height': height,
+        'DISPLAYSURF': DISPLAYSURF,
+        'fps_clock': pygame.time.Clock(),
+        'score': score,
+        'lives': lives,
+        'bullets': [],
+        'rocks': [],
+        'bullet_group': pygame.sprite.Group(),
+        'rock_group': pygame.sprite.Group(),
+        'ship': Ship((width / 2, height - 50), 0.5),
+        'rock_generator': RockGenerator(width, height),
+        'game_info': GameInfo(score, lives)
+    }
 
-    bullet_group = pygame.sprite.Group()
-    rock_group = pygame.sprite.Group()
-    ship = Ship((width / 2, height - 50), 0.5)
-    game_info = GameInfo(score, lives)
 
-    rock_generator = RockGenerator(width, height)
+def start_game(**params):
+    width, height = params['width'], params['height']
+    ship = params['ship']
+    score, lives = params['score'], params['lives']
+    bullets, rocks = params['bullets'], params['rocks']
+    bullet_group, rock_group = params['bullet_group'], params['rock_group']
+    rock_generator = params['rock_generator']
+    game_info = params['game_info']
+    DISPLAYSURF = params['DISPLAYSURF']
+    fps_clock, FPS = params['fps_clock'], params['FPS']
 
     while True:
         kwargs = {
@@ -96,6 +111,17 @@ def start():
 
         pygame.display.update()
         fps_clock.tick(FPS)
+
+        if lives <= 0:
+            break
+
+
+def start():
+    pygame.init()
+    pygame.display.set_caption('Space Battle')
+
+    params = get_params()
+    start_game(**params)
 
 
 if __name__ == '__main__':
