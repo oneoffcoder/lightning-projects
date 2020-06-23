@@ -1,6 +1,6 @@
+import itertools
 import os
 import sys
-import itertools
 
 import pygame
 from pygame.constants import KEYUP, QUIT, K_SPACE, K_q, K_c

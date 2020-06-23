@@ -1,9 +1,9 @@
-import uuid
 import random
 import time
+import uuid
 
 import pygame
-from pygame.constants import K_LEFT, K_a, K_RIGHT, K_d, K_SPACE
+from pygame.constants import K_LEFT, K_a, K_RIGHT, K_d
 
 
 class BaseObject(pygame.sprite.Sprite):
