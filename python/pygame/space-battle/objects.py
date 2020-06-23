@@ -40,7 +40,7 @@ class Bullet(BaseObject):
         surface.blit(self.image, self.rect.center)
 
         if y <= 0:
-            self.should_kill = True
+            self.kill()
 
     @staticmethod
     def instance(**kwargs):
@@ -61,7 +61,7 @@ class Rock(BaseObject):
         surface.blit(self.image, self.rect.center)
 
         if y >= kwargs['height']:
-            self.should_kill = True
+            self.kill()
 
 
 class Ship(BaseObject):
