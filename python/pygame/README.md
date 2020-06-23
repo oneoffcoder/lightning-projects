@@ -23,3 +23,7 @@ Audio
 * [Key Events](basic/key-movement.py): learn how to listen for key events
 * [Mouse Movement](basic/mouse-movement.py): learn how to move a sprite with the mouse
 * [Collision](basic/collection-detection.py): learn how to detect collision
+
+# Games
+
+* [Space Battle](space-battle): learn how to create a space battle program
