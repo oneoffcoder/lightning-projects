@@ -112,4 +112,27 @@ class RockGenerator(object):
             curr_x = random.choice(self.x_pos)
             if curr_x != self.prev_x:
                 self.prev_x = curr_x
-                return Rock((curr_x, 5))
+                return Rock((curr_x, 20))
+
+
+class GameInfo(object):
+    def __init__(self, score, lives):
+        self.font = pygame.font.Font('freesansbold.ttf', 20)
+        self.color = (0, 0, 0)
+        self.position = 10, 10
+        self.score = score
+        self.lives = lives
+
+    def __get_drawing_objects__(self):
+        text_surface = self.font.render(f'Score: {self.score}, Lives: {self.lives}', True, self.color)
+        rect = text_surface.get_rect()
+        rect.x, rect.y = 10, 10
+
+        return text_surface, rect
+
+    def draw(self, surface, **kwargs):
+        self.score = kwargs['score']
+        self.lives = kwargs['lives']
+
+        text_surface, rect = self.__get_drawing_objects__()
+        surface.blit(text_surface, rect)

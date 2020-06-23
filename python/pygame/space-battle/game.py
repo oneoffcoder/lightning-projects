@@ -5,7 +5,7 @@ import itertools
 import pygame
 from pygame.constants import KEYUP, QUIT, K_SPACE
 
-from objects import Ship, Bullet, RockGenerator
+from objects import Ship, Bullet, RockGenerator, GameInfo
 
 
 def get_remaining_objects(bullets, rocks, bullet_group, rock_group):
@@ -40,24 +40,27 @@ def start():
     pygame.display.set_caption('Space Battle')
     fps_clock = pygame.time.Clock()
 
+    score = 0
+    lives = 1
+
     bullets = []
     rocks = []
 
     bullet_group = pygame.sprite.Group()
     rock_group = pygame.sprite.Group()
     ship = Ship((width / 2, height - 50), 0.5)
+    game_info = GameInfo(score, lives)
 
     rock_generator = RockGenerator(width, height)
-
-    score = 0
-    lives = 1
 
     while True:
         kwargs = {
             'width': width,
             'height': height,
             'keys': pygame.key.get_pressed(),
-            'position': ship.get_center()
+            'position': ship.get_center(),
+            'score': score,
+            'lives': lives
         }
 
         for event in pygame.event.get():
@@ -76,6 +79,7 @@ def start():
 
         DISPLAYSURF.fill((255, 255, 255, 0))
 
+        game_info.draw(DISPLAYSURF, **kwargs)
         ship.draw(DISPLAYSURF, **kwargs)
 
         for bullet in bullets:
