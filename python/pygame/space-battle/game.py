@@ -68,6 +68,11 @@ def start():
             collided_rocks = set([r.uuid for r in itertools.chain(*collisions.values())])
             rocks = [r for r in rocks if r.uuid not in collided_rocks]
 
+        collisions = pygame.sprite.spritecollide(ship, rock_group, True)
+        if len(collisions):
+            collided_rocks = set([r.uuid for r in collisions])
+            rocks = [r for r in rocks if r.uuid not in collided_rocks]
+
         pygame.display.update()
         fps_clock.tick(FPS)
 
