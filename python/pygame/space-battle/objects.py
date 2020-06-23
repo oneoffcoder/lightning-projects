@@ -1,11 +1,16 @@
+import uuid
+import random
+import time
+
 import pygame
-from pygame.constants import K_LEFT, K_a, K_RIGHT, K_d
+from pygame.constants import K_LEFT, K_a, K_RIGHT, K_d, K_SPACE
 
 
 class BaseObject(pygame.sprite.Sprite):
     def __init__(self, ipath, position, scale=0.5):
         pygame.sprite.Sprite.__init__(self)
 
+        self.uuid = str(uuid.uuid4())
         img = pygame.image.load(ipath)
         rect = img.get_rect(center=position)
         w, h = rect.size[0], rect.size[1]
@@ -30,12 +35,16 @@ class Bullet(BaseObject):
             return
 
         x, y = self.rect.center
-        self.rect.center = x, y - 1
+        self.rect.center = x, y - 5
 
         surface.blit(self.image, self.rect.center)
 
         if y <= 0:
             self.should_kill = True
+
+    @staticmethod
+    def instance(**kwargs):
+        return Bullet(kwargs['position'])
 
 
 class Rock(BaseObject):
@@ -76,3 +85,31 @@ class Ship(BaseObject):
         self.rect.center = x, y
 
         surface.blit(self.image, self.rect.center)
+
+
+class RockGenerator(object):
+    def __init__(self, width, height):
+        rock = Rock((width / 2.0, height / 2.0))
+        w, h = rock.rect.size
+        self.x_pos = [x for x in range(0, width, w)]
+        self.prev_x = None
+        self.start_time = None
+
+    def should_generate(self):
+        if self.start_time is None:
+            self.start_time = time.time()
+            return True
+
+        stop_time = time.time()
+        diff = int(stop_time - self.start_time)
+        if diff >= 2:
+            self.start_time = stop_time
+            return True
+        return False
+
+    def next(self):
+        while True:
+            curr_x = random.choice(self.x_pos)
+            if curr_x != self.prev_x:
+                self.prev_x = curr_x
+                return Rock((curr_x, 5))

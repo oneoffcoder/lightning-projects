@@ -2,9 +2,9 @@ import os
 import sys
 
 import pygame
-from pygame.constants import KEYUP, QUIT, KEYDOWN
+from pygame.constants import KEYUP, QUIT, K_SPACE
 
-from objects import Ship
+from objects import Ship, Bullet, RockGenerator
 
 
 def start():
@@ -18,27 +18,46 @@ def start():
     pygame.display.set_caption('Space Battle')
     fps_clock = pygame.time.Clock()
 
-    bullets = pygame.sprite.Group()
-    rocks = pygame.sprite.Group()
+    bullets = []
+    rocks = []
+
+    bullet_group = pygame.sprite.Group()
+    rock_group = pygame.sprite.Group()
     ship = Ship((width / 2, height - 50), 0.5)
+
+    rock_generator = RockGenerator(width, height)
 
     while True:
         kwargs = {
             'width': width,
-            'height': height
+            'height': height,
+            'keys': pygame.key.get_pressed(),
+            'position': ship.get_center()
         }
 
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
+            elif event.type == KEYUP and event.key == K_SPACE:
+                bullet = Bullet.instance(**kwargs)
+                bullet_group.add(bullet)
+                bullets.append(bullet)
+
+        if rock_generator.should_generate():
+            rock = rock_generator.next()
+            rocks.append(rock)
+            rock_group.add(rock)
 
         DISPLAYSURF.fill((255, 255, 255, 0))
 
-        keys = pygame.key.get_pressed()
-        kwargs['keys'] = keys
-
         ship.draw(DISPLAYSURF, **kwargs)
+
+        for bullet in bullets:
+            bullet.draw(DISPLAYSURF, **kwargs)
+
+        for rock in rocks:
+            rock.draw(DISPLAYSURF, **kwargs)
 
         pygame.display.update()
         fps_clock.tick(FPS)
