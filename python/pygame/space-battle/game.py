@@ -2,7 +2,7 @@ import os
 import sys
 
 import pygame
-from pygame.constants import KEYUP, QUIT
+from pygame.constants import KEYUP, QUIT, KEYDOWN
 
 from objects import Ship
 
@@ -32,10 +32,11 @@ def start():
             if event.type == QUIT:
                 pygame.quit()
                 sys.exit()
-            elif event.type == KEYUP:
-                kwargs['event'] = event
 
         DISPLAYSURF.fill((255, 255, 255, 0))
+
+        keys = pygame.key.get_pressed()
+        kwargs['keys'] = keys
 
         ship.draw(DISPLAYSURF, **kwargs)
 

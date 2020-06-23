@@ -64,14 +64,14 @@ class Ship(BaseObject):
         x, y = self.rect.center
         w, h = self.rect.size
 
-        if 'event' in kwargs:
-            event = kwargs['event']
-            if event.key in (K_LEFT, K_a):
+        if 'keys' in kwargs:
+            keys = kwargs['keys']
+            if keys[K_LEFT] or keys[K_a]:
                 if x - w / 2.0 >= 0:
-                    x -= 10
-            elif event.key in (K_RIGHT, K_d):
+                    x -= 4
+            elif keys[K_RIGHT] or keys[K_d]:
                 if x + w / 2.0 <= width:
-                    x += 10
+                    x += 4
 
         self.rect.center = x, y
 
