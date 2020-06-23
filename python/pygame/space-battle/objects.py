@@ -142,7 +142,7 @@ class GameOverMessage(object):
     def __init__(self, width, height, score, lives):
         self.game_over_font = pygame.font.Font('freesansbold.ttf', 30)
         self.game_info_font = pygame.font.Font('freesansbold.ttf', 20)
-        self.game_action_font = pygame.font.Font('freesansbold.ttf', 15)
+        self.game_action_font = pygame.font.Font('freesansbold.ttf', 20)
 
         self.game_over_color = (255, 0, 0)
         self.game_info_color = (0, 0, 0)
