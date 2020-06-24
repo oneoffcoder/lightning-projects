@@ -165,6 +165,10 @@ def start():
     pygame.init()
     pygame.display.set_caption('Space Battle')
 
+    pygame.mixer.init()
+    pygame.mixer.music.load('./audio/game.wav')
+    pygame.mixer.music.play(loops=-1)
+
     while True:
         params = get_params()
         params['score'], params['lives'] = start_game(**params)
@@ -173,6 +177,7 @@ def start():
         if not do_continue:
             break
 
+    pygame.mixer.music.stop()
     quit_game()
 
 
