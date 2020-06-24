@@ -5,7 +5,7 @@ import sys
 import pygame
 from pygame.constants import KEYUP, QUIT, K_SPACE, K_q, K_c
 
-from objects import Ship, Bullet, RockGenerator, GameInfo, GameOverMessage
+from objects import Ship, Bullet, RockGenerator, GameInfo, GameOverMessage, AudioEffects
 
 
 def get_remaining_objects(bullets, rocks, bullet_group, rock_group):
@@ -53,7 +53,8 @@ def get_params():
         'rock_group': pygame.sprite.Group(),
         'ship': Ship((width / 2, height - 50), 0.5),
         'rock_generator': RockGenerator(width, height),
-        'game_info': GameInfo(score, lives)
+        'game_info': GameInfo(score, lives),
+        'audio': AudioEffects()
     }
 
 
@@ -72,6 +73,7 @@ def start_game(**params):
     game_info = params['game_info']
     DISPLAYSURF = params['DISPLAYSURF']
     fps_clock, FPS = params['fps_clock'], params['FPS']
+    audio = params['audio']
 
     while True:
         kwargs = {
@@ -90,6 +92,7 @@ def start_game(**params):
                 bullet = Bullet.instance(**kwargs)
                 bullet_group.add(bullet)
                 bullets.append(bullet)
+                audio.play('bullet')
 
         if rock_generator.should_generate():
             rock = rock_generator.next()
