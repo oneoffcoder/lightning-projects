@@ -23,7 +23,8 @@ class Satyr(pygame.sprite.Sprite):
         self.rect = rect
         self.position = x, y
 
-    def draw(self, surface):
+    def draw(self, surface, position):
+        self.position = position[0] - self.rect.width / 2, position[1] - self.rect.height / 2
         surface.blit(self.image, self.position)
 
 
@@ -48,7 +49,7 @@ def start():
 
         DISPLAYSURF.fill((255, 255, 255, 0))
 
-        satyr.draw(DISPLAYSURF)
+        satyr.draw(DISPLAYSURF, pygame.mouse.get_pos())
 
         pygame.display.update()
         fps_clock.tick(FPS)

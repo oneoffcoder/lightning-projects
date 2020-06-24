@@ -1,3 +1,4 @@
+import os
 import random
 import sys
 
@@ -70,10 +71,12 @@ class Ball(object):
 def start():
     pygame.init()
 
+    FPS = 30
     width = 400
     height = 400
     DISPLAYSURF = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Bouncing Balls')
+    fps_clock = pygame.time.Clock()
 
     balls = [Ball.rand(width, height) for _ in range(10)]
 
@@ -90,7 +93,9 @@ def start():
             ball.update(width, height)
 
         pygame.display.update()
+        fps_clock.tick(FPS)
 
 
 if __name__ == '__main__':
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     start()

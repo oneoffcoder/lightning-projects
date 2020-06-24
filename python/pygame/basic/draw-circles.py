@@ -1,3 +1,4 @@
+import os
 import random
 import sys
 
@@ -26,11 +27,14 @@ def get_rand_radius(min_value=10, max_value=30):
 
 def start():
     pygame.init()
+
+    FPS = 30
     width = 400
     height = 400
 
     DISPLAYSURF = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Circles')
+    fps_clock = pygame.time.Clock()
 
     iters = 0
     while True:
@@ -46,9 +50,11 @@ def start():
         pygame.draw.circle(DISPLAYSURF, get_rand_color(), get_rand_position(width, height), get_rand_radius())
 
         pygame.display.update()
+        fps_clock.tick(FPS)
 
         iters += 1
 
 
 if __name__ == '__main__':
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     start()

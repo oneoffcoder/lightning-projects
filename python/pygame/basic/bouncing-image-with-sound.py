@@ -1,3 +1,4 @@
+import os
 import random
 import sys
 
@@ -83,10 +84,12 @@ class Image(object):
 def start():
     pygame.init()
 
+    FPS = 30
     width = 400
     height = 400
     DISPLAYSURF = pygame.display.set_mode((width, height))
     pygame.display.set_caption('Bouncing Image with Sound')
+    fps_clock = pygame.time.Clock()
 
     images = [Image.rand('./images/logo.png', './audios/fairy.wav', width, height, scale=0.5) for _ in range(1)]
 
@@ -106,7 +109,9 @@ def start():
                 image.play()
 
         pygame.display.update()
+        fps_clock.tick(FPS)
 
 
 if __name__ == '__main__':
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     start()

@@ -1,8 +1,15 @@
 # Pygame
 
 Tutorials in [Pygame](https://www.pygame.org). The API documentation is [available](https://www.pygame.org/docs/). 
-All sound effects taken from [zapsplat](https://www.zapsplat.com/).
-All images take from [craftpix](https://craftpix.net/).
+
+Images
+
+* [Open Game Art](https://opengameart.org/)
+* [craftpix](https://craftpix.net/)
+
+Audio
+
+* [zapsplat](https://www.zapsplat.com/)
 
 # Basic
 
@@ -14,3 +21,9 @@ All images take from [craftpix](https://craftpix.net/).
 * [Image Rotation](basic/image-rotation.py): learn how to rotate an image
 * [Sound](basic/bouncing-image-with-sound.py): learn how to play sound
 * [Key Events](basic/key-movement.py): learn how to listen for key events
+* [Mouse Movement](basic/mouse-movement.py): learn how to move a sprite with the mouse
+* [Collision](basic/collection-detection.py): learn how to detect collision
+
+# Games
+
+* [Space Battle](space-battle): learn how to create a space battle program
