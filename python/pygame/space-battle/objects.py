@@ -183,6 +183,7 @@ class GameOverMessage(object):
         text_surface, rect = self.__get_game_action__()
         surface.blit(text_surface, rect)
 
+
 class AudioEffects(object):
     def __init__(self):
         self.effects = {
