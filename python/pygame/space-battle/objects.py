@@ -11,13 +11,8 @@ class BaseObject(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
 
         self.uuid = str(uuid.uuid4())
-        img = pygame.image.load(ipath)
-        rect = img.get_rect(center=position)
-        w, h = rect.size[0], rect.size[1]
-        w, h = int(w * scale), int(h * scale)
-        self.image = pygame.transform.scale(img, (w, h))
+        self.image = BaseObject.__scale__(ipath, position, scale)
         self.rect = self.image.get_rect(center=position)
-        self.should_kill = False
 
     def get_center(self):
         return self.rect.center
@@ -25,15 +20,20 @@ class BaseObject(pygame.sprite.Sprite):
     def draw(self, surface, **kwargs):
         raise NotImplementedError('Not yet implemented')
 
+    @staticmethod
+    def __scale__(ipath, position, scale):
+        img = pygame.image.load(ipath)
+        rect = img.get_rect(center=position)
+        w, h = rect.size[0], rect.size[1]
+        w, h = int(w * scale), int(h * scale)
+        return pygame.transform.scale(img, (w, h))
+
 
 class Bullet(BaseObject):
     def __init__(self, position, scale=1.0):
         BaseObject.__init__(self, './images/bullet.png', position, scale)
 
     def draw(self, surface, **kwargs):
-        if self.should_kill:
-            return
-
         x, y = self.rect.center
         self.rect.center = x, y - 5
 
@@ -52,9 +52,6 @@ class Rock(BaseObject):
         BaseObject.__init__(self, './images/rock.png', position, scale)
 
     def draw(self, surface, **kwargs):
-        if self.should_kill:
-            return
-
         x, y = self.rect.center
         self.rect.center = x, y + 1
 
