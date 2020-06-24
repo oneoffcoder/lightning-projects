@@ -112,6 +112,8 @@ def start_game(**params):
 
         bullets, rocks, points = get_remaining_objects(bullets, rocks, bullet_group, rock_group)
         score += points
+        for _ in range(points):
+            audio.play('explosion')
 
         rocks, hits = get_remaining_rocks(ship, rocks, rock_group)
         lives += hits

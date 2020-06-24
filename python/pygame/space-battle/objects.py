@@ -186,7 +186,8 @@ class GameOverMessage(object):
 class AudioEffects(object):
     def __init__(self):
         self.effects = {
-            'bullet': pygame.mixer.Sound('./audio/bullet.wav')
+            'bullet': pygame.mixer.Sound('./audio/bullet.wav'),
+            'explosion': pygame.mixer.Sound('./audio/explosion.wav')
         }
 
     def play(self, effect):
