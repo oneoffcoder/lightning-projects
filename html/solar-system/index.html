@@ -21,31 +21,52 @@
             <h1>Solar System</h1>
         </div>
         <div class="center">
-            <svg id="solar-system" width="1100" height="1100" style="border: 1px solid black;">
+            <svg id="solar-system" width="1600" height="1600" style="border: 1px solid black;">
                 <g id="sun" transform="translate(500, 500)">
-                    <circle r="50" fill="#fcca03" />
-                    <rect x="0" y="70" width="7" height="20" fill="black"/>
+                    <circle id="sun-circle" r="50" fill="#fcca03" />
+                    <!-- <rect id="rect-circle" x="0" y="70" width="7" height="20" fill="black"/> -->
                 </g>
                 <g id="mercury" transform="translate(500, 600)">
-                    <circle r="10.09" fill="silver" />
+                    <circle id="mercury-circle" r="10.09" fill="silver" />
                 </g>
                 <g id="venus" transform="translate(500, 654)">
-                    <circle r="16.5" fill="silver" />
+                    <circle id="venus-circle" r="16.5" fill="silver" />
                 </g>
-                <g id="earth" transform="translate(500, 682.8)">
-                    <circle r="16.9" fill="silver" />
+                <g id="earth" transform="translate(500, 682)">
+                    <circle id="earth-circle" r="16.9" fill="silver" />
                 </g>
-                <g id="mars" transform="translate(500, 718.8)">
-                    <circle r="12.4" fill="silver" />
+                <g id="mars" transform="translate(500, 718.5)">
+                    <circle id="mars-circle" r="12.4" fill="silver" />
+                </g>
+                <g id="jupiter" transform="translate(500, 824.75)">
+                    <circle id="jupiter-circle" r="33.9" fill="silver" />
+                </g>
+                <g id="saturn" transform="translate(500, 877.8)">
+                    <circle id="saturn-circle" r="32.731" fill="silver" />
+                </g>
+                <g id="uranus" transform="translate(500, 937.8)">
+                    <circle id="uranus-circle" r="26.677" fill="silver" />
+                </g>
+                <g id="neptune" transform="translate(500, 976.8)">
+                    <circle id="neptune-circle" r="26.4" fill="silver" />
                 </g>
                 <g id="pluto" transform="translate(500, 1000)">
-                    <circle r="5.0" fill="brown" />
+                    <circle id="pluto-circle" r="5.0" fill="brown" />
                 </g>
             </svg>
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
         <script>
             function init() {
+                const width = document.getElementById('solar-system').getAttribute('width');
+                const height = document.getElementById('solar-system').getAttribute('height');
+                const cx = width / 2.0;
+                const cy = height / 2.0;
+
+                console.log(`${cx}, ${cy}`);
+
+                document.getElementById('sun').setAttribute('transform', `translate(${cx}, ${cy})`)
+
                 const planets = getPlanets();
 
                 const diamParams = getDiamScalingParams();
@@ -56,31 +77,23 @@
 
                 planets.forEach(p => {
                     p.normDiam = rescale(Math.log(p.diameter), diamParams.a, diamParams.b, diamParams.min, diamParams.max);
-                    p.normDist = rescale(Math.log(p.distance), distParams.a, distParams.b, distParams.min, distParams.max);
+                    p.normDist = cx + rescale(Math.log(p.distance), distParams.a, distParams.b, distParams.min, distParams.max);
                 });
                 console.table(planets);
 
-                const diams = planets.map(p => Math.log(p.diameter));
-                diams.push(Math.log(1391982.78));
-                let _min = Math.min(...diams);
-                let _max = Math.max(...diams);
-                console.log(`diameters, ${_min}, ${_max}`);
-                diams.forEach(d => {
-                    const v = rescale(d, 5, 50, _min, _max);
-                    console.log(`${d} => ${v}`);
-                });
+                planets.forEach(p => {
+                    const gId = `${p.name}`;
+                    const g = document.getElementById(gId);
+                    g.setAttribute('transform', `translate(${cx}, ${p.normDist})`);
 
-                // const dists = planets.map(p => Math.log(p.distance));
-                // _min = Math.min(...dists);
-                // _max = Math.max(...dists);
-                // console.log('distances');
-                // dists.forEach(d => {
-                //     const v = rescale(d, 100, 500, _min, _max);
-                //     console.log(v);
-                // })
+                    const circleId = `${p.name}-circle`;
+                    const circle = document.getElementById(circleId);
+                    circle.setAttribute('r', `${p.normDiam}`);
+                    circle.setAttribute('fill', `${p.color}`);
+                })
             }
 
-            function getDiamScalingParams() {
+            function getDiamScalingParams(a = 5, b = 50) {
                 const planets = getPlanets();
 
                 const diams = planets.map(p => Math.log(p.diameter));
@@ -88,16 +101,16 @@
 
                 let min = Math.min(...diams);
                 let max = Math.max(...diams);
-                return {a: 5, b: 50, min: min, max: max};
+                return {a: a, b: b, min: min, max: max};
             }
 
-            function getDistScalingParams() {
+            function getDistScalingParams(a = 75, b = 750) {
                 const planets = getPlanets();
 
                 const dists = planets.map(p => Math.log(p.distance));
                 const min = Math.min(...dists);
                 const max = Math.max(...dists);
-                return {a: 100, b: 500, min: min, max: max};
+                return {a: a, b: b, min: min, max: max};
             }
 
             function rescale(x, a, b, min, max) {
@@ -107,15 +120,15 @@
             function getPlanets() {
                 const sunDiameter = 1391982.78;
                 const planets = [
-                    getPlanet('mercury', 4879.0, 57.9, 1407.6, 88.0, 'silver'),
-                    getPlanet('venus', 12104.0, 108.2, -5832.5, 224.7, 'green'),
-                    getPlanet('earth', 12756.0, 149.6, 23.9, 365.2, 'blue'),
-                    getPlanet('mars', 6792.0, 227.9, 24.6, 687.0, 'red'),
-                    getPlanet('jupiter', 142984.0, 778.6, 9.9, 4331.0, 'lightbrown'),
-                    getPlanet('saturn', 120536.0, 1433.5, 10.7, 10747.0, 'lightyellow'),
-                    getPlanet('uranus', 51118.0, 2872.5, -17.2, 30589.0, 'lightblue'),
-                    getPlanet('neptune', 49528.0, 4495.1, 16.1, 59800.0, 'blue'),
-                    getPlanet('pluto', 2370.0, 5906.4, -153.3, 90560.0, 'brown'),
+                    getPlanet('mercury', 4879.0, 57.9, 1407.6, 88.0, '#9ea5b0'),
+                    getPlanet('venus', 12104.0, 108.2, -5832.5, 224.7, '#3db536'),
+                    getPlanet('earth', 12756.0, 149.6, 23.9, 365.2, '#0b56e0'),
+                    getPlanet('mars', 6792.0, 227.9, 24.6, 687.0, '#ff6b4a'),
+                    getPlanet('jupiter', 142984.0, 778.6, 9.9, 4331.0, '#e6a009'),
+                    getPlanet('saturn', 120536.0, 1433.5, 10.7, 10747.0, '#dfe374'),
+                    getPlanet('uranus', 51118.0, 2872.5, -17.2, 30589.0, '#63db8f'),
+                    getPlanet('neptune', 49528.0, 4495.1, 16.1, 59800.0, '#63a1db'),
+                    getPlanet('pluto', 2370.0, 5906.4, -153.3, 90560.0, '#ad935a'),
                 ];
 
                 return planets;
@@ -123,12 +136,12 @@
 
             function getPlanet(name, diameter, distance, rotationPeriod, orbitalPeriod, color) {
                 return {
-                    'name': name,
-                    'diameter': diameter,
-                    'distance': distance,
-                    'rotationPeriod': rotationPeriod,
-                    'orbitalPeriod': orbitalPeriod,
-                    'color': color
+                    name: name,
+                    diameter: diameter,
+                    distance: distance,
+                    rotationPeriod: rotationPeriod,
+                    orbitalPeriod: orbitalPeriod,
+                    color: color
                 };
             }
         </script>
