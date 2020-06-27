@@ -19,6 +19,7 @@
     <body onload="init()">
         <div class="center">
             <h1>Solar System</h1>
+            <button onclick="doOrbit()">orbit</button>
         </div>
         <div class="center">
             <svg id="solar-system" width="1600" height="1600" style="border: 1px solid black;">
@@ -57,8 +58,38 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
         <script>
+            let time = 1;
+            let solarSystem;
+
             function init() {
-                initSolarSystem();
+                solarSystem = initSolarSystem();
+                // setInterval(rotate, 1000);
+                // rotate(solarSystem);
+            }
+
+            function doOrbit() {
+                rotate();
+            }
+
+            function rotate() {
+                const center = solarSystem.center;
+                solarSystem.planets.forEach(p => {
+                    const c = p.getCoordinate(center, time);
+                    const d = Math.sqrt(Math.pow(c.x - center.x, 2.0) + Math.pow(c.y - center.y, 2.0));
+                    const d2 = p.getDistance(center);
+
+                    if (p.name === 'mercury') {
+                        console.log(`${time}, (${p.x}, ${p.y}) => (${c.x}, ${c.y}) | ${d} | ${d2}`);
+                    }
+
+                    const gId = `${p.name}`;
+                    const g = document.getElementById(gId);
+                    g.setAttribute('transform', `translate(${c.x}, ${c.y})`);
+                });
+                time++;
+                if (time >= 360) {
+                    time = 0;
+                }
             }
 
             function initSolarSystem() {
@@ -78,7 +109,7 @@
                     p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
                     p.x = cx;
                     p.y = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
-                    p.normOrbitalPeriod = 360.0 / p.orbitalPeriod;
+                    p.theta = 360.0 / p.orbitalPeriod;
                 });
 
                 console.table(planets);
@@ -93,6 +124,11 @@
                     circle.setAttribute('r', `${p.normDiam}`);
                     circle.setAttribute('fill', `${p.color}`);
                 });
+
+                return {
+                    planets: planets,
+                    center: {x: cx, y: cy}
+                };
             }
 
             function getDiamScalingParams(a = 5, b = 50) {
@@ -143,7 +179,21 @@
                     distance: distance,
                     rotationPeriod: rotationPeriod,
                     orbitalPeriod: orbitalPeriod,
-                    color: color
+                    color: color,
+                    getDistance: function(c) {
+                        const d = Math.sqrt(Math.pow(this.x - c.x, 2.0) + Math.pow(this.y - c.y, 2.0));
+                        return d;
+                    },
+                    getCoordinate: function(center, time) {
+                        const theta = this.theta * time;
+                        const distance = this.getDistance(center);
+                        const x = center.x + distance * Math.cos(theta);
+                        const y = center.y + distance * Math.sin(theta);
+                        return {
+                            x: x,
+                            y: y
+                        };
+                    }
                 };
             }
         </script>
