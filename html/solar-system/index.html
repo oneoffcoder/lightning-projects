@@ -69,15 +69,12 @@
 
                 const planets = getPlanets();
 
-                const diamParams = getDiamScalingParams();
-                const distParams = getDistScalingParams();
-
-                console.log(diamParams);
-                console.log(distParams);
+                const pDiam = getDiamScalingParams();
+                const pDist = getDistScalingParams();
 
                 planets.forEach(p => {
-                    p.normDiam = rescale(Math.log(p.diameter), diamParams.a, diamParams.b, diamParams.min, diamParams.max);
-                    p.normDist = cx + rescale(Math.log(p.distance), distParams.a, distParams.b, distParams.min, distParams.max);
+                    p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
+                    p.normDist = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
                 });
                 console.table(planets);
 
