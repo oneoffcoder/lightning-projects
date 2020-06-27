@@ -58,12 +58,14 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
         <script>
             function init() {
+                initSolarSystem();
+            }
+
+            function initSolarSystem() {
                 const width = document.getElementById('solar-system').getAttribute('width');
                 const height = document.getElementById('solar-system').getAttribute('height');
                 const cx = width / 2.0;
                 const cy = height / 2.0;
-
-                console.log(`${cx}, ${cy}`);
 
                 document.getElementById('sun').setAttribute('transform', `translate(${cx}, ${cy})`)
 
@@ -74,20 +76,23 @@
 
                 planets.forEach(p => {
                     p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
-                    p.normDist = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
+                    p.x = cx;
+                    p.y = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
+                    p.normOrbitalPeriod = 360.0 / p.orbitalPeriod;
                 });
+
                 console.table(planets);
 
                 planets.forEach(p => {
                     const gId = `${p.name}`;
                     const g = document.getElementById(gId);
-                    g.setAttribute('transform', `translate(${cx}, ${p.normDist})`);
+                    g.setAttribute('transform', `translate(${p.x}, ${p.y})`);
 
                     const circleId = `${p.name}-circle`;
                     const circle = document.getElementById(circleId);
                     circle.setAttribute('r', `${p.normDiam}`);
                     circle.setAttribute('fill', `${p.color}`);
-                })
+                });
             }
 
             function getDiamScalingParams(a = 5, b = 50) {
