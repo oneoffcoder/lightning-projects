@@ -58,7 +58,7 @@
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
         <script>
-            let time = 1;
+            let time = 1.0;
             let solarSystem;
 
             function init() {
@@ -78,15 +78,11 @@
                     const d = Math.sqrt(Math.pow(c.x - center.x, 2.0) + Math.pow(c.y - center.y, 2.0));
                     const d2 = p.getDistance(center);
 
-                    if (p.name === 'mercury') {
-                        console.log(`${time}, (${p.x}, ${p.y}) => (${c.x}, ${c.y}) | ${d} | ${d2}`);
-                    }
-
                     const gId = `${p.name}`;
                     const g = document.getElementById(gId);
                     g.setAttribute('transform', `translate(${c.x}, ${c.y})`);
                 });
-                time++;
+                time += 1.0;
                 if (time >= 360) {
                     time = 0;
                 }
@@ -107,8 +103,8 @@
 
                 planets.forEach(p => {
                     p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
-                    p.x = cx;
-                    p.y = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
+                    p.x = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
+                    p.y = cy;
                     p.theta = 360.0 / p.orbitalPeriod;
                 });
 
