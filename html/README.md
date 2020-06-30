@@ -5,3 +5,4 @@
 * [rps-game](rps-game): A challenging project to code the classic Rock, Paper, Scissor game.
 * [tic-tac-toe](tic-tack-toe): Classic tic tac toe.
 * [checkers](checkers): Classic checkers.
+* [solar-system](solar-system): A simulation of the planetary orbits in our solar system.
