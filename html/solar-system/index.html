@@ -21,6 +21,7 @@
             <h1>Solar System</h1>
         </div>
         <div class="center">
+            <h1>test</h1>
             <svg id="solar-system" width="1600" height="1600" style="border: 1px solid black;">
                 <g id="sun" transform="translate(500, 500)">
                     <circle id="sun-circle" r="50" fill="#fcca03" />
@@ -62,6 +63,9 @@
             let timer;
 
             function init() {
+                const ss = document.getElementById('solar-system');
+                ss.setAttribute('transform', 'scale(-0.5, 0.5)');
+
                 solarSystem = initSolarSystem();
                 timer = setInterval(orbit, 100);
             }
@@ -77,8 +81,7 @@
                     const g = document.getElementById(gId);
                     g.setAttribute('transform', `translate(${x}, ${y})`);
                 });
-                time += 100.0;
-                console.log(time);
+                time += 50.0;
             }
 
             function initSolarSystem() {
