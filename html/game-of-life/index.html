@@ -317,6 +317,8 @@
 
             function getPatterns() {
                 const patterns = new Map();
+                patterns.set('glider', [[3, 1], [4, 2], [4, 3], [3, 3], [2, 3]]);
+                patterns.set('beacon', [[1, 1], [1, 2], [2, 1], [2, 2], [3, 3], [3, 4], [4, 3], [4, 4]]);
                 patterns.set('toad', [[2, 2], [2, 3], [2, 4], [3, 1], [3, 2], [3, 3]]);
                 patterns.set('blinker', [[1, 2], [2, 2], [3, 2]]);
                 patterns.set('r-pentomino', [[2, 1], [1, 2], [2, 2], [3, 2], [1, 3]]);
