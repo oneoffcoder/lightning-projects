@@ -36,6 +36,7 @@
             <select id="pattern" name="pattern"></select>
             <button id="initButton" onclick="initSimulation()">Initialize</button>
             <button id="startButton" onclick="startSimulation()">Start Simulation</button>
+            <span id="generation">0</span>
         </div>
         <table id="grid" class="grid">
             
@@ -45,17 +46,27 @@
             const nCols = 50;
             let grid;
             let timer;
+            let initialized = false;
+            let gen = 0;
 
             function init() {
                 initTable();
                 initSelect();
 
                 grid = initGrid();
-                console.log(grid);
             }
 
             function startSimulation() {
+                if (!initialized) {
+                    console.log('game not initialized');
+                    return;
+                }
+                if (timer) {
+                    console.log('simulation in progress');
+                    return;
+                }
                 timer = setInterval(doSimulation, 500);
+                // doSimulation();
             }
 
             function doSimulation() {
@@ -63,12 +74,13 @@
                     return;
                 }
 
+                const cells = Array();
                 for (let [k, cell] of grid) {
                     const trId = `cell-${k}`;
                     const tr = document.getElementById(trId);
 
                     if (cell.isAliveNext() === true) {
-                        cell.dead = false;
+                        cells.push({id: k, dead: false});
                         if (tr.classList.contains('grid-cell-dead')) {
                             tr.classList.remove('grid-cell-dead');
                         }
@@ -76,7 +88,7 @@
                             tr.classList.add('grid-cell-alive');
                         }
                     } else {
-                        cell.dead = true;
+                        cells.push({id: k, dead: true});
                         if (tr.classList.contains('grid-cell-alive')) {
                             tr.classList.remove('grid-cell-alive');
                         }
@@ -85,6 +97,19 @@
                         }
                     }
                 }
+
+                cells.forEach(c => {
+                    const cell = grid.get(c.id);
+                    cell.dead = c.dead;
+                });
+
+                gen++;
+                updateGeneration();
+            }
+
+            function updateGeneration() {
+                const span = document.getElementById('generation');
+                span.innerHTML = `${gen}`;
             }
 
             function clearGridColor() {
@@ -119,6 +144,8 @@
             function initSimulation() {
                 if (timer) {
                     clearInterval(timer);
+                    timer = undefined;
+                    console.log('cleared timer');
                 }
 
                 clearGridColor();
@@ -140,6 +167,10 @@
                 }
 
                 updateGridColor();
+
+                initialized = true;
+                gen = 0;
+                updateGeneration();
             }
 
             function initSelect() {
