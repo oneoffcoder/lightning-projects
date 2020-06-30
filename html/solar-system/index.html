@@ -7,6 +7,10 @@
             }
             .center {
                 text-align: center;
+                width: 1600px;
+            }
+            .solar-system {
+                margin-top: -120px;
             }
             .planet {
                 border-radius: 50%;
@@ -16,21 +20,28 @@
             }
             svg.solar-system {
                 border: 1px solid black;
+                background-color: black;
+            }
+            svg > g > text {
+                fill: white !important;
+            }
+            body {
+                background: black;
+                color: white;
             }
         </style>
     </head>
     <body onload="init()">
         <div class="center">
             <h1>Solar System</h1>
-            <h2>test1</h2>
         </div>
-        <div class="center">
-            <h2>test2</h2>
-            <svg id="solar-system" width="1600" height="1600" class="solar-system" transform="scale(-0.5, 0.5)">
+        <div class="solar-system">
+            <svg id="solar-system" width="1600" height="1600" class="solar-system" transform="scale(-0.7, 0.7)">
                 <g id="sun" transform="translate(500, 500)">
                     <circle id="sun-circle" r="50" fill="#fcca03" />
                     <text transform="scale(-1, 1)" y="60" dominant-baseline="middle" text-anchor="middle">Sun</text>
                 </g>
+                <!-- planets -->
                 <g id="mercury" transform="translate(500, 600)">
                     <circle id="mercury-circle" r="10.09" fill="silver" />
                     <text transform="scale(-1, 1)" y="20" dominant-baseline="middle" text-anchor="middle">Mercury</text>
@@ -67,9 +78,36 @@
                     <circle id="pluto-circle" r="5.0" fill="brown" />
                     <text transform="scale(-1, 1)" y="-20" dominant-baseline="middle" text-anchor="middle">Pluto</text>
                 </g>
+                <!-- orbital paths -->
+                <g id="mercury-path" transform="translate(800, 800)">
+                    <circle id="mercury-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="venus-path" transform="translate(800, 800)">
+                    <circle id="venus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="earth-path" transform="translate(800, 800)">
+                    <circle id="earth-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="mars-path" transform="translate(800, 800)">
+                    <circle id="mars-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="jupiter-path" transform="translate(800, 800)">
+                    <circle id="jupiter-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="saturn-path" transform="translate(800, 800)">
+                    <circle id="saturn-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="uranus-path" transform="translate(800, 800)">
+                    <circle id="uranus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="neptune-path" transform="translate(800, 800)">
+                    <circle id="neptune-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
+                <g id="pluto-path" transform="translate(800, 800)">
+                    <circle id="pluto-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
+                </g>
             </svg>
         </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.0/anime.min.js"></script>
         <script>
             let time = 1.0;
             let solarSystem;
@@ -128,6 +166,11 @@
                     const circle = document.getElementById(circleId);
                     circle.setAttribute('r', `${p.normDiam}`);
                     circle.setAttribute('fill', `${p.color}`);
+
+                    const cId = `${p.name}-path-circle`;
+                    const c = document.getElementById(cId);
+                    c.setAttribute('r', `${p.normDist}`);
+                    c.setAttribute('stroke', `${p.color}`);
                 });
 
                 return {
