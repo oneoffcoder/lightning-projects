@@ -46,7 +46,7 @@
             }
         </style>
     </head>
-    <body onload="init()">
+    <body onload="init()" onresize="reinit()">
         <!-- <div id="custom-bg" style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url('space.jpg'); opacity: 1;"></div> -->
         <div class="center">
             <h1>Solar System</h1>
@@ -132,6 +132,11 @@
             function init() {
                 solarSystem = initSolarSystem();
                 timer = setInterval(orbit, 100);
+            }
+
+            function reinit() {
+                clearInterval(timer);
+                init();
             }
 
             function orbit() {
