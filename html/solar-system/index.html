@@ -22,9 +22,11 @@
     <body onload="init()">
         <div class="center">
             <h1>Solar System</h1>
+            <h2>test1</h2>
         </div>
         <div class="center">
-            <svg id="solar-system" width="1600" height="1600" class="solar-system" transform="scale(-0.8, 0.8)">
+            <h2>test2</h2>
+            <svg id="solar-system" width="1600" height="1600" class="solar-system" transform="scale(-0.5, 0.5)">
                 <g id="sun" transform="translate(500, 500)">
                     <circle id="sun-circle" r="50" fill="#fcca03" />
                     <text transform="scale(-1, 1)" y="60" dominant-baseline="middle" text-anchor="middle">Sun</text>
@@ -93,25 +95,6 @@
             }
 
             function initSolarSystem() {
-                function getPoint(theta, center, r, n=3600.0) {
-                    const x = center.x + Math.cos(2.0 * Math.PI / n * theta) * r;
-                    const y = center.y + Math.sin(2.0 * Math.PI / n * theta) * r;
-                    const m = new Map();
-                    m.set('x', x);
-                    m.set('y', y);
-                    return {theta: theta, coordinate: m};
-                }
-
-                function getPoints(delta, center, r, n=3600.0) {
-                    const points = Array();
-                    for (let i = 0; i < n; i += 1.0) {
-                        const point = getPoint(i * delta, center, r);
-
-                        points.push(point.coordinate);
-                    }
-                    return points;
-                }
-
                 const width = document.getElementById('solar-system').getAttribute('width');
                 const height = document.getElementById('solar-system').getAttribute('height');
                 const cx = width / 2.0;
@@ -129,9 +112,7 @@
                     p.x = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
                     p.y = cy;
                     p.normDist = Math.sqrt(Math.pow(p.x - cx, 2.0) + Math.pow(p.y - cy, 2.0));
-                    p.theta = 360.0 / p.orbitalPeriod;
                     p.delta = 360.0 / p.orbitalPeriod;
-                    p.points = getPoints(p.delta, {x: cx, y: cy}, p.normDist);
                     p.cx = cx;
                     p.cy = cy;
                 });
