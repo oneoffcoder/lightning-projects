@@ -7,30 +7,52 @@
             }
             .center {
                 text-align: center;
-                width: 1600px;
             }
             .solar-system {
-                margin-top: -120px;
+                width: calc(100vw - 180px);
+                height: calc(100vw - 180px);
+                margin-left: auto;
+                margin-right: auto;
             }
             svg.solar-system {
-                border: 1px solid black;
-                background-color: black;
+                background-color: transparent;
+                width: 100%;
+                height: 100%;
             }
             svg > g > text {
                 fill: white !important;
             }
+            svg > g[id$="path"] {
+                transform: translate(calc((100vw - 180px) / 2), calc((100vw - 180px) / 2)) !important;
+            }
             body {
-                background: black;
                 color: white;
+                background: black;
+            }
+            #custom-bg {
+                background-position: center center;
+                background-repeat: no-repeat;
+                background-size: cover;
+                height: 100%;
+                left: 0;
+                margin: 0;
+                opacity: 0.0;
+                padding: 0;
+                position: fixed;
+                top: 0;
+                transition: opacity 700ms;
+                width: 100%;
+                z-index: -1;
             }
         </style>
     </head>
     <body onload="init()">
+        <!-- <div id="custom-bg" style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url('space.jpg'); opacity: 1;"></div> -->
         <div class="center">
             <h1>Solar System</h1>
         </div>
         <div class="solar-system">
-            <svg id="solar-system" width="1600" height="1600" class="solar-system" transform="scale(-0.7, 0.7)">
+            <svg id="solar-system" class="solar-system" transform="scale(-1, 1)">
                 <g id="sun" transform="translate(500, 500)">
                     <circle id="sun-circle" r="50" fill="#fcca03" />
                     <text transform="scale(-1, 1)" y="60" dominant-baseline="middle" text-anchor="middle">Sun</text>
@@ -73,31 +95,31 @@
                     <text transform="scale(-1, 1)" y="-20" dominant-baseline="middle" text-anchor="middle">Pluto</text>
                 </g>
                 <!-- orbital paths -->
-                <g id="mercury-path" transform="translate(800, 800)">
+                <g id="mercury-path">
                     <circle id="mercury-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="venus-path" transform="translate(800, 800)">
+                <g id="venus-path">
                     <circle id="venus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="earth-path" transform="translate(800, 800)">
+                <g id="earth-path">
                     <circle id="earth-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="mars-path" transform="translate(800, 800)">
+                <g id="mars-path">
                     <circle id="mars-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="jupiter-path" transform="translate(800, 800)">
+                <g id="jupiter-path">
                     <circle id="jupiter-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="saturn-path" transform="translate(800, 800)">
+                <g id="saturn-path">
                     <circle id="saturn-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="uranus-path" transform="translate(800, 800)">
+                <g id="uranus-path">
                     <circle id="uranus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="neptune-path" transform="translate(800, 800)">
+                <g id="neptune-path">
                     <circle id="neptune-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
-                <g id="pluto-path" transform="translate(800, 800)">
+                <g id="pluto-path">
                     <circle id="pluto-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
                 </g>
             </svg>
@@ -127,8 +149,8 @@
             }
 
             function initSolarSystem() {
-                const width = document.getElementById('solar-system').getAttribute('width');
-                const height = document.getElementById('solar-system').getAttribute('height');
+                const width = document.getElementById('solar-system').clientWidth;
+                const height = document.getElementById('solar-system').clientHeight;
                 const cx = width / 2.0;
                 const cy = height / 2.0;
 
@@ -137,7 +159,7 @@
                 const planets = getPlanets();
 
                 const pDiam = getDiamScalingParams();
-                const pDist = getDistScalingParams();
+                const pDist = getDistScalingParams(a = 75, b = cx - 30);
 
                 planets.forEach(p => {
                     p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
