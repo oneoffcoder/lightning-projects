@@ -19,7 +19,6 @@
     <body onload="init()">
         <div class="center">
             <h1>Solar System</h1>
-            <button onclick="doOrbit()">orbit</button>
         </div>
         <div class="center">
             <svg id="solar-system" width="1600" height="1600" style="border: 1px solid black;">
@@ -63,32 +62,46 @@
 
             function init() {
                 solarSystem = initSolarSystem();
-                // setInterval(rotate, 1000);
+                setInterval(orbit, 100);
                 // rotate(solarSystem);
             }
 
-            function doOrbit() {
-                rotate();
-            }
-
-            function rotate() {
+            function orbit() {
                 const center = solarSystem.center;
                 solarSystem.planets.forEach(p => {
-                    const c = p.getCoordinate(center, time);
-                    const d = Math.sqrt(Math.pow(c.x - center.x, 2.0) + Math.pow(c.y - center.y, 2.0));
-                    const d2 = p.getDistance(center);
+                    const c = p.getCoordinate(time);
+                    const x = c.get('x');
+                    const y = c.get('y');
 
                     const gId = `${p.name}`;
                     const g = document.getElementById(gId);
-                    g.setAttribute('transform', `translate(${c.x}, ${c.y})`);
+                    g.setAttribute('transform', `translate(${x}, ${y})`);
                 });
-                time += 1.0;
-                if (time >= 360) {
+                time += 20.0;
+                if (time >= 3600) {
                     time = 0;
                 }
             }
 
             function initSolarSystem() {
+                function getPoint(theta, center, r, n=3600.0) {
+                    const x = center.x + Math.cos(2.0 * Math.PI / n * theta) * r;
+                    const y = center.y + Math.sin(2.0 * Math.PI / n * theta) * r;
+                    const m = new Map();
+                    m.set('x', x);
+                    m.set('y', y);
+                    return {theta: theta, coordinate: m};
+                }
+
+                function getPoints(delta, center, r, n=3600.0) {
+                    let points = new Map();
+                    for (let i = 0; i < n; i += 1.0) {
+                        const point = getPoint(i * delta, center, r);
+                        points.set(point.theta, point.coordinate);
+                    }
+                    return points;
+                }
+
                 const width = document.getElementById('solar-system').getAttribute('width');
                 const height = document.getElementById('solar-system').getAttribute('height');
                 const cx = width / 2.0;
@@ -105,7 +118,10 @@
                     p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
                     p.x = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
                     p.y = cy;
+                    p.normDist = Math.sqrt(Math.pow(p.x - cx, 2.0) + Math.pow(p.y - cy, 2.0));
                     p.theta = 360.0 / p.orbitalPeriod;
+                    p.delta = 360.0 / p.orbitalPeriod;
+                    p.points = getPoints(p.delta, {x: cx, y: cy}, p.normDist);
                 });
 
                 console.table(planets);
@@ -176,19 +192,9 @@
                     rotationPeriod: rotationPeriod,
                     orbitalPeriod: orbitalPeriod,
                     color: color,
-                    getDistance: function(c) {
-                        const d = Math.sqrt(Math.pow(this.x - c.x, 2.0) + Math.pow(this.y - c.y, 2.0));
-                        return d;
-                    },
-                    getCoordinate: function(center, time) {
-                        const theta = this.theta * time;
-                        const distance = this.getDistance(center);
-                        const x = center.x + distance * Math.cos(theta);
-                        const y = center.y + distance * Math.sin(theta);
-                        return {
-                            x: x,
-                            y: y
-                        };
+                    getCoordinate: function(time) {
+                        const k = this.theta * time;
+                        return this.points.get(k);
                     }
                 };
             }
