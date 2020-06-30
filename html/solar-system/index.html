@@ -174,11 +174,7 @@
                     p.delta = 360.0 / p.orbitalPeriod;
                     p.cx = cx;
                     p.cy = cy;
-                });
 
-                console.table(planets);
-
-                planets.forEach(p => {
                     const gId = `${p.name}`;
                     const g = document.getElementById(gId);
                     g.setAttribute('transform', `translate(${p.x}, ${p.y})`);
@@ -193,6 +189,8 @@
                     c.setAttribute('r', `${p.normDist}`);
                     c.setAttribute('stroke', `${p.color}`);
                 });
+
+                console.table(planets);
 
                 return {
                     planets: planets,
