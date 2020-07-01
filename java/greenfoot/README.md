@@ -1,3 +1,5 @@
+![One-Off Coder Logo](../logo.png "One-Off Coder")
+
 # Projects
 
 * [bump-babies](bump-babies): fish eating baby snacks

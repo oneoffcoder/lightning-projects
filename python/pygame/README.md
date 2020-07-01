@@ -1,3 +1,5 @@
+![One-Off Coder Logo](../logo.png "One-Off Coder")
+
 # Pygame
 
 Tutorials in [Pygame](https://www.pygame.org). The API documentation is [available](https://www.pygame.org/docs/). 
