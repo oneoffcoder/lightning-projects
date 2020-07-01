@@ -1,3 +1,5 @@
+![One-Off Coder Logo](../logo.png "One-Off Coder")
+
 # Project Description
 
 * [guessing-game](guessing-game): Have fun coding a game that asks users to guess which number the computer will generate.
