@@ -30,4 +30,4 @@ Audio
 # Games
 
 * [Space Battle](space-battle): learn how to create a space battle program
-* [Yapp Bird](yappy-bird): a Flappy-Bird clone
+* [Yappy Bird](yappy-bird): a Flappy-Bird clone
