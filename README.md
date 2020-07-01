@@ -9,6 +9,7 @@ info@oneoffcoder.com.
 
 * [HTML, CSS, JavaScript](html): Games based on HTML, CSS and JavaScript
 * [Java, Greenfoot](java/greenfoot): Games based on Java and Greenfoot
+* [Python, Pygame](java/pygame): Games based on Python and Pygame
 
 # Citation
 
