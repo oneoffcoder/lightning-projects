@@ -11,10 +11,12 @@
             }
             .letter {
                 font-size: large;
+                cursor: pointer;
             }
             .dihdah {
                 font-size: xx-large;
                 font-weight: bolder;
+                cursor: pointer;
             }
         </style>
     </head>
@@ -36,7 +38,7 @@
         </div>
         <div class="form-group">
             <label for="text">Type your text below</label>
-            <textarea class="form-control" id="text" rows="3">sos one-off coder</textarea>
+            <textarea class="form-control" id="text" rows="3">sos</textarea>
         </div>
         <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
         <br/>
@@ -50,6 +52,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js" crossorigin="anonymous"></script>
         <script>
             const l2d = getL2D();
+            const d2l = getD2L();
             let isPlaying = false;
 
             function generate() {
@@ -81,8 +84,8 @@
             }
 
             function modifyOutputs(letter, dihDah) {
-                const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter">${letter}</span>`;
-                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah">${dihDah}</span>`;
+                const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter" onmouseover="playLetter('${letter}')">${letter}</span>`;
+                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah" onmouseover="playDihDah('${dihDah}')">${dihDah}</span>`;
                 const odd = document.getElementById('dihDahOutput').innerHTML;
 
                 document.getElementById('letterOutput').innerHTML += lt;
@@ -91,7 +94,25 @@
                 } else {
                     document.getElementById('dihDahOutput').innerHTML = `${lt} : ${dd} <br/> ${odd}`;
                 }
+            }
+
+            function playLetter(letter) {
+                if (isPlaying) {
+                    return;
+                }
+                console.log(letter);
                 
+                const howl = new Howl({ 
+                    src: [`audios/${letter}.wav`],
+                    onend: () => isPlaying = false
+                });
+
+                isPlaying = true;
+                howl.play();
+            }
+
+            function playDihDah(dihDah) {
+                playLetter(d2l.get(dihDah));
             }
 
             function getMorseCode(text, handler) {
@@ -199,6 +220,15 @@
             function getTextInput() {
                 const textArea = document.getElementById('text');
                 return textArea.value;
+            }
+
+            function getD2L() {
+                const l2d = getL2D();
+                const d2l = new Map();
+                for (const [l, d] of l2d) {
+                    d2l.set(d, l);
+                }
+                return d2l;
             }
 
             function getL2D() {
