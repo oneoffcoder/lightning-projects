@@ -34,6 +34,9 @@
                         morse-code-wav
                     </a>
                 </p>
+                <p>
+                    Awesome <a href="https://www.youtube.com/watch?v=xsDk5_bktFo" target="_blank">video on Morse code</a>
+                </p>
             </div>
         </div>
         <div class="form-group">
@@ -129,7 +132,7 @@
                 if (isPlaying) {
                     return;
                 }
-                
+
                 isPlaying = true;
                 const morseCode = getMorseCode(word, undefined);
                 morseCode.play();
