@@ -38,7 +38,7 @@
         </div>
         <div class="form-group">
             <label for="text">Type your text below</label>
-            <textarea class="form-control" id="text" rows="3">sos</textarea>
+            <textarea class="form-control" id="text" rows="3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0 sos</textarea>
         </div>
         <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
         <br/>
@@ -100,7 +100,6 @@
                 if (isPlaying) {
                     return;
                 }
-                console.log(letter);
                 
                 const howl = new Howl({ 
                     src: [`audios/${letter}.wav`],
@@ -193,11 +192,6 @@
                     };
                 }
 
-
-                console.log(normText);
-                console.table(tokens);
-                console.log(tokens);
-
                 return {
                     letterIndex: 0,
                     letters: tokens,
@@ -208,7 +202,6 @@
                         }
 
                         const letter = this.letters[this.letterIndex];
-                        console.log(`LETTER: playing ${letter.letter} => ${letter.dd}`);
                         handler(letter.letter, letter.dd);
                         this.letterIndex += 1;
                         const playable = getLetterPlayable(letter, this);
