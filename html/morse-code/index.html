@@ -38,12 +38,17 @@
         </div>
         <div class="form-group">
             <label for="text">Type your text below</label>
-            <textarea class="form-control" id="text" rows="3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0 sos</textarea>
+            <textarea class="form-control" id="text" rows="3">sos jee</textarea>
         </div>
         <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
+        
         <br/>
         <br/>
+
+        <div id="letterOutputHint" style="display: none;">Hover over words to play sound</div>
         <div id="letterOutput" class="alert alert-primary" role="alert" style="display: none;">&nbsp;</div>
+
+        <div id="dihDahOutputHint" style="display: none;">Hover over letters to play sound</div>
         <div id="dihDahOutput" class="alert alert-secondary" role="alert" style="display: none;">&nbsp;</div>
         
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
@@ -76,6 +81,9 @@
             function showOutputs() {
                 document.getElementById('letterOutput').style.display = 'block';
                 document.getElementById('dihDahOutput').style.display = 'block';
+
+                document.getElementById('letterOutputHint').style.display = 'block';
+                document.getElementById('dihDahOutputHint').style.display = 'block';
             }
 
             function clearOutputs() {
@@ -83,17 +91,44 @@
                 document.getElementById('dihDahOutput').innerHTML = '';
             }
 
-            function modifyOutputs(letter, dihDah) {
-                const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter" onmouseover="playLetter('${letter}')">${letter}</span>`;
-                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah" onmouseover="playDihDah('${dihDah}')">${dihDah}</span>`;
-                const odd = document.getElementById('dihDahOutput').innerHTML;
-
-                document.getElementById('letterOutput').innerHTML += lt;
-                if (lt === ' ') {
-                    document.getElementById('dihDahOutput').innerHTML = `<br/> ${odd}`;
-                } else {
-                    document.getElementById('dihDahOutput').innerHTML = `${lt} : ${dd} <br/> ${odd}`;
+            function modifyOutputs(index, size, letter, dihDah) {
+                function modifyLetter() {
+                    let normLetter = letter === '_BT_WORD_SPACE' ? ' ' : letter;
+                    document.getElementById('letterOutput').innerHTML += normLetter;
                 }
+
+                function postProcessWords() {
+                    if (index === size - 1) {
+                        const words = document.getElementById('letterOutput').innerHTML
+                            .split(' ')
+                            .map(word => `<span class="letter" onmouseover="playWord('${word}')">${word}</span>`)
+                            .join(' ');
+
+                        document.getElementById('letterOutput').innerHTML = words;
+                    }
+                }
+
+                function modifyDihDah() {
+                    const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter" onmouseover="playLetter('${letter}')">${letter}</span>`;
+                    const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah" onmouseover="playDihDah('${dihDah}')">${dihDah}</span>`;
+                    const odd = document.getElementById('dihDahOutput').innerHTML;
+
+                    if (lt === ' ') {
+                        document.getElementById('dihDahOutput').innerHTML = `<br/> ${odd}`;
+                    } else {
+                        document.getElementById('dihDahOutput').innerHTML = `${lt} : ${dd} <br/> ${odd}`;
+                    }
+                }
+                
+                modifyLetter();
+                modifyDihDah();
+                postProcessWords();
+            }
+
+            function playWord(word) {
+                const morseCode = getMorseCode(word, undefined);
+                isPlaying = true;
+                morseCode.play();
             }
 
             function playLetter(letter) {
@@ -114,7 +149,7 @@
                 playLetter(d2l.get(dihDah));
             }
 
-            function getMorseCode(text, handler) {
+            function getMorseCode(text, letterHandler) {
                 function getCode(c) {
                     function getSrc(dd) {
                         const audioPattern = [...dd].join(' ');
@@ -202,7 +237,11 @@
                         }
 
                         const letter = this.letters[this.letterIndex];
-                        handler(letter.letter, letter.dd);
+
+                        if (letterHandler) {
+                            letterHandler(this.letterIndex, this.letters.length, letter.letter, letter.dd);
+                        }
+                        
                         this.letterIndex += 1;
                         const playable = getLetterPlayable(letter, this);
                         playable.play();
