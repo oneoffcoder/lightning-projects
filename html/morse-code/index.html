@@ -34,8 +34,13 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js" crossorigin="anonymous"></script>
         <script>
             const l2d = getL2D();
+            let isPlaying = false;
 
             function generate() {
+                if (isPlaying === true) {
+                    return;
+                }
+
                 const text = getTextInput();
                 if (!text) {
                     return;
@@ -44,6 +49,7 @@
                 clearOutputs();
 
                 const morseCode = getMorseCode(text, modifyOutputs);
+                isPlaying = true;
                 morseCode.play();
             }
 
@@ -154,6 +160,7 @@
                     letters: tokens,
                     play: function() {
                         if (this.letterIndex >= this.letters.length) {
+                            isPlaying = false;
                             return;
                         }
 
