@@ -20,7 +20,7 @@
         </div>
         <div class="form-group">
             <label for="text">Type your text below</label>
-            <textarea class="form-control" id="text" rows="3">sos</textarea>
+            <textarea class="form-control" id="text" rows="3">sos one-off coder</textarea>
         </div>
         <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
         
@@ -37,84 +37,108 @@
                     return;
                 }
 
-                const words = text
+                const morseCode = getMorseCode(text);
+                morseCode.play();
+            }
+
+            function getMorseCode(text) {
+                function getCode(c) {
+                    function getSrc(dd) {
+                        const audioPattern = [...dd].join(' ');
+                        const audios = [...audioPattern]
+                            .map(c => c === '.' ? 'audios/dih.wav' : c === '-' ? 'audios/dah.wav' : 'audios/space.wav');
+                        return audios;
+                    }
+
+                    const dd = l2d.get(c);
+                    const src = getSrc(dd);
+                    
+                    return {
+                        letter: c,
+                        dd: dd,
+                        src: src
+                    }
+                }
+
+                const normText = text
                     .split(' ')
                     .map(t => t.toUpperCase().trim())
-                    .filter(t => t.length > 0);
-                if (words.length < 1) {
-                    return;
-                }
+                    .filter(t => t.length > 0)
+                    .map(t => [...t].filter(l => l2d.has(l)).join(''))
+                    .join(' ');
 
-                const ddWords = [...words].map(word => convertWord(word));
-                ddWords.forEach(ddWord => {
-                    console.log(ddWord.word);
-                    console.log(ddWord.ddLetters);
-                    console.log(ddWord.ddAudios);
-                    console.log(ddWord.playable);
-                    ddWord.playable.next();
-                });
-            }
-
-            function convertWord(word) {
-                const ddLetters = convertWordToDihDahLetters(word);
-                const ddAudios = flattenDihDahLetterAudios([...ddLetters].map(c => convertDihDahLetterToSound(c)));
-                return {
-                    word: word,
-                    ddLetters: ddLetters,
-                    ddAudios: ddAudios,
-                    playable: convertDdAudioToPlayable(ddAudios)
-                }
-            }
-
-            function convertDdAudioToPlayable(ddAudios) {
-                return {
-                    index: 0,
-                    audios: ddAudios,
-                    next: function() {
-                        const audio = this.audios[this.index];
-                        const howl = new Howl({
-                            src: [audio],
-                            onend: () => {
-                                if (this.index <= this.audios.length - 1) {
-                                    this.index += 1;
-                                    this.next();
-                                }
-                            }
+                const words = [...normText];
+                const tokens = Array();
+                for (let i = 0; i < words.length; i++) {
+                    const word = words[i];
+                    if (word === ' ') {
+                        tokens.push({
+                            letter: '_BT_WORD_SPACE',
+                            dd: '_BT_WORD_SPACE',
+                            src: [...'       '].map(c => 'audios/space.wav')
                         });
-                        howl.play();
-                    }
-                }
-            }
-
-            function flattenDihDahLetterAudios(ddAudios) {
-                const audios = Array();
-                for (let i = 0; i < ddAudios.length; i++) {
-                    const arr = ddAudios[i];
-                    for (let j = 0; j < arr.length; j++) {
-                        audios.push(arr[j]);
-                    }
-
-                    if (i < ddAudios.length - 1) {
-                        for (let j = 0; j < 3; j++) {
-                            audios.push('audios/space.wav');
+                    } else {
+                        const letters = [...word];
+                        for (let j = 0; j < letters.length; j++) {
+                            tokens.push(getCode(letters[j]));
+                            if (j < letters.length - 1) {
+                                tokens.push({
+                                    letter: '_BT_LETTER_SPACE',
+                                    dd: '_BT_LETTER_SPACE',
+                                    src: [...'   '].map(c => 'audios/space.wav')
+                                })
+                            }
                         }
                     }
                 }
-                return audios;
-            }
 
-            function convertWordToDihDahLetters(word) {
-                return [...word]
-                    .map(c => c.toUpperCase())
-                    .filter(c => l2d.has(c))
-                    .map(c => l2d.get(c));
-            }
+                function getLetterPlayable(letter, callback) {
+                    return {
+                        index: 0,
+                        letter: letter.letter,
+                        dd: letter.dd,
+                        audios: letter.src,
+                        callback: callback,
+                        play: function() {
+                            const audio = this.audios[this.index];
+                                                        
+                            const howl = new Howl({
+                                src: [audio],
+                                onend: () => {
+                                    this.index += 1;
+                                    
+                                    if (this.index <= this.audios.length - 1) {
+                                        this.play();
+                                    } else {
+                                        callback.play();
+                                    }
+                                }
+                            });
+                            howl.play();
+                        }
+                    };
+                }
 
-            function convertDihDahLetterToSound(ddLetter) {
-                const dihDhas = [...ddLetter].join(' ');
-                return [...dihDhas]
-                    .filter(c => c === '.' || c === '-' || c === ' ')
-                    .map(c => c === '.' ? 'audios/dih.wav' : c === '-' ? 'audios/dah.wav' : 'audios/space.wav');
+
+                console.log(normText);
+                console.table(tokens);
+                console.log(tokens);
+
+                return {
+                    letterIndex: 0,
+                    letters: tokens,
+                    play: function() {
+                        if (this.letterIndex >= this.letters.length) {
+                            return;
+                        }
+
+                        const letter = this.letters[this.letterIndex];
+                        console.log(`LETTER: playing ${letter.letter}`);
+                        this.letterIndex += 1;
+                        const playable = getLetterPlayable(letter, this);
+                        playable.play();
+                    }
+                }
             }
 
             function getTextInput() {
