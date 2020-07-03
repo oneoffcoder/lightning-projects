@@ -23,6 +23,10 @@
             <textarea class="form-control" id="text" rows="3">sos one-off coder</textarea>
         </div>
         <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
+        <br/>
+        <br/>
+        <div id="letterOutput" class="alert alert-primary" role="alert">&nbsp;</div>
+        <div id="dihDahOutput" class="alert alert-secondary" role="alert">&nbsp;</div>
         
         <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -37,11 +41,32 @@
                     return;
                 }
 
-                const morseCode = getMorseCode(text);
+                clearOutputs();
+
+                const morseCode = getMorseCode(text, modifyOutputs);
                 morseCode.play();
             }
 
-            function getMorseCode(text) {
+            function clearOutputs() {
+                document.getElementById('letterOutput').innerHTML = '';
+                document.getElementById('dihDahOutput').innerHTML = '';
+            }
+
+            function modifyOutputs(letter, dihDah) {
+                const lt = letter === '_BT_WORD_SPACE' ? ' ' : letter;
+                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : dihDah;
+                const odd = document.getElementById('dihDahOutput').innerHTML;
+
+                document.getElementById('letterOutput').innerHTML += lt;
+                if (lt === ' ') {
+                    document.getElementById('dihDahOutput').innerHTML = `<br/> ${odd}`;
+                } else {
+                    document.getElementById('dihDahOutput').innerHTML = `${lt} : ${dd} <br/> ${odd}`;
+                }
+                
+            }
+
+            function getMorseCode(text, handler) {
                 function getCode(c) {
                     function getSrc(dd) {
                         const audioPattern = [...dd].join(' ');
@@ -133,7 +158,8 @@
                         }
 
                         const letter = this.letters[this.letterIndex];
-                        console.log(`LETTER: playing ${letter.letter}`);
+                        console.log(`LETTER: playing ${letter.letter} => ${letter.dd}`);
+                        handler(letter.letter, letter.dd);
                         this.letterIndex += 1;
                         const playable = getLetterPlayable(letter, this);
                         playable.play();
