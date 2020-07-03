@@ -1,0 +1,161 @@
+<html>
+    <head>
+        <title>Morse Code</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <style>
+            * {
+                font-family: monospace;
+            }
+            body {
+                margin: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="form-group">
+            <label for="text">Text</label>
+            <textarea class="form-control" id="text" rows="3">sos</textarea>
+        </div>
+        <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js" crossorigin="anonymous"></script>
+        <script>
+            const l2d = getL2D();
+
+            function generate() {
+                const text = getTextInput();
+                if (!text) {
+                    return;
+                }
+
+                const words = text
+                    .split(' ')
+                    .map(t => t.toUpperCase().trim())
+                    .filter(t => t.length > 0);
+                if (words.length < 1) {
+                    return;
+                }
+
+                const ddWords = [...words].map(word => convertWord(word));
+                ddWords.forEach(ddWord => {
+                    console.log(ddWord.word);
+                    console.log(ddWord.ddLetters);
+                    console.log(ddWord.ddAudios);
+                    console.log(ddWord.playable);
+                    ddWord.playable.next();
+                });
+            }
+
+            function convertWord(word) {
+                const ddLetters = convertWordToDihDahLetters(word);
+                const ddAudios = flattenDihDahLetterAudios([...ddLetters].map(c => convertDihDahLetterToSound(c)));
+                return {
+                    word: word,
+                    ddLetters: ddLetters,
+                    ddAudios: ddAudios,
+                    playable: convertDdAudioToPlayable(ddAudios)
+                }
+            }
+
+            function convertDdAudioToPlayable(ddAudios) {
+                return {
+                    index: 0,
+                    audios: ddAudios,
+                    next: function() {
+                        const audio = this.audios[this.index];
+                        const howl = new Howl({
+                            src: [audio],
+                            onend: () => {
+                                if (this.index <= this.audios.length - 1) {
+                                    this.index += 1;
+                                    this.next();
+                                }
+                            }
+                        });
+                        howl.play();
+                    }
+                }
+            }
+
+            function flattenDihDahLetterAudios(ddAudios) {
+                const audios = Array();
+                for (let i = 0; i < ddAudios.length; i++) {
+                    const arr = ddAudios[i];
+                    for (let j = 0; j < arr.length; j++) {
+                        audios.push(arr[j]);
+                    }
+
+                    if (i < ddAudios.length - 1) {
+                        for (let j = 0; j < 3; j++) {
+                            audios.push('audios/space.wav');
+                        }
+                    }
+                }
+                return audios;
+            }
+
+            function convertWordToDihDahLetters(word) {
+                return [...word]
+                    .map(c => c.toUpperCase())
+                    .filter(c => l2d.has(c))
+                    .map(c => l2d.get(c));
+            }
+
+            function convertDihDahLetterToSound(ddLetter) {
+                const dihDhas = [...ddLetter].join(' ');
+                return [...dihDhas]
+                    .filter(c => c === '.' || c === '-' || c === ' ')
+                    .map(c => c === '.' ? 'audios/dih.wav' : c === '-' ? 'audios/dah.wav' : 'audios/space.wav');
+            }
+
+            function getTextInput() {
+                const textArea = document.getElementById('text');
+                return textArea.value;
+            }
+
+            function getL2D() {
+                const l2d = new Map();
+                l2d.set('A', '.-');
+                l2d.set('B', '-...');
+                l2d.set('C', '-.-.');
+                l2d.set('D', '-..');
+                l2d.set('E', '.');
+                l2d.set('F', '..-.');
+                l2d.set('G', '--.');
+                l2d.set('H', '....');
+                l2d.set('I', '..');
+                l2d.set('J', '.---');
+                l2d.set('K', '-.-');
+                l2d.set('L', '.-..');
+                l2d.set('M', '--');
+                l2d.set('N', '-.');
+                l2d.set('O', '---');
+                l2d.set('P', '.--.');
+                l2d.set('Q', '--.-');
+                l2d.set('R', '.-.');
+                l2d.set('S', '...');
+                l2d.set('T', '-');
+                l2d.set('U', '..-');
+                l2d.set('V', '...-');
+                l2d.set('W', '.--');
+                l2d.set('X', '-..-');
+                l2d.set('Y', '-.--');
+                l2d.set('Z', '--..');
+                l2d.set('1', '.----');
+                l2d.set('2', '..---');
+                l2d.set('3', '...--');
+                l2d.set('4', '....-');
+                l2d.set('5', '.....');
+                l2d.set('6', '-....');
+                l2d.set('7', '--...');
+                l2d.set('8', '---..');
+                l2d.set('9', '----.');
+                l2d.set('0', '-----');
+                return l2d;
+            }
+        </script>
+    </body>
+</html>
