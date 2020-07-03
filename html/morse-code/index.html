@@ -9,6 +9,13 @@
             body {
                 margin: 10px;
             }
+            .letter {
+                font-size: large;
+            }
+            .dihdah {
+                font-size: xx-large;
+                font-weight: bolder;
+            }
         </style>
     </head>
     <body>
@@ -74,8 +81,8 @@
             }
 
             function modifyOutputs(letter, dihDah) {
-                const lt = letter === '_BT_WORD_SPACE' ? ' ' : letter;
-                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : dihDah;
+                const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter">${letter}</span>`;
+                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah">${dihDah}</span>`;
                 const odd = document.getElementById('dihDahOutput').innerHTML;
 
                 document.getElementById('letterOutput').innerHTML += lt;
