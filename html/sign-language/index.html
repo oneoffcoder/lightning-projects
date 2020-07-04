@@ -42,7 +42,28 @@
                 </div>
             </div>
             <div class="col">
-                <button type="button" class="btn btn-primary" onclick="next()">Next</button>
+                <div>
+                    Which letter is represented by the picture?
+                </div>
+                <div class="btn-group" data-toggle="buttons">
+                    <label class="btn btn-info">
+                        <input type="radio" name="options" id="option1" onclick="optionClicked(1)"> <span
+                            id="answer1">A</span>
+                    </label>
+                    <label class="btn btn-secondary">
+                        <input type="radio" name="options" id="option2" onclick="optionClicked(2)"> <span
+                            id="answer2">B</span>
+                    </label>
+                </div>
+
+                <div>
+                    <button type="button" class="btn btn-primary" onclick="next()">Next</button>
+                </div>
+
+                <br/>
+                <div id="result" class="result" role="alert">
+                    
+                </div>
             </div>
         </div>
     </div>
@@ -64,14 +85,52 @@
         crossorigin="anonymous"></script>
     <script>
         const data = getData();
+        let answer;
 
         function init() {
             next();
         }
 
+        function optionClicked(option) {
+            console.log(option);
+            const id = `answer${option}`;
+            const choice = document.getElementById(id).innerHTML;
+            console.log(answer === choice);
+
+            const div = document.getElementById('result');
+            div.style.display = 'block';
+
+            if (answer === choice) {
+                div.setAttribute('class', 'alert alert-success');
+                div.innerHTML = 'correct!';
+            } else {
+                div.setAttribute('class', 'alert alert-danger');
+                div.innerHTML = 'incorrect!';
+            }
+        }
+
+        function clearRadios() {
+            const options = document.getElementsByName('options');
+            for (let i = 0; i < options.length; i++) {
+                options[i].checked = false;
+            }
+        }
+
         function next() {
-            const item = getRandomChar();
-            document.getElementById('alphabet').src = item.src;
+            clearRadios();
+            const item1 = getRandomChar();
+            const item2 = getRandomChar();
+
+            document.getElementById('alphabet').src = item1.src;
+            answer = item1.data;
+            console.log(answer);
+
+            const options = _.shuffle([item1.data, item2.data]);
+            document.getElementById('answer1').innerHTML = options[0];
+            document.getElementById('answer2').innerHTML = options[1];
+
+            const div = document.getElementById('result');
+            div.style.display = 'none';
         }
 
         function getDims(srcW, srcH, maxW, maxH) {
