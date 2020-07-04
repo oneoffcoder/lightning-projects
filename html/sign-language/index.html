@@ -13,17 +13,15 @@
             margin: 10px;
         }
 
-        .alphabet {
-            width: calc(20vw);
-            height: calc(50vw - 25vw);
-            margin-left: auto;
-            margin-right: auto;
-            border: 1px solid black !important;
+        .container .img-thumbnail {
+            display: block;
+            width: auto;
+            max-height: 200px;
         }
     </style>
 </head>
 
-<body onload="init()" onresize="resizeImage()">
+<body onload="init()">
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-4">American Manual Alphabet</h1>
@@ -38,17 +36,19 @@
     </div>
     <div class="container">
         <div class="row">
-          <div class="col">
-            <div id="alphabet" class="alphabet"></div>
-          </div>
-          <div class="col">
-            <button type="button" class="btn btn-primary" onclick="next()">Next</button>
-          </div>
+            <div class="col">
+                <div class="text-center">
+                    <img id="alphabet" src="images/a.png" class="img-fluid img-thumbnail mx-auto d-block" />
+                </div>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-primary" onclick="next()">Next</button>
+            </div>
         </div>
-      </div>
-    
+    </div>
+
     <div>
-        
+
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
@@ -70,42 +70,8 @@
         }
 
         function next() {
-            const div = document.getElementById('alphabet');
-            const maxW = div.clientWidth;
-            const maxH = div.clientHeight;
-
-            div.innerHTML = '';
-
             const item = getRandomChar();
-            const img = new Image();
-            img.onload = function() {
-                const imgW = this.width;
-                const imgH = this.height;
-
-                const dims = getDims(imgW, imgH, maxW, maxH);
-                
-                img.width = dims.width;
-                img.height = dims.height;
-                img.classList.add('alphabet-image');
-
-                div.appendChild(img);
-            };
-            img.src = item.src;
-        }
-
-        function resizeImage() {
-            const div = document.getElementById('alphabet');
-            const maxW = div.clientWidth;
-            const maxH = div.clientHeight;
-
-            const img = document.getElementsByClassName('alphabet-image')[0];
-            const imgW = img.width;
-            const imgH = img.height;
-
-            const dims = getDims(imgW, imgH, maxW, maxH);
-            
-            img.width = dims.width;
-            img.height = dims.height;
+            document.getElementById('alphabet').src = item.src;
         }
 
         function getDims(srcW, srcH, maxW, maxH) {
