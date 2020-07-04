@@ -1,106 +1,139 @@
 <html>
-    <head>
-        <title>Slot Machine!</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-        <script>
-            function getRandomNumber() {
-                return Math.floor(Math.random() * 2) + 1;
-            }
 
-            function getElement(id) {
-                return document.getElementById(id);
-            }
+<head>
+    <title>Slot Machine!</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
+    <style>
+        * {
+            font-family: monospace;
+        }
 
-            function spin() {
-                const item1 = getElement('item1');
-                const item2 = getElement('item2');
-                const item3 = getElement('item3');
+        body {
+            margin: 10px;
+        }
 
-                const num1 = getRandomNumber();
-                const num2 = getRandomNumber();
-                const num3 = getRandomNumber();
+        .slot-number {
+            font-size: 100px;
+        }
 
-                item1.innerHTML = `${num1}`;
-                item2.innerHTML = `${num2}`;
-                item3.innerHTML = `${num3}`;
+        .message {
+            text-align: center;
+            display: none;
+            font-size: xx-large;
+            color: red;
+        }
 
-                if (num1 === num2 && num1 === num3) {
-                    playBoing();
-                    showMessage();
-                } else {
-                    hideMessage();
-                }
-            } 
+        .center {
+            text-align: center;
+        }
 
-            function playBoing() {
-                const boing = document.getElementById("boing");
-                boing.play();
-            }
+        .lever {
+            margin-top: 5px;
+        }
 
-            function showMessage() {
-                const msg = document.getElementById("message");
-                msg.style.display = "block";
-                msg.classList.add('animated', 'pulse')
-            }
+        table.center {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    </style>
+</head>
 
-            function hideMessage() {
-                const msg = document.getElementById("message");
-                msg.style.display = "none";
-            }
-        </script>
-        <style>
-            * {
-                font-family: monospace;
-            }
-            body {
-                background-color: lightblue;
-            }
-            .slot-number {
-                font-size: 100px;
-            }
-            .message {
-                text-align: center;
-                display: none;
-                font-size: xx-large;
-                color: red;
-            }
-            .center {
-                text-align: center;
-            }
-            .lever {
-                margin-top: 5px;
-            }
-            table.center {
-                margin-left: auto;
-                margin-right: auto;
-            }
-        </style>
-    </head>
-    <body>
-        <h1 class="center">Play Slot!</h1>
-        <div class="center lever">
-            <button onclick="spin()">Lever</button>
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Play Slot!</h1>
+            <p class="lead">
+                Slot machine simulator
+            </p>
+            <hr class="my-4">
+            <p>
+                Hit lever button to start
+            </p>
         </div>
-        <table class="center">
-            <tbody>
-                <tr>
-                    <td>
-                        <span id="item1" class="slot-number">-</span>
-                    </td>
-                    <td>
-                        <span id="item2" class="slot-number">-</span>
-                    </td>
-                    <td>
-                        <span id="item3" class="slot-number">-</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div id="message" class="center message">
-            You Won!
-        </div>
-        <audio id="boing">
-            <source src="boing.mp3" type="audio/mpeg">
-        </audio>
-    </body>
+    </div>
+    <div class="center lever">
+        <button type="button" class="btn btn-primary" onclick="spin()">Lever</button>
+    </div>
+    <table class="center">
+        <tbody>
+            <tr>
+                <td>
+                    <span id="item1" class="slot-number">-</span>
+                </td>
+                <td>
+                    <span id="item2" class="slot-number">-</span>
+                </td>
+                <td>
+                    <span id="item3" class="slot-number">-</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div id="message" class="center message">
+        You Won!
+    </div>
+    <audio id="boing">
+        <source src="boing.mp3" type="audio/mpeg">
+    </audio>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js" crossorigin="anonymous"></script>
+    <script>
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 2) + 1;
+        }
+
+        function getElement(id) {
+            return document.getElementById(id);
+        }
+
+        function spin() {
+            const item1 = getElement('item1');
+            const item2 = getElement('item2');
+            const item3 = getElement('item3');
+
+            const num1 = getRandomNumber();
+            const num2 = getRandomNumber();
+            const num3 = getRandomNumber();
+
+            item1.innerHTML = `${num1}`;
+            item2.innerHTML = `${num2}`;
+            item3.innerHTML = `${num3}`;
+
+            if (num1 === num2 && num1 === num3) {
+                playBoing();
+                showMessage();
+            } else {
+                hideMessage();
+            }
+        }
+
+        function playBoing() {
+            const boing = document.getElementById("boing");
+            boing.play();
+        }
+
+        function showMessage() {
+            const msg = document.getElementById("message");
+            msg.style.display = "block";
+            msg.classList.add('animated', 'pulse')
+        }
+
+        function hideMessage() {
+            const msg = document.getElementById("message");
+            msg.style.display = "none";
+        }
+    </script>
+</body>
+
 </html>
