@@ -1,9 +1,13 @@
 <html>
     <head>
         <title>Tic-Tac-Toe</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
         <style>
             * {
-                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                font-family: monospace;
+            }
+            body {
+                margin: 10px;
             }
             .center {
                 text-align: center;
@@ -19,6 +23,7 @@
                 width: 100px;
                 height: 100px;
                 padding: 15px;
+                border: 1px solid black;
             }
             .restart-button {
                 margin-bottom: 5px;
@@ -26,11 +31,18 @@
         </style>
     </head>
     <body onload="init()">
-        <div class="center">
-            <h1>Tic-Tac-Toe!</h1>
-        </div>
-        <div class="center">
-            <button id="restart-button" class="restart-button" onclick="restart()">restart</button>
+        <div class="jumbotron jumbotron-fluid">
+            <div class="container">
+                <h1 class="display-4">Tic-Tac-Toe!</h1>
+                <p class="lead">
+                    Classic Tic-Tac-Toe game; play against the computer
+                </p>
+                <hr class="my-4">
+                <p>
+                    Hit restart at any time to start over
+                </p>
+                <button id="restart-button" type="button" class="btn btn-primary" onclick="restart()">restart</button>
+            </div>
         </div>
         <table class="ttt-table">
             <tbody>
@@ -51,9 +63,8 @@
                 </tr>
             </tbody>
         </table>
-        <div id="result" class="center">
-
-        </div>
+        <br/>
+        <div id="result" class="alert alert-primary" role="alert" style="display: none;"></div>
 
         <audio id="clicked">
             <source src="audio/fairy.mp3" type="audio/mp3">
@@ -114,6 +125,7 @@
                     if (isGridFull()) {
                         gameOver = true;
                         result.innerHTML = `Draw!`;
+                        result.style.display = 'block';
                     } else {
                         function doTimer() {
                             const position = getComputerPosition();
@@ -128,6 +140,7 @@
                             if (winner !== 'none') {
                                 gameOver = true;
                                 result.innerHTML = `${winner} Win!`;
+                                result.style.display = 'block';
                             }
 
                             clearInterval(timer);
@@ -140,6 +153,7 @@
                 } else {
                     gameOver = true;
                     result.innerHTML = `${winner} Win!`;
+                    result.style.display = 'block';
                 }
             }
 
@@ -162,6 +176,7 @@
             function restart() {
                 const result = document.getElementById('result');
                 result.innerHTML = '';
+                result.style.display = 'none';
 
                 gameOver = false;
                 clearTable();
