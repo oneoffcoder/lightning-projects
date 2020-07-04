@@ -1,86 +1,125 @@
 <html>
-    <head>
-        <title>Guessing Game</title>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css">
-        <style>
-            * {
-                font-family: monospace;
-            }
-        </style>
-        <script>
-            let score = 0;
-            let total = 0;
-            let previousIndex = -1;
 
-            function getRandomNumber() {
-                return Math.floor(Math.random() * 10) + 1;
-            }
+<head>
+    <title>Guessing Game</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.2/animate.min.css"
+        crossorigin="anonymous">
+    <style>
+        * {
+            font-family: monospace;
+        }
 
-            function getRandomEffect() {
-                const effects = ['bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'swing'];
-                while (true) {
-                    const index = Math.floor(Math.random() * effects.length);
-                    if (index != previousIndex) {
-                        previousIndex = index;
-                        return effects[index];
-                    }
+        body {
+            margin: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Guessing Game</h1>
+            <p class="lead">
+                Are you able to guess which numbers the computer will generate?
+            </p>
+            <hr class="my-4">
+            <p>
+                Try entering the numbers: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+            </p>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Guess</span>
+                    </div>
+                    <input id="guess" type="number" min="1" max="10" type="text" class="form-control">
+                </div>
+            </div>
+            <div class="col-sm">
+                <button type="button" class="btn btn-primary" onclick="checkGuess()">
+                    Submit
+                </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm">
+                <div id="answer-div" class="alert alert-primary" style="display: none;" role="alert"></div>
+                <div id="score-div" class="alert alert-info" style="display: none;" role="alert"></div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <br />
+    
+    <audio id="boing">
+        <source src="boing.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        let score = 0;
+        let total = 0;
+        let previousIndex = -1;
+
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 10) + 1;
+        }
+
+        function getRandomEffect() {
+            const effects = ['bounce', 'flash', 'pulse', 'rubberBand', 'shake', 'swing'];
+            while (true) {
+                const index = Math.floor(Math.random() * effects.length);
+                if (index != previousIndex) {
+                    previousIndex = index;
+                    return effects[index];
                 }
             }
+        }
 
-            function checkGuess() {
-                const guess = document.getElementById('guess').value;
-                if (guess.length == 0) {
-                    return;
-                }
-                const number = parseInt(guess);
-                const randomNumber = getRandomNumber();
+        function checkGuess() {
+            const guess = document.getElementById('guess').value;
+            if (guess.length == 0) {
+                return;
+            }
+            const number = parseInt(guess);
+            const randomNumber = getRandomNumber();
 
-                let message = '';
-                if (number === randomNumber) {
-                    message = `Correct!`;
-                    score += 1;
-                } else {
-                    message = `Incorrect! Computer generated ${randomNumber}. You guessed ${number}.`;
-                }
-
-                total += 1;
-
-                const answerDiv = document.getElementById('answer-div');
-                answerDiv.innerHTML = message;
-
-                const scoreDiv = document.getElementById('score-div');
-                scoreDiv.innerHTML = `Score = ${score} of ${total}`;
-
-                if (number === randomNumber) {
-                    const effect = getRandomEffect();
-                    playBoing();
-                    console.log(`effect = ${effect}`);
-                    scoreDiv.className = '';
-                    scoreDiv.classList.add('animated', effect)
-                }
+            let message = '';
+            if (number === randomNumber) {
+                message = `Correct!`;
+                score += 1;
+            } else {
+                message = `Incorrect! Computer generated ${randomNumber}. You guessed ${number}.`;
             }
 
-            function playBoing() {
-                const boing = document.getElementById('boing');
-                boing.play();
-            }
-        </script>
-    </head>
-    <body>
-        <h1>Guessing Game!</h1>
-        <p>
-            Are you able to guess which numbers the computer will generate?
-        </p>
-        <p>
-            Try entering the numbers: 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-        </p>
-        <input id="guess" type="number" min="1" max="10">
-        <button type="button" onclick="checkGuess()">Guess!</button>
-        <div id="answer-div"></div>
-        <div id="score-div"></div>
+            total += 1;
 
-        <audio id="boing">
-            <source src="boing.mp3" type="audio/mpeg">
-        </audio>
-    </body>
+            const answerDiv = document.getElementById('answer-div');
+            answerDiv.innerHTML = message;
+            answerDiv.style.display = 'block';
+
+            const scoreDiv = document.getElementById('score-div');
+            scoreDiv.innerHTML = `Score = ${score} of ${total}`;
+            scoreDiv.style.display = 'block';
+
+            if (number === randomNumber) {
+                const effect = getRandomEffect();
+                playBoing();
+
+                scoreDiv.className = '';
+                scoreDiv.classList.add('alert', 'alert-info', 'animated', effect)
+            }
+        }
+
+        function playBoing() {
+            const boing = document.getElementById('boing');
+            boing.play();
+        }
+    </script>
+</body>
+
 </html>
