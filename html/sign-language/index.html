@@ -13,10 +13,13 @@
             margin: 10px;
         }
 
-        .container .img-thumbnail {
+        .img-max-height {
             display: block;
             width: auto;
-            max-height: 200px;
+            margin-left: auto;
+            margin-right: auto;
+            max-height: 100px;
+
         }
     </style>
 </head>
@@ -29,16 +32,16 @@
                 <a href="https://en.wikipedia.org/wiki/American_manual_alphabet" target="_blank">Wikipedia</a>
             </p>
             <hr class="my-4">
-            <p>
-                Learn the AMA
-            </p>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#chartModal">
+                View Chart
+            </button>
         </div>
     </div>
     <div class="container">
         <div class="row">
             <div class="col">
                 <div class="text-center">
-                    <img id="alphabet" src="images/a.png" class="img-fluid img-thumbnail mx-auto d-block" />
+                    <img id="alphabet" src="images/a.png" class="img-fluid img-max-height mx-auto d-block" />
                 </div>
             </div>
             <div class="col">
@@ -67,6 +70,237 @@
                 </div>
             </div>
         </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg"id="chartModal"  tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">APA Chart</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="alphabetChart" class="">
+                    <div class="row">
+                        <div class="col-3">
+                            <img src="images/a.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>a</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/b.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>b</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/c.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>c</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/d.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>d</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/e.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>e</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/f.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>f</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/g.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>g</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/h.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>h</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/i.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>i</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/j.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>j</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/k.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>k</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/l.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>l</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/m.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>m</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/n.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>n</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/o.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>o</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/p.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>p</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/q.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>q</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/r.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>r</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/s.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>s</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/t.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>t</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/u.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>u</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/v.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>v</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/w.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>w</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/x.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>x</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/y.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>y</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <img src="images/z.png" alt="" class="img-fluid img-max-height">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <span>z</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
