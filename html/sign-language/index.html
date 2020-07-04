@@ -45,6 +45,7 @@
                 <div>
                     Which letter is represented by the picture?
                 </div>
+                <br/>
                 <div class="btn-group" data-toggle="buttons">
                     <label class="btn btn-info">
                         <input type="radio" name="options" id="option1" onclick="optionClicked(1)"> <span
@@ -119,7 +120,10 @@
         function next() {
             clearRadios();
             const item1 = getRandomChar();
-            const item2 = getRandomChar();
+            let item2 = getRandomChar();
+            while (item2.data === item1.data) {
+                item2 = getRandomChar();
+            }
 
             document.getElementById('alphabet').src = item1.src;
             answer = item1.data;
