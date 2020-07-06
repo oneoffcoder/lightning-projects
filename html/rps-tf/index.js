@@ -11,30 +11,9 @@ const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 500;
 const mobile = false;
 
-const renderPointcloud = mobile === false;
-
 const state = {
     backend: 'webgl'
 };
-
-if (renderPointcloud) {
-    state.renderPointcloud = true;
-}
-
-function setupDatGui() {
-    const gui = new dat.GUI();
-    gui.add(state, 'backend', ['wasm', 'webgl', 'cpu', 'webgpu'])
-        .onChange(async backend => {
-            await tf.setBackend(backend);
-        });
-
-    if (renderPointcloud) {
-        gui.add(state, 'renderPointcloud').onChange(render => {
-            document.querySelector('#scatter-gl-container').style.display =
-                render ? 'inline-block' : 'none';
-        });
-    }
-}
 
 function drawPoint(ctx, y, x, r) {
     ctx.beginPath();
@@ -126,12 +105,6 @@ const main =
     }
 
 const landmarksRealTime = async (video) => {
-    setupDatGui();
-
-    const stats = new Stats();
-    stats.showPanel(0);
-    document.body.appendChild(stats.dom);
-
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
 
@@ -160,7 +133,6 @@ const landmarksRealTime = async (video) => {
     ];
 
     async function frameLandmarks() {
-        stats.begin();
         ctx.drawImage(
             video, 0, 0, videoWidth, videoHeight, 0, 0, canvas.width,
             canvas.height);
@@ -168,51 +140,14 @@ const landmarksRealTime = async (video) => {
         if (predictions.length > 0) {
             const result = predictions[0].landmarks;
             drawKeypoints(ctx, result, predictions[0].annotations);
-
-            if (renderPointcloud === true && scatterGL != null) {
-                const pointsData = result.map(point => {
-                    return [-point[0], -point[1], -point[2]];
-                });
-
-                const dataset =
-                    new ScatterGL.Dataset([...pointsData, ...ANCHOR_POINTS]);
-
-                if (!scatterGLHasInitialized) {
-                    scatterGL.render(dataset);
-
-                    const fingers = Object.keys(fingerLookupIndices);
-
-                    scatterGL.setSequences(
-                        fingers.map(finger => ({ indices: fingerLookupIndices[finger] })));
-                    scatterGL.setPointColorer((index) => {
-                        if (index < pointsData.length) {
-                            return 'steelblue';
-                        }
-                        return 'white';  // Hide.
-                    });
-                } else {
-                    scatterGL.updateDataset(dataset);
-                }
-                scatterGLHasInitialized = true;
-            }
         }
-        stats.end();
         requestAnimationFrame(frameLandmarks);
     };
 
     frameLandmarks();
-
-    if (renderPointcloud) {
-        document.querySelector('#scatter-gl-container').style =
-            `width: ${VIDEO_WIDTH}px; height: ${VIDEO_HEIGHT}px;`;
-
-        scatterGL = new ScatterGL(
-            document.querySelector('#scatter-gl-container'),
-            { 'rotateOnStart': false, 'selectEnabled': false });
-    }
 };
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
 
-main();
+tf.setBackend('webgl').then(() => main());
