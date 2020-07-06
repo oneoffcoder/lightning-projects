@@ -11,10 +11,6 @@ const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 500;
 const mobile = false;
 
-const state = {
-    backend: 'webgl'
-};
-
 function drawKeypoints(ctx, keypoints) {
     function drawPoint(ctx, y, x, r) {
         ctx.beginPath();
@@ -84,7 +80,6 @@ async function loadVideo() {
 
 const main =
     async () => {
-        await tf.setBackend(state.backend);
         model = await handpose.load();
         let video;
 
@@ -111,9 +106,6 @@ const landmarksRealTime = async (video) => {
 
     const ctx = canvas.getContext('2d');
 
-    video.width = videoWidth;
-    video.height = videoHeight;
-
     ctx.clearRect(0, 0, videoWidth, videoHeight);
     ctx.strokeStyle = 'red';
     ctx.fillStyle = 'red';
@@ -135,7 +127,12 @@ const landmarksRealTime = async (video) => {
         const predictions = await model.estimateHands(video);
         if (predictions.length > 0) {
             const result = predictions[0].landmarks;
-            drawKeypoints(ctx, result, predictions[0].annotations);
+            const annots = predictions[0].annotations;
+            console.log('result');
+            console.log(result);
+            console.log('annots');
+            console.log(annots);
+            drawKeypoints(ctx, result, annots);
         }
         requestAnimationFrame(frameLandmarks);
     };
