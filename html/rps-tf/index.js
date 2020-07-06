@@ -6,7 +6,7 @@ let videoWidth, videoHeight,
         ringFinger: [0, 13, 14, 15, 16],
         pinky: [0, 17, 18, 19, 20]
     };
-
+let model;
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 500;
 const mobile = false;
@@ -15,13 +15,27 @@ const state = {
     backend: 'webgl'
 };
 
-function drawPoint(ctx, y, x, r) {
-    ctx.beginPath();
-    ctx.arc(x, y, r, 0, 2 * Math.PI);
-    ctx.fill();
-}
-
 function drawKeypoints(ctx, keypoints) {
+    function drawPoint(ctx, y, x, r) {
+        ctx.beginPath();
+        ctx.arc(x, y, r, 0, 2 * Math.PI);
+        ctx.fill();
+    }
+
+    function drawPath(ctx, points, closePath) {
+        const region = new Path2D();
+        region.moveTo(points[0][0], points[0][1]);
+        for (let i = 1; i < points.length; i++) {
+            const point = points[i];
+            region.lineTo(point[0], point[1]);
+        }
+
+        if (closePath) {
+            region.closePath();
+        }
+        ctx.stroke(region);
+    }
+
     const keypointsArray = keypoints;
 
     for (let i = 0; i < keypointsArray.length; i++) {
@@ -38,22 +52,6 @@ function drawKeypoints(ctx, keypoints) {
     }
 }
 
-function drawPath(ctx, points, closePath) {
-    const region = new Path2D();
-    region.moveTo(points[0][0], points[0][1]);
-    for (let i = 1; i < points.length; i++) {
-        const point = points[i];
-        region.lineTo(point[0], point[1]);
-    }
-
-    if (closePath) {
-        region.closePath();
-    }
-    ctx.stroke(region);
-}
-
-let model;
-
 async function setupCamera() {
     if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
         throw new Error(
@@ -65,8 +63,6 @@ async function setupCamera() {
         'audio': false,
         'video': {
             facingMode: 'user',
-            // Only setting the video to a specified size in order to accommodate a
-            // point cloud, so on mobile devices accept the default size.
             width: mobile ? undefined : VIDEO_WIDTH,
             height: mobile ? undefined : VIDEO_HEIGHT
         },
