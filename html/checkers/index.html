@@ -1,311 +1,251 @@
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>Checkers</title>
-        <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
-        <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
-        <style>
-            * {
-                font-family: monospace;
-            }
-            .center {
-                text-align: center;
-            }
-            .checker-board {
-                border-collapse:collapse;
-                border:1px solid #000000; 
-                margin: auto;
-            }
-            .checker-cell {
-                border:1px solid #000000;
-                width: 75px;
-                height: 75px;
-                text-align: center;
-            }
-            .checker-cell.over-legal {
-                border: 2px dashed #00FF00;
-            }
-            .checker-cell.over-illegal {
-                border: 2px dashed #FF0000;
-            }
-            .brown-cell {
-                background: brown;
-            }
-            .red-cell {
-                background: lightgray;
-            }
-            .piece {
-                width: 50px;
-                height: 50px;
-            }
-            .meta-table {
-                margin: auto;
-                width: 800px;
-            }
-            .meta-cell {
-                text-align: center;
-                width: 33%;
-            }
-            .score {
-                font-size: 30px;
-            }
-            .score.red {
-                color: red;
-            }
-            .score.black {
-                color: black;
-            }
-            .turn {
-                font-size: 30px;
-            }
-            h1.title {
-                font-size: 50px;
-            }
-        </style>
-    </head>
-    <body onload="init()">
-        <div class="center">
-            <h1 class="title">Checkers</h1>
-        </div>
-        <table id="board" class="checker-board">
-            
-        </table>
-        <table id="meta-table" class="meta-table">
-            <tbody>
-                <tr>
-                    <td class="meta-cell">
-                        Red Score
-                        <br/>
-                        <span id="red-score" class="score red">0</span>
-                    </td>
-                    <td class="meta-cell">
-                        <a href="https://www.oneoffcoder.com" target="_blank">
-                            <img src="images/logo.png" alt="One-Off Coder">
-                        </a>
-                        <br/>
-                        <span id="turn" class="turn">Red's Turn</span>
-                    </td>
-                    <td class="meta-cell">
-                        Black Score
-                        <br/>
-                        <span id="black-score" class="score black">0</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
 
-        <script>
-            const nRows = 8;
-            const nCols = 8;
-            let board;
-            let movingPiece = undefined;
-            let dragOverTd = undefined;
-            let cellSource = undefined;
-            let playerTurn = 'red';
-            let redScore = 0;
-            let blackScore = 0;
-            let pieces;
-            let pMap;
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Checkers game">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Checkers">
+    <meta name="author" content="Jee Vang, Ph.D.">
+    <meta name="organization" content="One-Off Coder">
+    <title>Checkers</title>
+    <!-- https://electronjs.org/docs/tutorial/security#csp-meta-tag -->
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+    <style>
+        * {
+            font-family: monospace;
+        }
 
-            function init() {
-                board = initBoard();
-                pieces = initPieces();
-                pMap = toMap(pieces);
+        .center {
+            text-align: center;
+        }
 
-                initTable(board);
-                initCell(pieces);
-            }
+        .checker-board {
+            border-collapse: collapse;
+            border: 1px solid #000000;
+            margin: auto;
+        }
 
-            function toMap(pieces) {
-                const m = {};
-                for (const piece of pieces) {
-                    const row = piece.row;
-                    const col = piece.col;
+        .checker-cell {
+            border: 1px solid #000000;
+            width: 75px;
+            height: 75px;
+            text-align: center;
+        }
 
-                    if (!m.hasOwnProperty(row)) {
-                        m[row] = {}
-                    }
-                    if (!m[row].hasOwnProperty(col)) {
-                        m[row][col] = piece;
-                    }
+        .checker-cell.over-legal {
+            border: 2px dashed #00FF00;
+        }
+
+        .checker-cell.over-illegal {
+            border: 2px dashed #FF0000;
+        }
+
+        .brown-cell {
+            background: brown;
+        }
+
+        .red-cell {
+            background: lightgray;
+        }
+
+        .piece {
+            width: 50px;
+            height: 50px;
+        }
+
+        .meta-table {
+            margin: auto;
+            width: 800px;
+        }
+
+        .meta-cell {
+            text-align: center;
+            width: 33%;
+        }
+
+        .score {
+            font-size: 30px;
+        }
+
+        .score.red {
+            color: red;
+        }
+
+        .score.black {
+            color: black;
+        }
+
+        .turn {
+            font-size: 30px;
+        }
+
+        h1.title {
+            font-size: 50px;
+        }
+    </style>
+</head>
+
+<body onload="init()">
+    <div class="center">
+        <h1 class="title">Checkers</h1>
+    </div>
+    <table id="board" class="checker-board">
+
+    </table>
+    <table id="meta-table" class="meta-table">
+        <tbody>
+            <tr>
+                <td class="meta-cell">
+                    Red Score
+                    <br />
+                    <span id="red-score" class="score red">0</span>
+                </td>
+                <td class="meta-cell">
+                    <a href="https://www.oneoffcoder.com" target="_blank">
+                        <img src="images/logo.png" alt="One-Off Coder">
+                    </a>
+                    <br />
+                    <span id="turn" class="turn">Red's Turn</span>
+                </td>
+                <td class="meta-cell">
+                    Black Score
+                    <br />
+                    <span id="black-score" class="score black">0</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <script>
+        const nRows = 8;
+        const nCols = 8;
+        let board;
+        let movingPiece = undefined;
+        let dragOverTd = undefined;
+        let cellSource = undefined;
+        let playerTurn = 'red';
+        let redScore = 0;
+        let blackScore = 0;
+        let pieces;
+        let pMap;
+
+        function init() {
+            board = initBoard();
+            pieces = initPieces();
+            pMap = toMap(pieces);
+
+            initTable(board);
+            initCell(pieces);
+        }
+
+        function toMap(pieces) {
+            const m = {};
+            for (const piece of pieces) {
+                const row = piece.row;
+                const col = piece.col;
+
+                if (!m.hasOwnProperty(row)) {
+                    m[row] = {}
                 }
-                return m;
+                if (!m[row].hasOwnProperty(col)) {
+                    m[row][col] = piece;
+                }
+            }
+            return m;
+        }
+
+        function getCoordinate(id) {
+            const tokens = id.split('-');
+            const r = +tokens[1];
+            const c = +tokens[2];
+            return [r, c];
+        }
+
+        function getImageCell(imageId) {
+            const coord = getCoordinate(imageId);
+            const r = coord[0];
+            const c = coord[1];
+            const cellId = `cell-${r}-${c}`
+            const td = document.getElementById(cellId);
+            return td;
+        }
+
+        function handlePieceDragStart(e) {
+            const img = e.srcElement;
+            img.style.opacity = '0.1';
+
+            const tokens = img.id.split('-');
+            const r = +tokens[1];
+            const c = +tokens[2];
+            if (r < nRows && c < nCols) {
+                movingPiece = pMap[r][c];
             }
 
-            function getCoordinate(id) {
-                const tokens = id.split('-');
+            const td = getImageCell(img.id);
+            const data = td.innerHTML;
+            e.dataTransfer.setData('text/html', data);
+            cellSource = td;
+            // console.log(`handlePieceDragStart ${td.id} ${img.id}`);
+        }
+
+        function handlePieceDragEnter(e) {
+            const img = e.srcElement;
+            const td = getImageCell(img.id);
+            if (movingPiece) {
+                const tokens = td.id.split('-');
                 const r = +tokens[1];
                 const c = +tokens[2];
-                return [r, c];
+
+                const isLegalMove = movingPiece.isLegalMove(r, c);
+                const clazz = isLegalMove ? 'over-legal' : 'over-illegal';
+                td.classList.add(clazz);
+                dragOverTd = td;
             }
+            // console.log(`handlePieceDragEnter ${td.id}`);
+        }
 
-            function getImageCell(imageId) {
-                const coord = getCoordinate(imageId);
-                const r = coord[0];
-                const c = coord[1];
-                const cellId = `cell-${r}-${c}`
-                const td = document.getElementById(cellId);
-                return td;
-            }
-
-            function handlePieceDragStart(e) {
-                const img = e.srcElement;
-                img.style.opacity = '0.1';
-
-                const tokens = img.id.split('-');
+        function handlePieceDragOver(e) {
+            const img = e.srcElement;
+            const td = getImageCell(img.id);
+            if (movingPiece) {
+                const tokens = td.id.split('-');
                 const r = +tokens[1];
                 const c = +tokens[2];
-                if (r < nRows && c < nCols) {
-                    movingPiece = pMap[r][c];
-                }
 
-                const td = getImageCell(img.id);
-                const data = td.innerHTML;
-                e.dataTransfer.setData('text/html', data);
-                cellSource = td;
-                // console.log(`handlePieceDragStart ${td.id} ${img.id}`);
+                td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
+                dragOverTd = td;
             }
+            // console.log(`handlePieceDragOver ${td.id}`);
+        }
 
-            function handlePieceDragEnter(e) {
-                const img = e.srcElement;
-                const td = getImageCell(img.id);
-                if (movingPiece) {
-                    const tokens = td.id.split('-');
-                    const r = +tokens[1];
-                    const c = +tokens[2];
+        function handlePieceDragLeave(e) {
+            const img = e.srcElement;
+            const td = getImageCell(img.id);
+            td.classList.remove('over-illegal');
+            // console.log('handlePieceDragLeave');
+        }
 
-                    const isLegalMove = movingPiece.isLegalMove(r, c);
-                    const clazz = isLegalMove ? 'over-legal' : 'over-illegal';
-                    td.classList.add(clazz);
-                    dragOverTd = td;
-                }
-                // console.log(`handlePieceDragEnter ${td.id}`);
-            }
+        function handlePieceDragDrop(e) {
+            const img = e.srcElement;
+            const td = getImageCell(img.id);
+            handleDrop(td);
+        }
 
-            function handlePieceDragOver(e) {
-                const img = e.srcElement;
-                const td = getImageCell(img.id);
-                if (movingPiece) {
-                    const tokens = td.id.split('-');
-                    const r = +tokens[1];
-                    const c = +tokens[2];
+        function handlePieceDragEnd(e) {
+            const img = e.srcElement;
+            img.style.opacity = '1.0';
+            movingPiece = undefined;
+            cellSource = undefined;
+            // console.log('handlePieceDragEnd');
+        }
 
-                    td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
-                    dragOverTd = td;
-                }
-                // console.log(`handlePieceDragOver ${td.id}`);
-            }
-
-            function handlePieceDragLeave(e) {
-                const img = e.srcElement;
-                const td = getImageCell(img.id);
-                td.classList.remove('over-illegal');
-                // console.log('handlePieceDragLeave');
-            }
-
-            function handlePieceDragDrop(e) {
-                const img = e.srcElement;
-                const td = getImageCell(img.id);
-                handleDrop(td);
-            }
-
-            function handlePieceDragEnd(e) {
-                const img = e.srcElement;
-                img.style.opacity = '1.0';
-                movingPiece = undefined;
-                cellSource = undefined;
-                // console.log('handlePieceDragEnd');
-            }
-
-            function initCell(pieces) {
-                for (const piece of pieces) {
-                    const id = `img-${piece.row}-${piece.col}`
-                    const img = document.createElement('img');
-                    img.id = id;
-                    img.src = piece.image;
-                    img.className = 'piece';
-                    img.setAttribute('draggable', 'true');
-                    img.addEventListener('dragstart', handlePieceDragStart, false);
-                    img.addEventListener('dragenter', handlePieceDragEnter, false);
-                    img.addEventListener('dragover', handlePieceDragOver, false);
-                    img.addEventListener('dragleave', handlePieceDragLeave, false);
-                    img.addEventListener('drop', handlePieceDragDrop, false);
-                    img.addEventListener('dragend', handlePieceDragEnd, false);
-
-                    const cellId = `cell-${piece.row}-${piece.col}`;
-                    const cell = document.getElementById(cellId);
-                    cell.appendChild(img);
-                }
-            }
-
-            function handleCellDragStart(e) {
-                const td = e.srcElement;
-                if (!td.id.startsWith('cell')) {
-                    return;
-                }
-            }
-
-            function handleCellDragEnter(e) {
-                const td = e.srcElement;
-                if (!td.id.startsWith('cell')) {
-                    return;
-                }
-                // console.log(`handleCellDragEnter ${td.id}`);
-            }
-
-            function handleCellDragOver(e) {
-                if (e.preventDefault) {
-                    e.preventDefault();
-                }
-
-                e.dataTransfer.dropEffect = 'move';
-
-                const td = e.srcElement;
-                if (!td.id.startsWith('cell')) {
-                    return;
-                }
-
-                const coordinates = getCoordinate(td.id);
-                const r = coordinates[0];
-                const c = coordinates[1];
-                if (movingPiece) {
-                    td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
-                    dragOverTd = td;
-                }
-                // console.log(`handleCellDragOver ${td.id}`);
-            }
-
-            function handleDrop(cellTarget) {
-                if (!(movingPiece && cellSource && cellTarget)) {
-                    return;
-                }
-
-                const sourceCoord = getCoordinate(cellSource.id);
-                const targetCoord = getCoordinate(cellTarget.id);
-
-                const sR = sourceCoord[0];
-                const tR = targetCoord[0];
-
-                const sC = sourceCoord[1];
-                const tC = targetCoord[1];
-
-                if (sR === tR && sC === tC) {
-                    // source and target are the same
-                    return;
-                }
-
-                if (!movingPiece.isLegalMove(tR, tC)) {
-                    // illegal move
-                    return;
-                }
-
-                cellTarget.innerHTML = cellSource.innerHTML;
-                cellTarget.classList.remove('over-legal');
-                cellSource.innerHTML = '';
-
-                const img = document.getElementById(`img-${sR}-${sC}`);
-                img.style.opacity = '1.0';
-                img.id = `img-${tR}-${tC}`;
+        function initCell(pieces) {
+            for (const piece of pieces) {
+                const id = `img-${piece.row}-${piece.col}`
+                const img = document.createElement('img');
+                img.id = id;
+                img.src = piece.image;
+                img.className = 'piece';
+                img.setAttribute('draggable', 'true');
                 img.addEventListener('dragstart', handlePieceDragStart, false);
                 img.addEventListener('dragenter', handlePieceDragEnter, false);
                 img.addEventListener('dragover', handlePieceDragOver, false);
@@ -313,430 +253,512 @@
                 img.addEventListener('drop', handlePieceDragDrop, false);
                 img.addEventListener('dragend', handlePieceDragEnd, false);
 
-                const piece = pMap[sR][sC];
-                
-                let coordinate = undefined;
-                if (piece.isCrowned === false) {
-                    if (isLeftCapture(piece.color, sR, sC, tR, tC)) {
-                        coordinate = getLeftCaptureCoordinate(piece.color, sR, sC);
-                    } else if (isRightCapture(piece.color, sR, sC, tR, tC)) {
-                        coordinate = getRightCaptureCoordinate(piece.color, sR, sC);
-                    }
-                } else {
-                    let coords = getQueenCaptureCoordinates(sR, sC);
-                    Object.keys(coords).forEach((k) => {
-                        if (coords[k].coord.r === tR && coords[k].coord.c === tC) {
-                            coordinate = [coords[k].capture.r, coords[k].capture.c];
-                        }
-                    });
-                }
+                const cellId = `cell-${piece.row}-${piece.col}`;
+                const cell = document.getElementById(cellId);
+                cell.appendChild(img);
+            }
+        }
 
-                if (coordinate) {
-                    const r = coordinate[0];
-                    const c = coordinate[1];
-                    if (pMap.hasOwnProperty(r) && pMap[r].hasOwnProperty(c)) {
-                        pieces.splice(pMap[r][c].index, 1);
-                        delete pMap[r][c];
-                    }
-                    const cellCapture = document.getElementById(`cell-${r}-${c}`);
-                    cellCapture.innerHTML = '';
+        function handleCellDragStart(e) {
+            const td = e.srcElement;
+            if (!td.id.startsWith('cell')) {
+                return;
+            }
+        }
 
-                    if (piece.color === 'red') {
-                        redScore++;
-                    } else {
-                        blackScore++;
-                    }
-                }                
+        function handleCellDragEnter(e) {
+            const td = e.srcElement;
+            if (!td.id.startsWith('cell')) {
+                return;
+            }
+            // console.log(`handleCellDragEnter ${td.id}`);
+        }
 
-                piece.row = tR;
-                piece.col = tC;
-
-                delete pMap[sR][sC];
-                if (!pMap.hasOwnProperty(tR)) {
-                    pMap[tR] = {};
-                }
-                pMap[tR][tC] = piece;
-
-                handleCrowning(piece);
-
-                playerTurn = 'red' === playerTurn ? 'black' : 'red';
-                movingPiece = undefined;
-                dragOverTd = undefined;
-                cellSource = undefined;
-
-                document.getElementById('turn').innerText = playerTurn === 'red' ? 'Red\'s Turn' : 'Black\'s Turn';
-                document.getElementById('red-score').innerText = `${redScore}`;
-                document.getElementById('black-score').innerText = `${blackScore}`;
+        function handleCellDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
             }
 
-            function handleCrowning(piece) {
-                // already crowned
-                if (piece.isCrowned === true) {
-                    return;
+            e.dataTransfer.dropEffect = 'move';
+
+            const td = e.srcElement;
+            if (!td.id.startsWith('cell')) {
+                return;
+            }
+
+            const coordinates = getCoordinate(td.id);
+            const r = coordinates[0];
+            const c = coordinates[1];
+            if (movingPiece) {
+                td.classList.add(movingPiece.isLegalMove(r, c) ? 'over-legal' : 'over-illegal');
+                dragOverTd = td;
+            }
+            // console.log(`handleCellDragOver ${td.id}`);
+        }
+
+        function handleDrop(cellTarget) {
+            if (!(movingPiece && cellSource && cellTarget)) {
+                return;
+            }
+
+            const sourceCoord = getCoordinate(cellSource.id);
+            const targetCoord = getCoordinate(cellTarget.id);
+
+            const sR = sourceCoord[0];
+            const tR = targetCoord[0];
+
+            const sC = sourceCoord[1];
+            const tC = targetCoord[1];
+
+            if (sR === tR && sC === tC) {
+                // source and target are the same
+                return;
+            }
+
+            if (!movingPiece.isLegalMove(tR, tC)) {
+                // illegal move
+                return;
+            }
+
+            cellTarget.innerHTML = cellSource.innerHTML;
+            cellTarget.classList.remove('over-legal');
+            cellSource.innerHTML = '';
+
+            const img = document.getElementById(`img-${sR}-${sC}`);
+            img.style.opacity = '1.0';
+            img.id = `img-${tR}-${tC}`;
+            img.addEventListener('dragstart', handlePieceDragStart, false);
+            img.addEventListener('dragenter', handlePieceDragEnter, false);
+            img.addEventListener('dragover', handlePieceDragOver, false);
+            img.addEventListener('dragleave', handlePieceDragLeave, false);
+            img.addEventListener('drop', handlePieceDragDrop, false);
+            img.addEventListener('dragend', handlePieceDragEnd, false);
+
+            const piece = pMap[sR][sC];
+
+            let coordinate = undefined;
+            if (piece.isCrowned === false) {
+                if (isLeftCapture(piece.color, sR, sC, tR, tC)) {
+                    coordinate = getLeftCaptureCoordinate(piece.color, sR, sC);
+                } else if (isRightCapture(piece.color, sR, sC, tR, tC)) {
+                    coordinate = getRightCaptureCoordinate(piece.color, sR, sC);
                 }
+            } else {
+                let coords = getQueenCaptureCoordinates(sR, sC);
+                Object.keys(coords).forEach((k) => {
+                    if (coords[k].coord.r === tR && coords[k].coord.c === tC) {
+                        coordinate = [coords[k].capture.r, coords[k].capture.c];
+                    }
+                });
+            }
+
+            if (coordinate) {
+                const r = coordinate[0];
+                const c = coordinate[1];
+                if (pMap.hasOwnProperty(r) && pMap[r].hasOwnProperty(c)) {
+                    pieces.splice(pMap[r][c].index, 1);
+                    delete pMap[r][c];
+                }
+                const cellCapture = document.getElementById(`cell-${r}-${c}`);
+                cellCapture.innerHTML = '';
 
                 if (piece.color === 'red') {
-                    if (piece.row === 0) {
-                        piece.isCrowned = true;
-                    }
-                } else if (piece.color === 'black') {
-                    if (piece.row === nRows - 1) {
-                        piece.isCrowned = true;
-                    }
+                    redScore++;
+                } else {
+                    blackScore++;
                 }
-
-                if (piece.isCrowned === true) {
-                    const id = `img-${piece.row}-${piece.col}`;
-                    document.getElementById(id).src = piece.queenImage;
-                }                
             }
 
-            function handleCellDragLeave(e) {
-                const td = e.srcElement;
-                if (!td.id.startsWith('cell')) {
-                    return;
-                }
-                td.classList.remove('over-legal');
-                td.classList.remove('over-illegal');
-                // console.log(`handleCellDragLeave ${td.id}`);
+            piece.row = tR;
+            piece.col = tC;
+
+            delete pMap[sR][sC];
+            if (!pMap.hasOwnProperty(tR)) {
+                pMap[tR] = {};
+            }
+            pMap[tR][tC] = piece;
+
+            handleCrowning(piece);
+
+            playerTurn = 'red' === playerTurn ? 'black' : 'red';
+            movingPiece = undefined;
+            dragOverTd = undefined;
+            cellSource = undefined;
+
+            document.getElementById('turn').innerText = playerTurn === 'red' ? 'Red\'s Turn' : 'Black\'s Turn';
+            document.getElementById('red-score').innerText = `${redScore}`;
+            document.getElementById('black-score').innerText = `${blackScore}`;
+        }
+
+        function handleCrowning(piece) {
+            // already crowned
+            if (piece.isCrowned === true) {
+                return;
             }
 
-            function handleCellDrop(e) {
-                if (e.stopPropagation) {
-                    e.stopPropagation();
+            if (piece.color === 'red') {
+                if (piece.row === 0) {
+                    piece.isCrowned = true;
                 }
-
-                const td = e.srcElement;
-                if (!td.id.startsWith('cell')) {
-                    return;
+            } else if (piece.color === 'black') {
+                if (piece.row === nRows - 1) {
+                    piece.isCrowned = true;
                 }
-                
-                handleDrop(td);
+            }
 
+            if (piece.isCrowned === true) {
+                const id = `img-${piece.row}-${piece.col}`;
+                document.getElementById(id).src = piece.queenImage;
+            }
+        }
+
+        function handleCellDragLeave(e) {
+            const td = e.srcElement;
+            if (!td.id.startsWith('cell')) {
+                return;
+            }
+            td.classList.remove('over-legal');
+            td.classList.remove('over-illegal');
+            // console.log(`handleCellDragLeave ${td.id}`);
+        }
+
+        function handleCellDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+
+            const td = e.srcElement;
+            if (!td.id.startsWith('cell')) {
+                return;
+            }
+
+            handleDrop(td);
+
+            return false;
+        }
+
+        function handleCellDragEnd(e) {
+            if (dragOverTd) {
+                dragOverTd.classList.remove('over-legal');
+                dragOverTd.classList.remove('over-illegal');
+                dragOverTd = undefined;
+            }
+
+            const td = getImageCell(e.srcElement.id);
+            if (!td.id.startsWith('cell')) {
+                return;
+            }
+            // console.log(`handlePieceDragEnd ${td.id}`);
+        }
+
+        function initTable(board) {
+            const table = document.getElementById('board');
+            for (let r = 0; r < nRows; r++) {
+                const row = table.insertRow(r);
+                for (let c = 0; c < nCols; c++) {
+                    const cell = row.insertCell(c);
+                    cell.id = `cell-${r}-${c}`;
+                    cell.classList.add('checker-cell');
+                    cell.classList.add(board[r][c].color === 'brown' ? 'brown-cell' : 'red-cell');
+                    if (board[r][c].color !== 'brown') {
+                        cell.addEventListener('dragstart', handleCellDragStart, false);
+                        cell.addEventListener('dragenter', handleCellDragEnter, false);
+                        cell.addEventListener('dragover', handleCellDragOver, false);
+                        cell.addEventListener('dragleave', handleCellDragLeave, false);
+                        cell.addEventListener('drop', handleCellDrop, false);
+                        cell.addEventListener('dragend', handleCellDragEnd, false);
+                    } else {
+                        cell.addEventListener('dragstart', (e) => { e.preventDefault(); }, false);
+                        cell.addEventListener('dragenter', (e) => {
+                            e.preventDefault();
+                            if (e.srcElement.id.startsWith('cell'))
+                                e.srcElement.classList.add('over-illegal');
+                        }, false);
+                        cell.addEventListener('dragover', (e) => {
+                            e.preventDefault();
+                            if (e.srcElement.id.startsWith('cell'))
+                                e.srcElement.classList.add('over-illegal');
+                        }, false);
+                        cell.addEventListener('dragleave', (e) => {
+                            e.preventDefault();
+                            if (e.srcElement.id.startsWith('cell'))
+                                e.srcElement.classList.remove('over-illegal');
+                        }, false);
+                        cell.addEventListener('drop', (e) => {
+                            e.preventDefault();
+                            if (e.srcElement.id.startsWith('cell'))
+                                e.srcElement.classList.remove('over-illegal');
+                        }, false);
+                        cell.addEventListener('dragend', (e) => {
+                            e.preventDefault();
+                            if (e.srcElement.id.startsWith('cell'))
+                                e.srcElement.classList.remove('over-illegal');
+                        }, false);
+                    }
+
+                }
+            }
+        }
+
+        function initPieces() {
+            const pieces = new Array();
+            let i = 0;
+            for (let r = 0; r < nRows; r++) {
+                for (let c = 0; c < nCols; c++) {
+                    const piece = getPiece(i, r, c);
+                    if (piece) {
+                        pieces.push(piece);
+                    }
+                }
+            }
+            return pieces;
+        }
+
+        function initBoard() {
+            const board = getBoard();
+            return board;
+        }
+
+        function getBoard() {
+            const board = Array(nRows);
+            for (let r = 0; r < nRows; r++) {
+                board[r] = new Array(nCols);
+                for (let c = 0; c < nCols; c++) {
+                    board[r][c] = getCell(r, c);
+                }
+            }
+            return board;
+        }
+
+        function getCell(r, c) {
+            return {
+                row: r,
+                col: c,
+                color: getCellColor(r, c)
+            }
+        }
+
+        function getCellColor(r, c) {
+            if (r % 2 === 0 && c % 2 === 0) {
+                return 'white';
+            } else if (r % 2 === 0 && c % 2 !== 0) {
+                return 'brown';
+            } else if (r % 2 !== 0 && c % 2 === 0) {
+                return 'brown';
+            } else {
+                return 'white';
+            }
+        }
+
+        function isCellOccupied(r, c) {
+            if (pMap.hasOwnProperty(r) && pMap[r].hasOwnProperty(c)) {
+                return true;
+            }
+            return false;
+        }
+
+        function getLeftCaptureMoveCoordinate(color, sR, sC) {
+            const dR = color === 'black' ? 2 : -2;
+            const r = sR + dR;
+            const c = sC - 2;
+            return [r, c];
+        }
+
+        function getRightCaptureMoveCoordinate(color, sR, sC) {
+            const dR = color === 'black' ? 2 : -2;
+            const r = sR + dR;
+            const c = sC + 2;
+            return [r, c];
+        }
+
+        function getLeftCaptureCoordinate(color, sR, sC) {
+            const dR = color === 'black' ? 1 : -1;
+            const r = sR + dR;
+            const c = sC - 1;
+            return [r, c];
+        }
+
+        function getRightCaptureCoordinate(color, sR, sC) {
+            const dR = color === 'black' ? 1 : -1;
+            const r = sR + dR;
+            const c = sC + 1;
+            return [r, c];
+        }
+
+        function isLeftCapture(color, sR, sC, tR, tC) {
+            let coordinate = getLeftCaptureMoveCoordinate(color, sR, sC);
+            let r = coordinate[0];
+            let c = coordinate[1];
+
+            const isValidMove = tR === r && tC === c && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+
+            if (!isValidMove) {
                 return false;
             }
 
-            function handleCellDragEnd(e) {
-                if (dragOverTd) {
-                    dragOverTd.classList.remove('over-legal');
-                    dragOverTd.classList.remove('over-illegal');
-                    dragOverTd = undefined;
-                }
+            coordinate = getLeftCaptureCoordinate(color, sR, sC);
+            r = coordinate[0];
+            c = coordinate[1];
 
-                const td = getImageCell(e.srcElement.id);
-                if (!td.id.startsWith('cell')) {
-                    return;
-                }
-                // console.log(`handlePieceDragEnd ${td.id}`);
+            if (isCellOccupied(r, c)) {
+                return true;
             }
 
-            function initTable(board) {
-                const table = document.getElementById('board');
-                for (let r = 0; r < nRows; r++) {
-                    const row = table.insertRow(r);
-                    for (let c = 0; c < nCols; c++) {
-                        const cell = row.insertCell(c);
-                        cell.id = `cell-${r}-${c}`;
-                        cell.classList.add('checker-cell');
-                        cell.classList.add(board[r][c].color === 'brown' ? 'brown-cell' : 'red-cell');
-                        if (board[r][c].color !== 'brown') {
-                            cell.addEventListener('dragstart', handleCellDragStart, false);
-                            cell.addEventListener('dragenter', handleCellDragEnter, false);
-                            cell.addEventListener('dragover', handleCellDragOver, false);
-                            cell.addEventListener('dragleave', handleCellDragLeave, false);
-                            cell.addEventListener('drop', handleCellDrop, false);
-                            cell.addEventListener('dragend', handleCellDragEnd, false);
-                        } else {
-                            cell.addEventListener('dragstart', (e) => { e.preventDefault(); }, false);
-                            cell.addEventListener('dragenter', (e) => { 
-                                e.preventDefault(); 
-                                if (e.srcElement.id.startsWith('cell'))
-                                    e.srcElement.classList.add('over-illegal'); 
-                                }, false);
-                            cell.addEventListener('dragover', (e) => { 
-                                e.preventDefault(); 
-                                if (e.srcElement.id.startsWith('cell'))
-                                    e.srcElement.classList.add('over-illegal'); 
-                                }, false);
-                            cell.addEventListener('dragleave', (e) => { 
-                                e.preventDefault(); 
-                                if (e.srcElement.id.startsWith('cell'))
-                                    e.srcElement.classList.remove('over-illegal'); 
-                                }, false);
-                            cell.addEventListener('drop', (e) => { 
-                                e.preventDefault(); 
-                                if (e.srcElement.id.startsWith('cell'))
-                                    e.srcElement.classList.remove('over-illegal'); 
-                                }, false);
-                            cell.addEventListener('dragend', (e) => { 
-                                e.preventDefault(); 
-                                if (e.srcElement.id.startsWith('cell'))
-                                    e.srcElement.classList.remove('over-illegal'); 
-                                }, false);
-                        }
-                        
-                    }
-                }
+            return false;
+        }
+
+        function isRightCapture(color, sR, sC, tR, tC) {
+            let coordinate = getRightCaptureMoveCoordinate(color, sR, sC);
+            let r = coordinate[0];
+            let c = coordinate[1];
+
+            const isValidMove = tR === r && tC === c && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
+
+            if (!isValidMove) {
+                return false;
             }
 
-            function initPieces() {
-                const pieces = new Array();
-                let i = 0;
-                for (let r = 0; r < nRows; r++) {
-                    for (let c = 0; c < nCols; c++) {
-                        const piece = getPiece(i, r, c);
-                        if (piece) {
-                            pieces.push(piece);
-                        }
-                    }
-                }
-                return pieces;
+            coordinate = getRightCaptureCoordinate(color, sR, sC);
+            r = coordinate[0];
+            c = coordinate[1];
+
+            if (isCellOccupied(r, c)) {
+                return true;
             }
 
-            function initBoard() {
-                const board = getBoard();
-                return board;
+            return false;
+        }
+
+        function isCaptureMove(color, sR, sC, tR, tC) {
+            if (isLeftCapture(color, sR, sC, tR, tC) || isRightCapture(color, sR, sC, tR, tC)) {
+                return true;
+            }
+            return false;
+        }
+
+        function getQueenLegalMoveCoordinates(qR, qC) {
+            const delta = 1;
+            const tlR = qR - delta; const tlC = qC - delta;
+            const trR = qR - delta; const trC = qC + delta;
+            const blR = qR + delta; const blC = qC - delta;
+            const brR = qR + delta; const brC = qC + delta;
+            return {
+                topL: { r: tlR, c: tlC },
+                topR: { r: trR, c: trC },
+                botL: { r: blR, c: blC },
+                botR: { r: brR, c: brC }
+            };
+        }
+
+        function getQueenCaptureCoordinates(qR, qC) {
+            const delta = 2;
+            const tlR = qR - delta; const tlC = qC - delta;
+            const trR = qR - delta; const trC = qC + delta;
+            const blR = qR + delta; const blC = qC - delta;
+            const brR = qR + delta; const brC = qC + delta;
+            return {
+                topL: { coord: { r: tlR, c: tlC }, capture: { r: qR - 1, c: qC - 1 } },
+                topR: { coord: { r: trR, c: trC }, capture: { r: qR - 1, c: qC + 1 } },
+                botL: { coord: { r: blR, c: blC }, capture: { r: qR + 1, c: qC - 1 } },
+                botR: { coord: { r: brR, c: brC }, capture: { r: qR + 1, c: qC + 1 } }
+            }
+        }
+
+        function getPiece(i, r, c) {
+            const cellColor = getCellColor(r, c);
+            let color = undefined;
+            let image = undefined;
+            let queenImage = undefined;
+
+            if (r < 2 && cellColor === 'white') {
+                color = 'black';
+                image = 'images/black.png';
+                queenImage = 'images/black-queen.png';
+            } else if (r > 5 && cellColor === 'white') {
+                color = 'red';
+                image = 'images/red.png';
+                queenImage = 'images/red-queen.png';
             }
 
-            function getBoard() {
-                const board = Array(nRows);
-                for (let r = 0; r < nRows; r++) {
-                    board[r] = new Array(nCols);
-                    for (let c = 0; c < nCols; c++) {
-                        board[r][c] = getCell(r, c);
-                    }
-                }
-                return board;
-            }
-
-            function getCell(r, c) {
+            if (color && image) {
                 return {
+                    index: i,
                     row: r,
                     col: c,
-                    color: getCellColor(r, c)
-                }
-            }
-
-            function getCellColor(r, c) {
-                if (r % 2 === 0 && c % 2 === 0) {
-                    return 'white';
-                } else if (r % 2 === 0 && c % 2 !== 0) {
-                    return 'brown';
-                } else if (r % 2 !== 0 && c % 2 === 0) {
-                    return 'brown';
-                } else {
-                    return 'white';
-                }
-            }
-
-            function isCellOccupied(r, c) {
-                if (pMap.hasOwnProperty(r) && pMap[r].hasOwnProperty(c)) {
-                    return true;
-                }
-                return false;
-            }
-
-            function getLeftCaptureMoveCoordinate(color, sR, sC) {
-                const dR = color === 'black'? 2 : -2;
-                const r = sR + dR;
-                const c = sC - 2;
-                return [r, c];
-            }
-
-            function getRightCaptureMoveCoordinate(color, sR, sC) {
-                const dR = color === 'black'? 2 : -2;
-                const r = sR + dR;
-                const c = sC + 2;
-                return [r, c];
-            }
-
-            function getLeftCaptureCoordinate(color, sR, sC) {
-                const dR = color === 'black'? 1 : -1;
-                const r = sR + dR;
-                const c = sC - 1;
-                return [r, c];
-            }
-
-            function getRightCaptureCoordinate(color, sR, sC) {
-                const dR = color === 'black'? 1 : -1;
-                const r = sR + dR;
-                const c = sC + 1;
-                return [r, c];
-            }
-
-            function isLeftCapture(color, sR, sC, tR, tC) {
-                let coordinate = getLeftCaptureMoveCoordinate(color, sR, sC);
-                let r = coordinate[0];
-                let c = coordinate[1];
-
-                const isValidMove = tR === r && tC === c && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
-                
-                if (!isValidMove) {
-                    return false;
-                }
-
-                coordinate = getLeftCaptureCoordinate(color, sR, sC);
-                r = coordinate[0];
-                c = coordinate[1];
-
-                if (isCellOccupied(r, c)) {
-                    return true;
-                }
-
-                return false;
-            }
-
-            function isRightCapture(color, sR, sC, tR, tC) {
-                let coordinate = getRightCaptureMoveCoordinate(color, sR, sC);
-                let r = coordinate[0];
-                let c = coordinate[1];
-
-                const isValidMove = tR === r && tC === c && 0 <= tR && tR < nRows && 0 <= tC && tC < nCols;
-
-                if (!isValidMove) {
-                    return false;
-                }
-
-                coordinate = getRightCaptureCoordinate(color, sR, sC);
-                r = coordinate[0];
-                c = coordinate[1];
-                
-                if (isCellOccupied(r, c)) {
-                    return true;
-                }
-
-                return false;
-            }
-
-            function isCaptureMove(color, sR, sC, tR, tC) {
-                if (isLeftCapture(color, sR, sC, tR, tC) || isRightCapture(color, sR, sC, tR, tC)) {
-                    return true;
-                }
-                return false;
-            }
-
-            function getQueenLegalMoveCoordinates(qR, qC) {
-                const delta = 1;
-                const tlR = qR - delta; const tlC = qC - delta;
-                const trR = qR - delta; const trC = qC + delta;
-                const blR = qR + delta; const blC = qC - delta;
-                const brR = qR + delta; const brC = qC + delta;
-                return {
-                    topL: {r: tlR, c: tlC}, 
-                    topR: {r: trR, c: trC}, 
-                    botL: {r: blR, c: blC}, 
-                    botR: {r: brR, c: brC}
-                };
-            }
-
-            function getQueenCaptureCoordinates(qR, qC) {
-                const delta = 2;
-                const tlR = qR - delta; const tlC = qC - delta;
-                const trR = qR - delta; const trC = qC + delta;
-                const blR = qR + delta; const blC = qC - delta;
-                const brR = qR + delta; const brC = qC + delta;
-                return {
-                    topL: {coord: {r: tlR, c: tlC}, capture: {r: qR - 1, c: qC - 1}},
-                    topR: {coord: {r: trR, c: trC}, capture: {r: qR - 1, c: qC + 1}},
-                    botL: {coord: {r: blR, c: blC}, capture: {r: qR + 1, c: qC - 1}},
-                    botR: {coord: {r: brR, c: brC}, capture: {r: qR + 1, c: qC + 1}}
-                }
-            }
-
-            function getPiece(i, r, c) {
-                const cellColor = getCellColor(r, c);
-                let color = undefined;
-                let image = undefined;
-                let queenImage = undefined;
-
-                if (r < 2 && cellColor === 'white') {
-                    color = 'black';
-                    image = 'images/black.png';
-                    queenImage = 'images/black-queen.png';
-                } else if (r > 5 && cellColor === 'white') {
-                    color = 'red';
-                    image = 'images/red.png';
-                    queenImage = 'images/red-queen.png';
-                }
-                
-                if (color && image) {
-                    return {
-                        index: i,
-                        row: r,
-                        col: c,
-                        isCrowned: false,
-                        color: color,
-                        image: image,
-                        queenImage: queenImage,
-                        isLegalMove: function(r, c) {
-                            // wait your turn
-                            if (this.color !== playerTurn) {
-                                return false;
-                            }
-
-                            // there can be no pieces on the brown squares
-                            const cellColor = getCellColor(r, c);
-                            if (cellColor === 'brown') {
-                                return false;
-                            }
-
-                            // cannot move to an occupied space
-                            if (isCellOccupied(r, c)) {
-                                return false;
-                            }
-
-                            if (this.isCrowned === false) {
-                                if (this.color === 'black' && this.row + 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
-                                    // black can move down
-                                    return true;
-                                } else if (this.color === 'red' && this.row - 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
-                                    // red can move up
-                                    return true;
-                                } else if (isCaptureMove(this.color, this.row, this.col, r, c)) {
-                                    // can capture
-                                    return true;
-                                }
-                            } else {
-                                // check to see if a legal move was made
-                                let coords = getQueenLegalMoveCoordinates(this.row, this.col);
-                                let legalMove = false;
-                                Object.keys(coords).forEach((k) => {
-                                    if (0 <= coords[k].r && coords[k].r < nRows && 0 <= coords[k].c && coords[k].c < nCols) {
-                                        if (coords[k].r === r && coords[k].c === c) {
-                                            legalMove = true;
-                                        }
-                                    }
-                                });
-
-                                if (legalMove === true) {
-                                    return true;
-                                }
-
-                                // check to see if a capture move was made
-                                coords = getQueenCaptureCoordinates(this.row, this.col);
-                                Object.keys(coords).forEach((k) => {
-                                    if (0 <= coords[k].coord.r && coords[k].coord.r < nRows && 0 <= coords[k].coord.c && coords[k].coord.c < nCols) {
-                                        if (coords[k].coord.r === r && coords[k].coord.c === c) {
-                                            if (isCellOccupied(coords[k].capture.r, coords[k].capture.c)) {
-                                                legalMove = true;
-                                            } else {
-                                                legalMove = false;
-                                            }
-                                        }
-                                    }
-                                });
-
-                                if (legalMove === true) {
-                                    return true;
-                                }
-                            }
-                            
+                    isCrowned: false,
+                    color: color,
+                    image: image,
+                    queenImage: queenImage,
+                    isLegalMove: function (r, c) {
+                        // wait your turn
+                        if (this.color !== playerTurn) {
                             return false;
                         }
+
+                        // there can be no pieces on the brown squares
+                        const cellColor = getCellColor(r, c);
+                        if (cellColor === 'brown') {
+                            return false;
+                        }
+
+                        // cannot move to an occupied space
+                        if (isCellOccupied(r, c)) {
+                            return false;
+                        }
+
+                        if (this.isCrowned === false) {
+                            if (this.color === 'black' && this.row + 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
+                                // black can move down
+                                return true;
+                            } else if (this.color === 'red' && this.row - 1 === r && (this.col - 1 === c || this.col + 1 === c)) {
+                                // red can move up
+                                return true;
+                            } else if (isCaptureMove(this.color, this.row, this.col, r, c)) {
+                                // can capture
+                                return true;
+                            }
+                        } else {
+                            // check to see if a legal move was made
+                            let coords = getQueenLegalMoveCoordinates(this.row, this.col);
+                            let legalMove = false;
+                            Object.keys(coords).forEach((k) => {
+                                if (0 <= coords[k].r && coords[k].r < nRows && 0 <= coords[k].c && coords[k].c < nCols) {
+                                    if (coords[k].r === r && coords[k].c === c) {
+                                        legalMove = true;
+                                    }
+                                }
+                            });
+
+                            if (legalMove === true) {
+                                return true;
+                            }
+
+                            // check to see if a capture move was made
+                            coords = getQueenCaptureCoordinates(this.row, this.col);
+                            Object.keys(coords).forEach((k) => {
+                                if (0 <= coords[k].coord.r && coords[k].coord.r < nRows && 0 <= coords[k].coord.c && coords[k].coord.c < nCols) {
+                                    if (coords[k].coord.r === r && coords[k].coord.c === c) {
+                                        if (isCellOccupied(coords[k].capture.r, coords[k].capture.c)) {
+                                            legalMove = true;
+                                        } else {
+                                            legalMove = false;
+                                        }
+                                    }
+                                }
+                            });
+
+                            if (legalMove === true) {
+                                return true;
+                            }
+                        }
+
+                        return false;
                     }
                 }
-                return undefined;
             }
-        </script>
-    </body>
+            return undefined;
+        }
+    </script>
+</body>
+
 </html>

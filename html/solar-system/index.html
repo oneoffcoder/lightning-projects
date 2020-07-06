@@ -1,269 +1,293 @@
 <html>
-    <head>
-        <title>Solar System</title>
-        <style>
-            * {
-                font-family: monospace;
-            }
-            .center {
-                text-align: center;
-            }
-            .solar-system {
-                width: calc(100vw - 30px);
-                height: calc(100vw - 30px);
-                margin-left: auto;
-                margin-right: auto;
-            }
-            svg.solar-system {
-                background-color: transparent;
-                width: 100%;
-                height: 100%;
-            }
-            svg > g > text {
-                fill: white !important;
-            }
-            svg > g[id$="path"] {
-                transform: translate(calc((100vw - 30px) / 2), calc((100vw - 30px) / 2)) !important;
-            }
-            body {
-                color: white;
-                background: black;
-            }
-            #custom-bg {
-                background-position: center center;
-                background-repeat: no-repeat;
-                background-size: cover;
-                height: 100%;
-                left: 0;
-                margin: 0;
-                opacity: 0.0;
-                padding: 0;
-                position: fixed;
-                top: 0;
-                transition: opacity 700ms;
-                width: 100%;
-                z-index: -1;
-            }
-        </style>
-    </head>
-    <body onload="init()" onresize="reinit()">
-        <!-- <div id="custom-bg" style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url('space.jpg'); opacity: 1;"></div> -->
-        <div class="center">
-            <h1>Solar System</h1>
-        </div>
-        <div class="solar-system">
-            <svg id="solar-system" class="solar-system" transform="scale(-1, 1)">
-                <g id="sun" transform="translate(500, 500)">
-                    <circle id="sun-circle" r="50" fill="#fcca03" />
-                    <text transform="scale(-1, 1)" y="60" dominant-baseline="middle" text-anchor="middle">Sun</text>
-                </g>
-                <!-- planets -->
-                <g id="mercury" transform="translate(500, 600)">
-                    <circle id="mercury-circle" r="10.09" fill="silver" />
-                    <text transform="scale(-1, 1)" y="20" dominant-baseline="middle" text-anchor="middle">Mercury</text>
-                </g>
-                <g id="venus" transform="translate(500, 654)">
-                    <circle id="venus-circle" r="16.5" fill="silver" />
-                    <text transform="scale(-1, 1)" y="30" dominant-baseline="middle" text-anchor="middle">Venus</text>
-                </g>
-                <g id="earth" transform="translate(500, 682)">
-                    <circle id="earth-circle" r="16.9" fill="silver" />
-                    <text transform="scale(-1, 1)" y="40" dominant-baseline="middle" text-anchor="middle">earth</text>
-                </g>
-                <g id="mars" transform="translate(500, 718.5)">
-                    <circle id="mars-circle" r="12.4" fill="silver" />
-                    <text transform="scale(-1, 1)" y="30" dominant-baseline="middle" text-anchor="middle">Mars</text>
-                </g>
-                <g id="jupiter" transform="translate(500, 824.75)">
-                    <circle id="jupiter-circle" r="33.9" fill="silver" />
-                    <text transform="scale(-1, 1)" y="50" dominant-baseline="middle" text-anchor="middle">Jupiter</text>
-                </g>
-                <g id="saturn" transform="translate(500, 877.8)">
-                    <circle id="saturn-circle" r="32.731" fill="silver" />
-                    <text transform="scale(-1, 1)" y="50" dominant-baseline="middle" text-anchor="middle">Saturn</text>
-                </g>
-                <g id="uranus" transform="translate(500, 937.8)">
-                    <circle id="uranus-circle" r="26.677" fill="silver" />
-                    <text transform="scale(-1, 1)" y="40" dominant-baseline="middle" text-anchor="middle">Uranus</text>
-                </g>
-                <g id="neptune" transform="translate(500, 976.8)">
-                    <circle id="neptune-circle" r="26.4" fill="silver" />
-                    <text transform="scale(-1, 1)" y="40" dominant-baseline="middle" text-anchor="middle">Neptune</text>
-                </g>
-                <g id="pluto" transform="translate(500, 1000)">
-                    <circle id="pluto-circle" r="5.0" fill="brown" />
-                    <text transform="scale(-1, 1)" y="-20" dominant-baseline="middle" text-anchor="middle">Pluto</text>
-                </g>
-                <!-- orbital paths -->
-                <g id="mercury-path">
-                    <circle id="mercury-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="venus-path">
-                    <circle id="venus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="earth-path">
-                    <circle id="earth-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="mars-path">
-                    <circle id="mars-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="jupiter-path">
-                    <circle id="jupiter-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="saturn-path">
-                    <circle id="saturn-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="uranus-path">
-                    <circle id="uranus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="neptune-path">
-                    <circle id="neptune-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-                <g id="pluto-path">
-                    <circle id="pluto-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2" stroke-dasharray="15.7, 15.7"/>
-                </g>
-            </svg>
-        </div>
-        <script>
-            let time = 1.0;
-            let solarSystem;
-            let timer;
 
-            function init() {
-                solarSystem = initSolarSystem();
-                timer = setInterval(orbit, 100);
-            }
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Solar system, planetary orbits">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Solar System, Planets, Orbits">
+    <meta name="author" content="Jee Vang, Ph.D.">
+    <meta name="organization" content="One-Off Coder">
+    <title>Solar System</title>
+    <style>
+        * {
+            font-family: monospace;
+        }
 
-            function reinit() {
-                clearInterval(timer);
-                init();
-            }
+        .center {
+            text-align: center;
+        }
 
-            function orbit() {
-                const center = solarSystem.center;
-                solarSystem.planets.forEach(p => {
-                    const c = p.tick(time);
-                    const x = c.get('x');
-                    const y = c.get('y');
+        .solar-system {
+            width: calc(100vw - 30px);
+            height: calc(100vw - 30px);
+            margin-left: auto;
+            margin-right: auto;
+        }
 
-                    const gId = `${p.name}`;
-                    const g = document.getElementById(gId);
-                    g.setAttribute('transform', `translate(${x}, ${y})`);
-                });
-                time += 50.0;
-            }
+        svg.solar-system {
+            background-color: transparent;
+            width: 100%;
+            height: 100%;
+        }
 
-            function initSolarSystem() {
-                const width = document.getElementById('solar-system').clientWidth;
-                const height = document.getElementById('solar-system').clientHeight;
-                const cx = width / 2.0;
-                const cy = height / 2.0;
+        svg>g>text {
+            fill: white !important;
+        }
 
-                document.getElementById('sun').setAttribute('transform', `translate(${cx}, ${cy})`)
+        svg>g[id$="path"] {
+            transform: translate(calc((100vw - 30px) / 2), calc((100vw - 30px) / 2)) !important;
+        }
 
-                const planets = getPlanets();
+        body {
+            color: white;
+            background: black;
+        }
 
-                const pDiam = getDiamScalingParams();
-                const pDist = getDistScalingParams(a = 75, b = cx - 30);
+        #custom-bg {
+            background-position: center center;
+            background-repeat: no-repeat;
+            background-size: cover;
+            height: 100%;
+            left: 0;
+            margin: 0;
+            opacity: 0.0;
+            padding: 0;
+            position: fixed;
+            top: 0;
+            transition: opacity 700ms;
+            width: 100%;
+            z-index: -1;
+        }
+    </style>
+</head>
 
-                planets.forEach(p => {
-                    p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
-                    p.x = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
-                    p.y = cy;
-                    p.normDist = Math.sqrt(Math.pow(p.x - cx, 2.0) + Math.pow(p.y - cy, 2.0));
-                    p.delta = 360.0 / p.orbitalPeriod;
-                    p.cx = cx;
-                    p.cy = cy;
+<body onload="init()" onresize="reinit()">
+    <!-- <div id="custom-bg" style="background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.3)), url('space.jpg'); opacity: 1;"></div> -->
+    <div class="center">
+        <h1>Solar System</h1>
+    </div>
+    <div class="solar-system">
+        <svg id="solar-system" class="solar-system" transform="scale(-1, 1)">
+            <g id="sun" transform="translate(500, 500)">
+                <circle id="sun-circle" r="50" fill="#fcca03" />
+                <text transform="scale(-1, 1)" y="60" dominant-baseline="middle" text-anchor="middle">Sun</text>
+            </g>
+            <!-- planets -->
+            <g id="mercury" transform="translate(500, 600)">
+                <circle id="mercury-circle" r="10.09" fill="silver" />
+                <text transform="scale(-1, 1)" y="20" dominant-baseline="middle" text-anchor="middle">Mercury</text>
+            </g>
+            <g id="venus" transform="translate(500, 654)">
+                <circle id="venus-circle" r="16.5" fill="silver" />
+                <text transform="scale(-1, 1)" y="30" dominant-baseline="middle" text-anchor="middle">Venus</text>
+            </g>
+            <g id="earth" transform="translate(500, 682)">
+                <circle id="earth-circle" r="16.9" fill="silver" />
+                <text transform="scale(-1, 1)" y="40" dominant-baseline="middle" text-anchor="middle">earth</text>
+            </g>
+            <g id="mars" transform="translate(500, 718.5)">
+                <circle id="mars-circle" r="12.4" fill="silver" />
+                <text transform="scale(-1, 1)" y="30" dominant-baseline="middle" text-anchor="middle">Mars</text>
+            </g>
+            <g id="jupiter" transform="translate(500, 824.75)">
+                <circle id="jupiter-circle" r="33.9" fill="silver" />
+                <text transform="scale(-1, 1)" y="50" dominant-baseline="middle" text-anchor="middle">Jupiter</text>
+            </g>
+            <g id="saturn" transform="translate(500, 877.8)">
+                <circle id="saturn-circle" r="32.731" fill="silver" />
+                <text transform="scale(-1, 1)" y="50" dominant-baseline="middle" text-anchor="middle">Saturn</text>
+            </g>
+            <g id="uranus" transform="translate(500, 937.8)">
+                <circle id="uranus-circle" r="26.677" fill="silver" />
+                <text transform="scale(-1, 1)" y="40" dominant-baseline="middle" text-anchor="middle">Uranus</text>
+            </g>
+            <g id="neptune" transform="translate(500, 976.8)">
+                <circle id="neptune-circle" r="26.4" fill="silver" />
+                <text transform="scale(-1, 1)" y="40" dominant-baseline="middle" text-anchor="middle">Neptune</text>
+            </g>
+            <g id="pluto" transform="translate(500, 1000)">
+                <circle id="pluto-circle" r="5.0" fill="brown" />
+                <text transform="scale(-1, 1)" y="-20" dominant-baseline="middle" text-anchor="middle">Pluto</text>
+            </g>
+            <!-- orbital paths -->
+            <g id="mercury-path">
+                <circle id="mercury-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="venus-path">
+                <circle id="venus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="earth-path">
+                <circle id="earth-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="mars-path">
+                <circle id="mars-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="jupiter-path">
+                <circle id="jupiter-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="saturn-path">
+                <circle id="saturn-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="uranus-path">
+                <circle id="uranus-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="neptune-path">
+                <circle id="neptune-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+            <g id="pluto-path">
+                <circle id="pluto-path-circle" r="75" fill="none" opacity="0.3" stroke="black" stroke-width="2"
+                    stroke-dasharray="15.7, 15.7" />
+            </g>
+        </svg>
+    </div>
+    <script>
+        let time = 1.0;
+        let solarSystem;
+        let timer;
 
-                    const gId = `${p.name}`;
-                    const g = document.getElementById(gId);
-                    g.setAttribute('transform', `translate(${p.x}, ${p.y})`);
+        function init() {
+            solarSystem = initSolarSystem();
+            timer = setInterval(orbit, 100);
+        }
 
-                    const circleId = `${p.name}-circle`;
-                    const circle = document.getElementById(circleId);
-                    circle.setAttribute('r', `${p.normDiam}`);
-                    circle.setAttribute('fill', `${p.color}`);
+        function reinit() {
+            clearInterval(timer);
+            init();
+        }
 
-                    const cId = `${p.name}-path-circle`;
-                    const c = document.getElementById(cId);
-                    c.setAttribute('r', `${p.normDist}`);
-                    c.setAttribute('stroke', `${p.color}`);
-                });
+        function orbit() {
+            const center = solarSystem.center;
+            solarSystem.planets.forEach(p => {
+                const c = p.tick(time);
+                const x = c.get('x');
+                const y = c.get('y');
 
-                console.table(planets);
+                const gId = `${p.name}`;
+                const g = document.getElementById(gId);
+                g.setAttribute('transform', `translate(${x}, ${y})`);
+            });
+            time += 50.0;
+        }
 
-                return {
-                    planets: planets,
-                    center: {x: cx, y: cy}
-                };
-            }
+        function initSolarSystem() {
+            const width = document.getElementById('solar-system').clientWidth;
+            const height = document.getElementById('solar-system').clientHeight;
+            const cx = width / 2.0;
+            const cy = height / 2.0;
 
-            function getDiamScalingParams(a = 5, b = 50) {
-                const planets = getPlanets();
+            document.getElementById('sun').setAttribute('transform', `translate(${cx}, ${cy})`)
 
-                const diams = planets.map(p => Math.log(p.diameter));
-                diams.push(Math.log(1391982.78));
+            const planets = getPlanets();
 
-                let min = Math.min(...diams);
-                let max = Math.max(...diams);
-                return {a: a, b: b, min: min, max: max};
-            }
+            const pDiam = getDiamScalingParams();
+            const pDist = getDistScalingParams(a = 75, b = cx - 30);
 
-            function getDistScalingParams(a = 75, b = 750) {
-                const planets = getPlanets();
+            planets.forEach(p => {
+                p.normDiam = rescale(Math.log(p.diameter), pDiam.a, pDiam.b, pDiam.min, pDiam.max);
+                p.x = rescale(Math.log(p.distance), pDist.a, pDist.b, pDist.min, pDist.max) + cx;
+                p.y = cy;
+                p.normDist = Math.sqrt(Math.pow(p.x - cx, 2.0) + Math.pow(p.y - cy, 2.0));
+                p.delta = 360.0 / p.orbitalPeriod;
+                p.cx = cx;
+                p.cy = cy;
 
-                const dists = planets.map(p => Math.log(p.distance));
-                const min = Math.min(...dists);
-                const max = Math.max(...dists);
-                return {a: a, b: b, min: min, max: max};
-            }
+                const gId = `${p.name}`;
+                const g = document.getElementById(gId);
+                g.setAttribute('transform', `translate(${p.x}, ${p.y})`);
 
-            function rescale(x, a, b, min, max) {
-                return (b - a) * (x - min) / (max - min) + a;
-            }
+                const circleId = `${p.name}-circle`;
+                const circle = document.getElementById(circleId);
+                circle.setAttribute('r', `${p.normDiam}`);
+                circle.setAttribute('fill', `${p.color}`);
 
-            function getPlanets() {
-                const sunDiameter = 1391982.78;
-                const planets = [
-                    getPlanet('mercury', 4879.0, 57.9, 1407.6, 88.0, '#9ea5b0'),
-                    getPlanet('venus', 12104.0, 108.2, -5832.5, 224.7, '#3db536'),
-                    getPlanet('earth', 12756.0, 149.6, 23.9, 365.2, '#0b56e0'),
-                    getPlanet('mars', 6792.0, 227.9, 24.6, 687.0, '#ff6b4a'),
-                    getPlanet('jupiter', 142984.0, 778.6, 9.9, 4331.0, '#e6a009'),
-                    getPlanet('saturn', 120536.0, 1433.5, 10.7, 10747.0, '#dfe374'),
-                    getPlanet('uranus', 51118.0, 2872.5, -17.2, 30589.0, '#63db8f'),
-                    getPlanet('neptune', 49528.0, 4495.1, 16.1, 59800.0, '#63a1db'),
-                    getPlanet('pluto', 2370.0, 5906.4, -153.3, 90560.0, '#ad935a'),
-                ];
+                const cId = `${p.name}-path-circle`;
+                const c = document.getElementById(cId);
+                c.setAttribute('r', `${p.normDist}`);
+                c.setAttribute('stroke', `${p.color}`);
+            });
 
-                return planets;
-            }
+            console.table(planets);
 
-            function getPlanet(name, diameter, distance, rotationPeriod, orbitalPeriod, color) {
-                return {
-                    name: name,
-                    diameter: diameter,
-                    distance: distance,
-                    rotationPeriod: rotationPeriod,
-                    orbitalPeriod: orbitalPeriod,
-                    color: color,
-                    tick: function(time) {
-                        const delta = 360.0 / this.orbitalPeriod;
-                        const theta = time * delta;
-                        const r = this.normDist;
-                        const cx = this.cx;
-                        const cy = this.cy;
+            return {
+                planets: planets,
+                center: { x: cx, y: cy }
+            };
+        }
 
-                        const x = cx + Math.cos(2.0 * Math.PI / 3600.0 * theta) * r;
-                        const y = cy + Math.sin(2.0 * Math.PI / 3600.0 * theta) * r;
-                        
-                        const m = new Map();
-                        m.set('x', x);
-                        m.set('y', y);
-                        return m;
-                    }
-                };
-            }
-        </script>
-    </body>
+        function getDiamScalingParams(a = 5, b = 50) {
+            const planets = getPlanets();
+
+            const diams = planets.map(p => Math.log(p.diameter));
+            diams.push(Math.log(1391982.78));
+
+            let min = Math.min(...diams);
+            let max = Math.max(...diams);
+            return { a: a, b: b, min: min, max: max };
+        }
+
+        function getDistScalingParams(a = 75, b = 750) {
+            const planets = getPlanets();
+
+            const dists = planets.map(p => Math.log(p.distance));
+            const min = Math.min(...dists);
+            const max = Math.max(...dists);
+            return { a: a, b: b, min: min, max: max };
+        }
+
+        function rescale(x, a, b, min, max) {
+            return (b - a) * (x - min) / (max - min) + a;
+        }
+
+        function getPlanets() {
+            const sunDiameter = 1391982.78;
+            const planets = [
+                getPlanet('mercury', 4879.0, 57.9, 1407.6, 88.0, '#9ea5b0'),
+                getPlanet('venus', 12104.0, 108.2, -5832.5, 224.7, '#3db536'),
+                getPlanet('earth', 12756.0, 149.6, 23.9, 365.2, '#0b56e0'),
+                getPlanet('mars', 6792.0, 227.9, 24.6, 687.0, '#ff6b4a'),
+                getPlanet('jupiter', 142984.0, 778.6, 9.9, 4331.0, '#e6a009'),
+                getPlanet('saturn', 120536.0, 1433.5, 10.7, 10747.0, '#dfe374'),
+                getPlanet('uranus', 51118.0, 2872.5, -17.2, 30589.0, '#63db8f'),
+                getPlanet('neptune', 49528.0, 4495.1, 16.1, 59800.0, '#63a1db'),
+                getPlanet('pluto', 2370.0, 5906.4, -153.3, 90560.0, '#ad935a'),
+            ];
+
+            return planets;
+        }
+
+        function getPlanet(name, diameter, distance, rotationPeriod, orbitalPeriod, color) {
+            return {
+                name: name,
+                diameter: diameter,
+                distance: distance,
+                rotationPeriod: rotationPeriod,
+                orbitalPeriod: orbitalPeriod,
+                color: color,
+                tick: function (time) {
+                    const delta = 360.0 / this.orbitalPeriod;
+                    const theta = time * delta;
+                    const r = this.normDist;
+                    const cx = this.cx;
+                    const cy = this.cy;
+
+                    const x = cx + Math.cos(2.0 * Math.PI / 3600.0 * theta) * r;
+                    const y = cy + Math.sin(2.0 * Math.PI / 3600.0 * theta) * r;
+
+                    const m = new Map();
+                    m.set('x', x);
+                    m.set('y', y);
+                    return m;
+                }
+            };
+        }
+    </script>
+</body>
+
 </html>

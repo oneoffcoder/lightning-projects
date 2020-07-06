@@ -1,246 +1,260 @@
 <html>
-    <head>
-        <title>Tic-Tac-Toe</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <style>
-            * {
-                font-family: monospace;
-            }
-            body {
-                margin: 10px;
-            }
-            .center {
-                text-align: center;
-            }
-            .ttt-table {
-                margin: auto;
-                width: 300px;
-            }
-            .ttt-cell {
-                text-align: center;
-                font-size: x-large;
-                background: lightblue;
-                width: 100px;
-                height: 100px;
-                padding: 15px;
-                border: 1px solid black;
-            }
-            .restart-button {
-                margin-bottom: 5px;
-            }
-        </style>
-    </head>
-    <body onload="init()">
-        <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-                <h1 class="display-4">Tic-Tac-Toe!</h1>
-                <p class="lead">
-                    Classic Tic-Tac-Toe game; play against the computer
-                </p>
-                <hr class="my-4">
-                <p>
-                    Hit restart at any time to start over
-                </p>
-                <button id="restart-button" type="button" class="btn btn-primary" onclick="restart()">restart</button>
-            </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Tic-tac-toe game">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Tic-tac-toe, Game">
+    <meta name="author" content="Jee Vang, Ph.D.">
+    <meta name="organization" content="One-Off Coder">
+    <title>Tic-Tac-Toe</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: monospace;
+        }
+
+        body {
+            margin: 10px;
+        }
+
+        .center {
+            text-align: center;
+        }
+
+        .ttt-table {
+            margin: auto;
+            width: 300px;
+        }
+
+        .ttt-cell {
+            text-align: center;
+            font-size: x-large;
+            background: lightblue;
+            width: 100px;
+            height: 100px;
+            padding: 15px;
+            border: 1px solid black;
+        }
+
+        .restart-button {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+
+<body onload="init()">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Tic-Tac-Toe!</h1>
+            <p class="lead">
+                Classic Tic-Tac-Toe game; play against the computer
+            </p>
+            <hr class="my-4">
+            <p>
+                Hit restart at any time to start over
+            </p>
+            <button id="restart-button" type="button" class="btn btn-primary" onclick="restart()">restart</button>
         </div>
-        <table class="ttt-table">
-            <tbody>
-                <tr>
-                    <td id="c00" class="ttt-cell" onclick="clicked(0, 0)">&nbsp;</td>
-                    <td id="c01" class="ttt-cell" onclick="clicked(0, 1)">&nbsp;</td>
-                    <td id="c02" class="ttt-cell" onclick="clicked(0, 2)">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td id="c10" class="ttt-cell" onclick="clicked(1, 0)">&nbsp;</td>
-                    <td id="c11" class="ttt-cell" onclick="clicked(1, 1)">&nbsp;</td>
-                    <td id="c12" class="ttt-cell" onclick="clicked(1, 2)">&nbsp;</td>
-                </tr>
-                <tr>
-                    <td id="c20" class="ttt-cell" onclick="clicked(2, 0)">&nbsp;</td>
-                    <td id="c21" class="ttt-cell" onclick="clicked(2, 1)">&nbsp;</td>
-                    <td id="c22" class="ttt-cell" onclick="clicked(2, 2)">&nbsp;</td>
-                </tr>
-            </tbody>
-        </table>
-        <br/>
-        <div id="result" class="alert alert-primary" role="alert" style="display: none;"></div>
+    </div>
+    <table class="ttt-table">
+        <tbody>
+            <tr>
+                <td id="c00" class="ttt-cell" onclick="clicked(0, 0)">&nbsp;</td>
+                <td id="c01" class="ttt-cell" onclick="clicked(0, 1)">&nbsp;</td>
+                <td id="c02" class="ttt-cell" onclick="clicked(0, 2)">&nbsp;</td>
+            </tr>
+            <tr>
+                <td id="c10" class="ttt-cell" onclick="clicked(1, 0)">&nbsp;</td>
+                <td id="c11" class="ttt-cell" onclick="clicked(1, 1)">&nbsp;</td>
+                <td id="c12" class="ttt-cell" onclick="clicked(1, 2)">&nbsp;</td>
+            </tr>
+            <tr>
+                <td id="c20" class="ttt-cell" onclick="clicked(2, 0)">&nbsp;</td>
+                <td id="c21" class="ttt-cell" onclick="clicked(2, 1)">&nbsp;</td>
+                <td id="c22" class="ttt-cell" onclick="clicked(2, 2)">&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+    <br />
+    <div id="result" class="alert alert-primary" role="alert" style="display: none;"></div>
 
-        <audio id="clicked">
-            <source src="audio/fairy.mp3" type="audio/mp3">
-        </audio>
+    <audio id="clicked">
+        <source src="audio/fairy.mp3" type="audio/mp3">
+    </audio>
 
-        <script>
-            const uSymbol = 'X';
-            const cSymbol = 'O';
-            const grid = [
-                ['', '', ''],
-                ['', '', ''],
-                ['', '', '']
-            ];
-            const nRows = 3;
-            const nCols = 3;
-            const winPaths = [
-                [[0, 0], [0, 1], [0, 2]], // horizontals
-                [[1, 0], [1, 1], [1, 2]],
-                [[2, 0], [2, 1], [2, 2]],
-                [[0, 0], [1, 0], [2, 0]], // verticals
-                [[0, 1], [1, 1], [2, 1]],
-                [[0, 2], [1, 2], [2, 2]],
-                [[0, 0], [1, 1], [2, 2]], // diagonals
-                [[0, 2], [1, 1], [2, 0]]
-            ];
-            let gameOver = false;
-            let timer;
-            let isThinking = false;
-            let isPlayingSound = false;
+    <script>
+        const uSymbol = 'X';
+        const cSymbol = 'O';
+        const grid = [
+            ['', '', ''],
+            ['', '', ''],
+            ['', '', '']
+        ];
+        const nRows = 3;
+        const nCols = 3;
+        const winPaths = [
+            [[0, 0], [0, 1], [0, 2]], // horizontals
+            [[1, 0], [1, 1], [1, 2]],
+            [[2, 0], [2, 1], [2, 2]],
+            [[0, 0], [1, 0], [2, 0]], // verticals
+            [[0, 1], [1, 1], [2, 1]],
+            [[0, 2], [1, 2], [2, 2]],
+            [[0, 0], [1, 1], [2, 2]], // diagonals
+            [[0, 2], [1, 1], [2, 0]]
+        ];
+        let gameOver = false;
+        let timer;
+        let isThinking = false;
+        let isPlayingSound = false;
 
-            function init() {
-                const sound = document.getElementById('clicked');
-                sound.addEventListener('ended', () => {
-                    sound.currentTime = 0;
-                    isPlayingSound = false;
-                });
+        function init() {
+            const sound = document.getElementById('clicked');
+            sound.addEventListener('ended', () => {
+                sound.currentTime = 0;
+                isPlayingSound = false;
+            });
 
-                updateTable();
+            updateTable();
+        }
+
+        function clicked(row, col) {
+            if (gameOver || isThinking || isPlayingSound) {
+                return;
             }
 
-            function clicked(row, col) {
-                if (gameOver || isThinking || isPlayingSound) {
-                    return;
-                }
+            if (grid[row][col] === '') {
+                grid[row][col] = uSymbol;
+                playSound();
+                updateTable();
+            } else {
+                return;
+            }
 
-                if (grid[row][col] === '') {
-                    grid[row][col] = uSymbol;
-                    playSound();
-                    updateTable();
-                } else {
-                    return;
-                }
+            let winner = getWinner();
+            const result = document.getElementById('result');
 
-                let winner = getWinner();
-                const result = document.getElementById('result');
-
-                if (winner === 'none') {
-                    if (isGridFull()) {
-                        gameOver = true;
-                        result.innerHTML = `Draw!`;
-                        result.style.display = 'block';
-                    } else {
-                        function doTimer() {
-                            const position = getComputerPosition();
-                            const row = position.row;
-                            const col = position.col;
-                            grid[row][col] = cSymbol;
-
-                            updateTable();
-
-                            winner = getWinner();
-
-                            if (winner !== 'none') {
-                                gameOver = true;
-                                result.innerHTML = `${winner} Win!`;
-                                result.style.display = 'block';
-                            }
-
-                            clearInterval(timer);
-                            isThinking = false;
-                        };
-
-                        isThinking = true;
-                        timer = setInterval(doTimer, 1000);
-                    }
-                } else {
+            if (winner === 'none') {
+                if (isGridFull()) {
                     gameOver = true;
-                    result.innerHTML = `${winner} Win!`;
+                    result.innerHTML = `Draw!`;
                     result.style.display = 'block';
-                }
-            }
+                } else {
+                    function doTimer() {
+                        const position = getComputerPosition();
+                        const row = position.row;
+                        const col = position.col;
+                        grid[row][col] = cSymbol;
 
-            function playSound() {
-                isPlayingSound = true;
-                const sound = document.getElementById('clicked');
-                sound.play();
-            }
+                        updateTable();
 
-            function updateTable() {
-                for (let row = 0; row < nRows; row++) {
-                    for (let col = 0; col < nCols; col++) {
-                        const cellId = `c${row}${col}`;
-                        const cell = document.getElementById(cellId);
-                        cell.innerHTML = grid[row][col];
-                    }
-                }
-            }
+                        winner = getWinner();
 
-            function restart() {
-                const result = document.getElementById('result');
-                result.innerHTML = '';
-                result.style.display = 'none';
-
-                gameOver = false;
-                clearTable();
-            }
-
-            function clearTable() {
-                for (let row = 0; row < nRows; row++) {
-                    for (let col = 0; col < nCols; col++) {
-                        grid[row][col] = '';
-                    }
-                }
-
-                updateTable();
-            }
-
-            function getComputerPosition() {
-                while (true) {
-                    const r = Math.floor(Math.random() * nRows);
-                    const c = Math.floor(Math.random() * nCols);
-                    if (grid[r][c] === '') {
-                        return {
-                            row: r,
-                            col: c
+                        if (winner !== 'none') {
+                            gameOver = true;
+                            result.innerHTML = `${winner} Win!`;
+                            result.style.display = 'block';
                         }
+
+                        clearInterval(timer);
+                        isThinking = false;
+                    };
+
+                    isThinking = true;
+                    timer = setInterval(doTimer, 1000);
+                }
+            } else {
+                gameOver = true;
+                result.innerHTML = `${winner} Win!`;
+                result.style.display = 'block';
+            }
+        }
+
+        function playSound() {
+            isPlayingSound = true;
+            const sound = document.getElementById('clicked');
+            sound.play();
+        }
+
+        function updateTable() {
+            for (let row = 0; row < nRows; row++) {
+                for (let col = 0; col < nCols; col++) {
+                    const cellId = `c${row}${col}`;
+                    const cell = document.getElementById(cellId);
+                    cell.innerHTML = grid[row][col];
+                }
+            }
+        }
+
+        function restart() {
+            const result = document.getElementById('result');
+            result.innerHTML = '';
+            result.style.display = 'none';
+
+            gameOver = false;
+            clearTable();
+        }
+
+        function clearTable() {
+            for (let row = 0; row < nRows; row++) {
+                for (let col = 0; col < nCols; col++) {
+                    grid[row][col] = '';
+                }
+            }
+
+            updateTable();
+        }
+
+        function getComputerPosition() {
+            while (true) {
+                const r = Math.floor(Math.random() * nRows);
+                const c = Math.floor(Math.random() * nCols);
+                if (grid[r][c] === '') {
+                    return {
+                        row: r,
+                        col: c
+                    }
+                }
+            }
+        }
+
+        function getWinner() {
+            for (const path of winPaths) {
+                const r0 = path[0][0];
+                const r1 = path[1][0];
+                const r2 = path[2][0];
+
+                const c0 = path[0][1];
+                const c1 = path[1][1];
+                const c2 = path[2][1];
+
+                const v1 = grid[r0][c0];
+                const v2 = grid[r1][c1];
+                const v3 = grid[r2][c2];
+
+                if (v1 === v2 && v1 === v3 && v1 !== '') {
+                    if (v1 === uSymbol) {
+                        return 'You';
+                    } else {
+                        return 'Computer';
                     }
                 }
             }
 
-            function getWinner() {
-                for (const path of winPaths) {
-                    const r0 = path[0][0];
-                    const r1 = path[1][0];
-                    const r2 = path[2][0];
+            return 'none';
+        }
 
-                    const c0 = path[0][1];
-                    const c1 = path[1][1];
-                    const c2 = path[2][1];
-
-                    const v1 = grid[r0][c0];
-                    const v2 = grid[r1][c1];
-                    const v3 = grid[r2][c2];
-
-                    if (v1 === v2 && v1 === v3 && v1 !== '') {
-                        if (v1 === uSymbol) {
-                            return 'You';
-                        } else {
-                            return 'Computer';
-                        }
+        function isGridFull() {
+            for (let row = 0; row < nRows; row++) {
+                for (let col = 0; col < nCols; col++) {
+                    if (grid[row][col] === '') {
+                        return false;
                     }
                 }
-
-                return 'none';
             }
+            return true;
+        }
+    </script>
+</body>
 
-            function isGridFull() {
-                for (let row = 0; row < nRows; row++) {
-                    for (let col = 0; col < nCols; col++) {
-                        if (grid[row][col] === '') {
-                            return false;
-                        }
-                    }
-                }
-                return true;
-            }
-        </script>
-    </body>
 </html>

@@ -1,315 +1,334 @@
 <html>
-    <head>
-        <title>Morse Code</title>
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-        <style>
-            * {
-                font-family: monospace;
-            }
-            body {
-                margin: 10px;
-            }
-            .letter {
-                font-size: large;
-                cursor: pointer;
-            }
-            .dihdah {
-                font-size: xx-large;
-                font-weight: bolder;
-                cursor: pointer;
-            }
-        </style>
-    </head>
-    <body>
-        <div class="jumbotron jumbotron-fluid">
-            <div class="container">
-                <h1 class="display-4">Morse Code</h1>
-                <p class="lead">
-                    <a href="https://en.wikipedia.org/wiki/Morse_code" target="_blank">Morse code</a> audio generator
-                </p>
-                <hr class="my-4">
-                <p>
-                    Dih-dah sounds generated using
-                    <a href="https://github.com/delimitry/morse-code-wav" target="_blank">
-                        morse-code-wav
-                    </a>
-                </p>
-                <p>
-                    Awesome <a href="https://www.youtube.com/watch?v=xsDk5_bktFo" target="_blank">video on Morse code</a>
-                </p>
-            </div>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Morse code generator">
+    <meta name="keywords" content="HTML, CSS, JavaScript, Morse, Code">
+    <meta name="author" content="Jee Vang, Ph.D.">
+    <meta name="organization" content="One-Off Coder">
+    <title>Morse Code</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <style>
+        * {
+            font-family: monospace;
+        }
+
+        body {
+            margin: 10px;
+        }
+
+        .letter {
+            font-size: large;
+            cursor: pointer;
+        }
+
+        .dihdah {
+            font-size: xx-large;
+            font-weight: bolder;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4">Morse Code</h1>
+            <p class="lead">
+                <a href="https://en.wikipedia.org/wiki/Morse_code" target="_blank">Morse code</a> audio generator
+            </p>
+            <hr class="my-4">
+            <p>
+                Dih-dah sounds generated using
+                <a href="https://github.com/delimitry/morse-code-wav" target="_blank">
+                    morse-code-wav
+                </a>
+            </p>
+            <p>
+                Awesome <a href="https://www.youtube.com/watch?v=xsDk5_bktFo" target="_blank">video on Morse code</a>
+            </p>
         </div>
-        <div class="form-group">
-            <label for="text">Type your text below</label>
-            <textarea class="form-control" id="text" rows="3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0</textarea>
-        </div>
-        <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
-        
-        <br/>
-        <br/>
+    </div>
+    <div class="form-group">
+        <label for="text">Type your text below</label>
+        <textarea class="form-control" id="text"
+            rows="3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 1 2 3 4 5 6 7 8 9 0</textarea>
+    </div>
+    <button type="button" class="btn btn-primary" onclick="generate()">Generate</button>
 
-        <div id="letterOutputHint" style="display: none;">Hover over words to play sound</div>
-        <div id="letterOutput" class="alert alert-primary" role="alert" style="display: none;">&nbsp;</div>
+    <br />
+    <br />
 
-        <div id="dihDahOutputHint" style="display: none;">Hover over letters to play sound</div>
-        <div id="dihDahOutput" class="alert alert-secondary" role="alert" style="display: none;">&nbsp;</div>
-        
-        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js" crossorigin="anonymous"></script>
-        <script>
-            const l2d = getL2D();
-            const d2l = getD2L();
-            let isPlaying = false;
+    <div id="letterOutputHint" style="display: none;">Hover over words to play sound</div>
+    <div id="letterOutput" class="alert alert-primary" role="alert" style="display: none;">&nbsp;</div>
 
-            function generate() {
-                if (isPlaying === true) {
-                    return;
-                }
+    <div id="dihDahOutputHint" style="display: none;">Hover over letters to play sound</div>
+    <div id="dihDahOutput" class="alert alert-secondary" role="alert" style="display: none;">&nbsp;</div>
 
-                const text = getTextInput();
-                if (!text) {
-                    return;
-                }
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.min.js" crossorigin="anonymous"></script>
+    <script>
+        const l2d = getL2D();
+        const d2l = getD2L();
+        let isPlaying = false;
 
-                clearOutputs();
-
-                const morseCode = getMorseCode(text, modifyOutputs);
-                isPlaying = true;
-                showOutputs();
-                morseCode.play();
+        function generate() {
+            if (isPlaying === true) {
+                return;
             }
 
-            function showOutputs() {
-                document.getElementById('letterOutput').style.display = 'block';
-                document.getElementById('dihDahOutput').style.display = 'block';
-
-                document.getElementById('letterOutputHint').style.display = 'block';
-                document.getElementById('dihDahOutputHint').style.display = 'block';
+            const text = getTextInput();
+            if (!text) {
+                return;
             }
 
-            function clearOutputs() {
-                document.getElementById('letterOutput').innerHTML = '';
-                document.getElementById('dihDahOutput').innerHTML = '';
+            clearOutputs();
+
+            const morseCode = getMorseCode(text, modifyOutputs);
+            isPlaying = true;
+            showOutputs();
+            morseCode.play();
+        }
+
+        function showOutputs() {
+            document.getElementById('letterOutput').style.display = 'block';
+            document.getElementById('dihDahOutput').style.display = 'block';
+
+            document.getElementById('letterOutputHint').style.display = 'block';
+            document.getElementById('dihDahOutputHint').style.display = 'block';
+        }
+
+        function clearOutputs() {
+            document.getElementById('letterOutput').innerHTML = '';
+            document.getElementById('dihDahOutput').innerHTML = '';
+        }
+
+        function modifyOutputs(index, size, letter, dihDah) {
+            function modifyLetter() {
+                let normLetter = letter === '_BT_WORD_SPACE' ? ' ' : letter;
+                document.getElementById('letterOutput').innerHTML += normLetter;
             }
 
-            function modifyOutputs(index, size, letter, dihDah) {
-                function modifyLetter() {
-                    let normLetter = letter === '_BT_WORD_SPACE' ? ' ' : letter;
-                    document.getElementById('letterOutput').innerHTML += normLetter;
+            function postProcessWords() {
+                if (index === size - 1) {
+                    const words = document.getElementById('letterOutput').innerHTML
+                        .split(' ')
+                        .map(word => `<span class="letter" onmouseover="playWord('${word}')">${word}</span>`)
+                        .join(' ');
+
+                    document.getElementById('letterOutput').innerHTML = words;
                 }
-
-                function postProcessWords() {
-                    if (index === size - 1) {
-                        const words = document.getElementById('letterOutput').innerHTML
-                            .split(' ')
-                            .map(word => `<span class="letter" onmouseover="playWord('${word}')">${word}</span>`)
-                            .join(' ');
-
-                        document.getElementById('letterOutput').innerHTML = words;
-                    }
-                }
-
-                function modifyDihDah() {
-                    const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter" onmouseover="playLetter('${letter}')">${letter}</span>`;
-                    const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah" onmouseover="playDihDah('${dihDah}')">${dihDah}</span>`;
-                    const odd = document.getElementById('dihDahOutput').innerHTML;
-
-                    if (lt === ' ') {
-                        document.getElementById('dihDahOutput').innerHTML = `<br/> ${odd}`;
-                    } else {
-                        document.getElementById('dihDahOutput').innerHTML = `${lt} : ${dd} <br/> ${odd}`;
-                    }
-                }
-                
-                modifyLetter();
-                modifyDihDah();
-                postProcessWords();
             }
 
-            function playWord(word) {
-                if (isPlaying) {
-                    return;
-                }
+            function modifyDihDah() {
+                const lt = letter === '_BT_WORD_SPACE' ? ' ' : `<span class="letter" onmouseover="playLetter('${letter}')">${letter}</span>`;
+                const dd = dihDah === '_BT_WORD_SPACE' ? ' ' : `<span class="dihdah" onmouseover="playDihDah('${dihDah}')">${dihDah}</span>`;
+                const odd = document.getElementById('dihDahOutput').innerHTML;
 
-                isPlaying = true;
-                const morseCode = getMorseCode(word, undefined);
-                morseCode.play();
+                if (lt === ' ') {
+                    document.getElementById('dihDahOutput').innerHTML = `<br/> ${odd}`;
+                } else {
+                    document.getElementById('dihDahOutput').innerHTML = `${lt} : ${dd} <br/> ${odd}`;
+                }
             }
 
-            function playLetter(letter) {
-                if (isPlaying) {
-                    return;
-                }
-                
-                const howl = new Howl({ 
-                    src: [`audios/${letter}.wav`],
-                    onend: () => isPlaying = false
-                });
+            modifyLetter();
+            modifyDihDah();
+            postProcessWords();
+        }
 
-                isPlaying = true;
-                howl.play();
+        function playWord(word) {
+            if (isPlaying) {
+                return;
             }
 
-            function playDihDah(dihDah) {
-                playLetter(d2l.get(dihDah));
+            isPlaying = true;
+            const morseCode = getMorseCode(word, undefined);
+            morseCode.play();
+        }
+
+        function playLetter(letter) {
+            if (isPlaying) {
+                return;
             }
 
-            function getMorseCode(text, letterHandler) {
-                function getCode(c) {
-                    function getSrc(dd) {
-                        const audioPattern = [...dd].join(' ');
-                        const audios = [...audioPattern]
-                            .map(c => c === '.' ? 'audios/dih.wav' : c === '-' ? 'audios/dah.wav' : 'audios/space.wav');
-                        return audios;
-                    }
+            const howl = new Howl({
+                src: [`audios/${letter}.wav`],
+                onend: () => isPlaying = false
+            });
 
-                    const dd = l2d.get(c);
-                    const src = getSrc(dd);
-                    
-                    return {
-                        letter: c,
-                        dd: dd,
-                        src: src
-                    }
+            isPlaying = true;
+            howl.play();
+        }
+
+        function playDihDah(dihDah) {
+            playLetter(d2l.get(dihDah));
+        }
+
+        function getMorseCode(text, letterHandler) {
+            function getCode(c) {
+                function getSrc(dd) {
+                    const audioPattern = [...dd].join(' ');
+                    const audios = [...audioPattern]
+                        .map(c => c === '.' ? 'audios/dih.wav' : c === '-' ? 'audios/dah.wav' : 'audios/space.wav');
+                    return audios;
                 }
 
-                const normText = text
-                    .split(' ')
-                    .map(t => t.toUpperCase().trim())
-                    .filter(t => t.length > 0)
-                    .map(t => [...t].filter(l => l2d.has(l)).join(''))
-                    .join(' ');
-
-                const words = [...normText];
-                const tokens = Array();
-                for (let i = 0; i < words.length; i++) {
-                    const word = words[i];
-                    if (word === ' ') {
-                        tokens.push({
-                            letter: '_BT_WORD_SPACE',
-                            dd: '_BT_WORD_SPACE',
-                            src: [...'       '].map(c => 'audios/space.wav')
-                        });
-                    } else {
-                        const letters = [...word];
-                        for (let j = 0; j < letters.length; j++) {
-                            tokens.push(getCode(letters[j]));
-                            if (j < letters.length - 1) {
-                                tokens.push({
-                                    letter: '_BT_LETTER_SPACE',
-                                    dd: '_BT_LETTER_SPACE',
-                                    src: [...'   '].map(c => 'audios/space.wav')
-                                })
-                            }
-                        }
-                    }
-                }
-
-                function getLetterPlayable(letter, callback) {
-                    return {
-                        index: 0,
-                        letter: letter.letter,
-                        dd: letter.dd,
-                        audios: letter.src,
-                        callback: callback,
-                        play: function() {
-                            const audio = this.audios[this.index];
-                                                        
-                            const howl = new Howl({
-                                src: [audio],
-                                onend: () => {
-                                    this.index += 1;
-                                    
-                                    if (this.index <= this.audios.length - 1) {
-                                        this.play();
-                                    } else {
-                                        callback.play();
-                                    }
-                                }
-                            });
-                            howl.play();
-                        }
-                    };
-                }
+                const dd = l2d.get(c);
+                const src = getSrc(dd);
 
                 return {
-                    letterIndex: 0,
-                    letters: tokens,
-                    play: function() {
-                        if (this.letterIndex >= this.letters.length) {
-                            isPlaying = false;
-                            return;
-                        }
+                    letter: c,
+                    dd: dd,
+                    src: src
+                }
+            }
 
-                        const letter = this.letters[this.letterIndex];
+            const normText = text
+                .split(' ')
+                .map(t => t.toUpperCase().trim())
+                .filter(t => t.length > 0)
+                .map(t => [...t].filter(l => l2d.has(l)).join(''))
+                .join(' ');
 
-                        if (letterHandler) {
-                            letterHandler(this.letterIndex, this.letters.length, letter.letter, letter.dd);
+            const words = [...normText];
+            const tokens = Array();
+            for (let i = 0; i < words.length; i++) {
+                const word = words[i];
+                if (word === ' ') {
+                    tokens.push({
+                        letter: '_BT_WORD_SPACE',
+                        dd: '_BT_WORD_SPACE',
+                        src: [...'       '].map(c => 'audios/space.wav')
+                    });
+                } else {
+                    const letters = [...word];
+                    for (let j = 0; j < letters.length; j++) {
+                        tokens.push(getCode(letters[j]));
+                        if (j < letters.length - 1) {
+                            tokens.push({
+                                letter: '_BT_LETTER_SPACE',
+                                dd: '_BT_LETTER_SPACE',
+                                src: [...'   '].map(c => 'audios/space.wav')
+                            })
                         }
-                        
-                        this.letterIndex += 1;
-                        const playable = getLetterPlayable(letter, this);
-                        playable.play();
                     }
                 }
             }
 
-            function getTextInput() {
-                const textArea = document.getElementById('text');
-                return textArea.value;
+            function getLetterPlayable(letter, callback) {
+                return {
+                    index: 0,
+                    letter: letter.letter,
+                    dd: letter.dd,
+                    audios: letter.src,
+                    callback: callback,
+                    play: function () {
+                        const audio = this.audios[this.index];
+
+                        const howl = new Howl({
+                            src: [audio],
+                            onend: () => {
+                                this.index += 1;
+
+                                if (this.index <= this.audios.length - 1) {
+                                    this.play();
+                                } else {
+                                    callback.play();
+                                }
+                            }
+                        });
+                        howl.play();
+                    }
+                };
             }
 
-            function getD2L() {
-                const l2d = getL2D();
-                const d2l = new Map();
-                for (const [l, d] of l2d) {
-                    d2l.set(d, l);
+            return {
+                letterIndex: 0,
+                letters: tokens,
+                play: function () {
+                    if (this.letterIndex >= this.letters.length) {
+                        isPlaying = false;
+                        return;
+                    }
+
+                    const letter = this.letters[this.letterIndex];
+
+                    if (letterHandler) {
+                        letterHandler(this.letterIndex, this.letters.length, letter.letter, letter.dd);
+                    }
+
+                    this.letterIndex += 1;
+                    const playable = getLetterPlayable(letter, this);
+                    playable.play();
                 }
-                return d2l;
             }
+        }
 
-            function getL2D() {
-                const l2d = new Map();
-                l2d.set('A', '.-');
-                l2d.set('B', '-...');
-                l2d.set('C', '-.-.');
-                l2d.set('D', '-..');
-                l2d.set('E', '.');
-                l2d.set('F', '..-.');
-                l2d.set('G', '--.');
-                l2d.set('H', '....');
-                l2d.set('I', '..');
-                l2d.set('J', '.---');
-                l2d.set('K', '-.-');
-                l2d.set('L', '.-..');
-                l2d.set('M', '--');
-                l2d.set('N', '-.');
-                l2d.set('O', '---');
-                l2d.set('P', '.--.');
-                l2d.set('Q', '--.-');
-                l2d.set('R', '.-.');
-                l2d.set('S', '...');
-                l2d.set('T', '-');
-                l2d.set('U', '..-');
-                l2d.set('V', '...-');
-                l2d.set('W', '.--');
-                l2d.set('X', '-..-');
-                l2d.set('Y', '-.--');
-                l2d.set('Z', '--..');
-                l2d.set('1', '.----');
-                l2d.set('2', '..---');
-                l2d.set('3', '...--');
-                l2d.set('4', '....-');
-                l2d.set('5', '.....');
-                l2d.set('6', '-....');
-                l2d.set('7', '--...');
-                l2d.set('8', '---..');
-                l2d.set('9', '----.');
-                l2d.set('0', '-----');
-                return l2d;
+        function getTextInput() {
+            const textArea = document.getElementById('text');
+            return textArea.value;
+        }
+
+        function getD2L() {
+            const l2d = getL2D();
+            const d2l = new Map();
+            for (const [l, d] of l2d) {
+                d2l.set(d, l);
             }
-        </script>
-    </body>
+            return d2l;
+        }
+
+        function getL2D() {
+            const l2d = new Map();
+            l2d.set('A', '.-');
+            l2d.set('B', '-...');
+            l2d.set('C', '-.-.');
+            l2d.set('D', '-..');
+            l2d.set('E', '.');
+            l2d.set('F', '..-.');
+            l2d.set('G', '--.');
+            l2d.set('H', '....');
+            l2d.set('I', '..');
+            l2d.set('J', '.---');
+            l2d.set('K', '-.-');
+            l2d.set('L', '.-..');
+            l2d.set('M', '--');
+            l2d.set('N', '-.');
+            l2d.set('O', '---');
+            l2d.set('P', '.--.');
+            l2d.set('Q', '--.-');
+            l2d.set('R', '.-.');
+            l2d.set('S', '...');
+            l2d.set('T', '-');
+            l2d.set('U', '..-');
+            l2d.set('V', '...-');
+            l2d.set('W', '.--');
+            l2d.set('X', '-..-');
+            l2d.set('Y', '-.--');
+            l2d.set('Z', '--..');
+            l2d.set('1', '.----');
+            l2d.set('2', '..---');
+            l2d.set('3', '...--');
+            l2d.set('4', '....-');
+            l2d.set('5', '.....');
+            l2d.set('6', '-....');
+            l2d.set('7', '--...');
+            l2d.set('8', '---..');
+            l2d.set('9', '----.');
+            l2d.set('0', '-----');
+            return l2d;
+        }
+    </script>
+</body>
+
 </html>
