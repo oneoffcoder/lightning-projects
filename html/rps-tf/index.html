@@ -3,98 +3,48 @@
 
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0, user-scalable=no">
     <title>Display Webcam Stream</title>
 
     <style>
-        #videoContainer {
-            margin: 0px auto;
-            width: 500px;
-            height: 375px;
-            border: 1px #333 solid;
+        #canvas-wrapper {
+            position: relative;
         }
 
-        #videoOutput {
-            width: 500px;
-            height: 375px;
-            background-color: #666;
-            -webkit-transform: scaleX(-1);
-            transform: scaleX(-1);
+        #canvas-wrapper,
+        #scatter-gl-container {
+            display: inline-block;
+            vertical-align: top;
         }
     </style>
 </head>
 
-<body onload="init()">
-    <div id="videoContainer">
-        <video autoplay id="videoOutput"></video>
+<body>
+    <div id="info" style='display:none'></div>
+    <div id="predictions"></div>
+    <div id="canvas-wrapper">
+        <canvas id="output" style=""></canvas>
+        <video id="video" playsinline style="
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+            visibility: hidden;
+            width: auto;
+            height: auto;
+            position: absolute;
+            ">
+        </video>
     </div>
+    <div id="scatter-gl-container"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.106.2/build/three.min.js"></script>
+    <script src="https://storage.googleapis.com/learnjs-data/handtrack_staging/scatter-gl.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/stats.js@0.17.0/build/stats.min.js"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
-    <script>
-        function init() {
-            const video = document.querySelector('#videoOutput');
-
-            if (navigator.mediaDevices.getUserMedia) {
-                navigator.mediaDevices.getUserMedia({ video: true })
-                    .then(function (stream) {
-                        video.srcObject = stream;
-                        main();
-                    })
-                    .catch(function (error) {
-                        console.log('Something went wrong!');
-                    });
-            } else {
-                console.log('no webcam!');
-            }
-        }
-
-        async function main() {
-            // Load the MediaPipe handpose model.
-            const model = await handpose.load();
-            console.log('model loaded');
-            // Pass in a video stream (or an image, canvas, or 3D tensor) to obtain a
-            // hand prediction from the MediaPipe graph.
-            const predictions = await model.estimateHands(document.querySelector('#videoOutput'));
-            console.log(predictions);
-            if (predictions.length > 0) {
-                /*
-                `predictions` is an array of objects describing each detected hand, for example:
-                [
-                  {
-                    handInViewConfidence: 1, // The probability of a hand being present.
-                    boundingBox: { // The bounding box surrounding the hand.
-                      topLeft: [162.91, -17.42],
-                      bottomRight: [548.56, 368.23],
-                    },
-                    landmarks: [ // The 3D coordinates of each hand landmark.
-                      [472.52, 298.59, 0.00],
-                      [412.80, 315.64, -6.18],
-                      ...
-                    ],
-                    annotations: { // Semantic groupings of the `landmarks` coordinates.
-                      thumb: [
-                        [412.80, 315.64, -6.18]
-                        [350.02, 298.38, -7.14],
-                        ...
-                      ],
-                      ...
-                    }
-                  }
-                ]
-                */
-
-                for (let i = 0; i < predictions.length; i++) {
-                    const keypoints = predictions[i].landmarks;
-
-                    // Log hand keypoints.
-                    for (let i = 0; i < keypoints.length; i++) {
-                        const [x, y, z] = keypoints[i];
-                        console.log(`Keypoint ${i}: [${x}, ${y}, ${z}]`);
-                    }
-                }
-            }
-        }
-
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.7.6/dat.gui.min.js"></script>
+    <script src="./index.js"></script>
 </body>
 
 </html>
