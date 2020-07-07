@@ -95,6 +95,59 @@ const main =
         landmarksRealTime(video);
     }
 
+function getStraightLineParams(arrs) {
+    const x1 = arrs[0][0]; const y1 = arrs[0][1];
+    const x2 = arrs[3][0]; const y2 = arrs[3][1];
+    const a = y2 - y1;
+    const b = x1 - x2;
+    const c = a * x1 + b * y1;
+    const m = a / b * -1;
+    const i = c / b;
+    return {
+        m: m,
+        b: i
+    }
+}
+
+function getAllStraightLineParams(annots) {
+    return {
+        'thumb': getStraightLineParams(annots['thumb']),
+        'indexFinger': getStraightLineParams(annots['indexFinger']),
+        'middleFinder': getStraightLineParams(annots['middleFinger']),
+        'ringFinger': getStraightLineParams(annots['ringFinger']),
+        'pinky': getStraightLineParams(annots['pinky'])
+    }
+}
+
+function toXY(annots) {
+    const output = {};
+    for (let k of Object.keys(annots)) {
+        const arr = annots[k].map(a => [a[0], a[1]]);
+        output[k] = arr;
+    }
+    return output;
+}
+
+function computeMse(p, xy) {
+    function sum(total, num) {
+        return total + num;
+    }
+    const m = p['m'];
+    const b = p['b'];
+
+    const mse = xy
+        .map(arr => {
+            const x = arr[0];
+            const y_t = arr[1];
+            const y_p = m * x + b;
+            const diff = y_t - y_p;
+            const squaredDiff = Math.pow(diff, 2.0);
+            return squaredDiff;
+        })
+        .reduce(sum, 0) / xy.length;
+    return mse;
+}
+
 const landmarksRealTime = async (video) => {
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
@@ -128,10 +181,13 @@ const landmarksRealTime = async (video) => {
         if (predictions.length > 0) {
             const result = predictions[0].landmarks;
             const annots = predictions[0].annotations;
-            console.log('result');
-            console.log(result);
             console.log('annots');
             console.log(annots);
+
+            const params = getAllStraightLineParams(annots);
+            const xy = toXY(annots);
+            console.log(computeMse(params['indexFinger'], xy['indexFinger']));
+
             drawKeypoints(ctx, result, annots);
         }
         requestAnimationFrame(frameLandmarks);
