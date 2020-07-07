@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0, user-scalable=no">
+    <title>Display Webcam Stream</title>
+
+    <style>
+        #canvas-wrapper {
+            position: relative;
+        }
+
+        #canvas-wrapper {
+            display: inline-block;
+            vertical-align: top;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="info" style='display:none'></div>
+    <div id="predictions"></div>
+    <div id="canvas-wrapper">
+        <canvas id="output"></canvas>
+        <video id="video" playsinline style="
+            -webkit-transform: scaleX(-1);
+            transform: scaleX(-1);
+            visibility: hidden;
+            width: auto;
+            height: auto;
+            position: absolute;
+            ">
+        </video>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
