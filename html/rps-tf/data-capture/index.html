@@ -33,6 +33,15 @@
             ">
         </video>
     </div>
+    <div>
+        <button onclick="capture('rock')">rock</button>
+        <button onclick="capture('paper')">paper</button>
+        <button onclick="capture('scissor')">scissor</button>
+        <button onclick="capture('shoot')">shoot</button>
+        <button onclick="undo()">undo</button>
+        <button onclick="download()">download</button>
+    </div>
+    <a id="dlAnchor" style="display:none"></a>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
     <script src="./index.js"></script>

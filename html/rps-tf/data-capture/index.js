@@ -10,6 +10,14 @@ let model;
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 500;
 const mobile = false;
+let lastSymbol = undefined;
+let symbol = undefined;
+const data = {
+    'rock': [],
+    'paper': [],
+    'scissor': [],
+    'shoot': []
+}
 
 function drawKeypoints(ctx, keypoints) {
     function drawPoint(ctx, y, x, r) {
@@ -95,70 +103,6 @@ const main =
         landmarksRealTime(video);
     }
 
-function getStraightLineParams(arrs) {
-    const deltaX = 5.0;
-    const x1 = arrs[0][0]; const y1 = arrs[0][1];
-    const x2 = arrs[3][0] < x1 ? arrs[3][0] - deltaX : arrs[3][0] + deltaX; const y2 = arrs[3][1];
-    const a = y2 - y1;
-    const b = x1 - x2;
-    const c = a * x1 + b * y1;
-    const m = a / b * -1;
-    const i = c / b;
-    return {
-        m: m,
-        b: i
-    }
-}
-
-function getAllStraightLineParams(annots) {
-    return {
-        'thumb': getStraightLineParams(annots['thumb']),
-        'indexFinger': getStraightLineParams(annots['indexFinger']),
-        'middleFinger': getStraightLineParams(annots['middleFinger']),
-        'ringFinger': getStraightLineParams(annots['ringFinger']),
-        'pinky': getStraightLineParams(annots['pinky'])
-    }
-}
-
-function toXY(annots) {
-    const output = {};
-    for (let k of Object.keys(annots)) {
-        const arr = annots[k].map(a => [a[0], a[1]]);
-        output[k] = arr;
-    }
-    return output;
-}
-
-function computeMse(p, xy) {
-    function sum(total, num) {
-        return total + num;
-    }
-    const m = p['m'];
-    const b = p['b'];
-
-    const mse = xy
-        .map(arr => {
-            const x = arr[0];
-            const y_t = arr[1];
-            const y_p = m * x + b;
-            const diff = y_t - y_p;
-            const squaredDiff = Math.pow(diff, 2.0);
-            return squaredDiff;
-        })
-        .reduce(sum, 0) / xy.length;
-    return mse;
-}
-
-function computeAllMse(params, xys) {
-    return {
-        thumb: computeMse(params['thumb'], xys['thumb']),
-        indexFinger: computeMse(params['indexFinger'], xys['indexFinger']),
-        middleFinger: computeMse(params['middleFinger'], xys['middleFinger']),
-        ringFinger: computeMse(params['ringFinger'], xys['ringFinger']),
-        pinky: computeMse(params['pinky'], xys['pinky'])
-    }
-}
-
 const landmarksRealTime = async (video) => {
     videoWidth = video.videoWidth;
     videoHeight = video.videoHeight;
@@ -192,14 +136,14 @@ const landmarksRealTime = async (video) => {
         if (predictions.length > 0) {
             const result = predictions[0].landmarks;
             const annots = predictions[0].annotations;
-            console.log('annots');
-            console.log(annots);
 
-            const params = getAllStraightLineParams(annots);
-            const xys = toXY(annots);
-            console.log(params);
-            console.log(xys);
-            console.log(computeAllMse(params, xys));
+            if (symbol) {
+                const d = captureData(annots);
+                data[symbol].push(d);
+
+                console.log(d);
+                uncapture();
+            }
 
             drawKeypoints(ctx, result, annots);
         }
@@ -208,6 +152,57 @@ const landmarksRealTime = async (video) => {
 
     frameLandmarks();
 };
+
+function captureData(annots) {
+    function getPoints(k, prefix, data) {
+        for (let i = 0; i < annots[k].length; i++) {
+            const colPrefix = `${prefix}${i}`;
+            const suf = ['x', 'y', 'z'];
+            const arr = annots[k][i];
+            for (let j = 0; j < arr.length; j++) {
+                const col = `${colPrefix}${suf[j]}`;
+                const val = arr[j];
+                data[col] = val;
+            }
+        }
+    }
+
+    const data = {};
+    getPoints('indexFinger', 'index', data);
+    getPoints('middleFinger', 'middle', data);
+    getPoints('ringFinger', 'ring', data);
+    getPoints('pinky', 'pinky', data);
+    getPoints('thumb', 'thumb', data);
+    getPoints('palmBase', 'palm', data)
+    return data;
+}
+
+function capture(s) {
+    symbol = s;
+}
+
+function uncapture() {
+    lastSymbol = symbol;
+    symbol = undefined;
+}
+
+function undo() {
+    data[lastSymbol].pop();
+}
+
+function download() {
+    function getMsPastEpoch() {
+        const now = new Date()  
+        const ms = now.getTime()
+        return ms;
+    }
+
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data));
+    const a = document.getElementById('dlAnchor');
+    a.setAttribute('href', dataStr);
+    a.setAttribute('download', `data-${getMsPastEpoch()}.json`);
+    a.click();
+}
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
