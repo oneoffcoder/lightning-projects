@@ -96,8 +96,9 @@ const main =
     }
 
 function getStraightLineParams(arrs) {
+    const deltaX = 5.0;
     const x1 = arrs[0][0]; const y1 = arrs[0][1];
-    const x2 = arrs[3][0]; const y2 = arrs[3][1];
+    const x2 = arrs[3][0] < x1 ? arrs[3][0] - deltaX : arrs[3][0] + deltaX; const y2 = arrs[3][1];
     const a = y2 - y1;
     const b = x1 - x2;
     const c = a * x1 + b * y1;
@@ -113,7 +114,7 @@ function getAllStraightLineParams(annots) {
     return {
         'thumb': getStraightLineParams(annots['thumb']),
         'indexFinger': getStraightLineParams(annots['indexFinger']),
-        'middleFinder': getStraightLineParams(annots['middleFinger']),
+        'middleFinger': getStraightLineParams(annots['middleFinger']),
         'ringFinger': getStraightLineParams(annots['ringFinger']),
         'pinky': getStraightLineParams(annots['pinky'])
     }
@@ -146,6 +147,16 @@ function computeMse(p, xy) {
         })
         .reduce(sum, 0) / xy.length;
     return mse;
+}
+
+function computeAllMse(params, xys) {
+    return {
+        thumb: computeMse(params['thumb'], xys['thumb']),
+        indexFinger: computeMse(params['indexFinger'], xys['indexFinger']),
+        middleFinger: computeMse(params['middleFinger'], xys['middleFinger']),
+        ringFinger: computeMse(params['ringFinger'], xys['ringFinger']),
+        pinky: computeMse(params['pinky'], xys['pinky'])
+    }
 }
 
 const landmarksRealTime = async (video) => {
@@ -185,8 +196,10 @@ const landmarksRealTime = async (video) => {
             console.log(annots);
 
             const params = getAllStraightLineParams(annots);
-            const xy = toXY(annots);
-            console.log(computeMse(params['indexFinger'], xy['indexFinger']));
+            const xys = toXY(annots);
+            console.log(params);
+            console.log(xys);
+            console.log(computeAllMse(params, xys));
 
             drawKeypoints(ctx, result, annots);
         }
