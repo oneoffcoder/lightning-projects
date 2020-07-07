@@ -11,6 +11,11 @@ const models = getModels();
 const VIDEO_WIDTH = 640;
 const VIDEO_HEIGHT = 500;
 const mobile = false;
+const predictionThreshold = 0.999;
+let youScore = 0;
+let comScore = 0;
+let youSymbol = undefined;
+let comSymbol = undefined;
 
 function drawKeypoints(ctx, keypoints) {
     function drawPoint(ctx, y, x, r) {
@@ -131,7 +136,28 @@ const landmarksRealTime = async (video) => {
             const annots = predictions[0].annotations;
             const d = captureData(annots);
             const r = predict(d);
-            console.log(r);
+            if (r.prob >= predictionThreshold) {
+                if (r.symbol === 'shoot' && youSymbol) {
+                    comSymbol = getComputerSymbol();
+                    const winner = getWinner(youSymbol, comSymbol);
+                    if (winner === 'user') {
+                        youScore += 1;
+                    } else if (winner === 'computer') {
+                        comScore += 1;
+                    }
+
+                    console.log(`${youSymbol} vs ${comSymbol}, winner = ${winner}, u = ${youScore}, c = ${comScore}`);
+
+                    updateLastSymbols();
+                    youSymbol = undefined;
+                    comSymbol = undefined;
+                } else if (r.symbol === 'rock' || r.symbol === 'paper' || r.symbol === 'scissor') {
+                    youSymbol = r.symbol;
+                }
+
+                updateScores();
+                updateSymbols();
+            }
 
             drawKeypoints(ctx, result, annots);
         }
@@ -164,7 +190,7 @@ function predict(x) {
         }
     }
 
-    return {prob: p, clazz: c};
+    return {prob: p, symbol: c};
 }
 
 function captureData(annots) {
@@ -460,6 +486,74 @@ function getModels() {
             ]
         }
     };
+}
+
+function getComputerSymbol() {
+    return _.sample(['rock', 'paper', 'scissor']);
+}
+
+function getWinner(u, c) {
+    if (u === 'rock' && c === 'paper') {
+        return 'computer';
+    } else if (u === 'rock' && c === 'scissor') {
+        return 'user';
+    } else if (u === 'rock' && c === 'rock') {
+        return 'tie';
+    } else if (u === 'paper' && c === 'paper') {
+        return 'tie';
+    } else if (u === 'paper' && c === 'scissor') {
+        return 'computer';
+    } else if (u === 'paper' && c === 'rock') {
+        return 'user';
+    } else if (u === 'scissor' && c === 'paper') {
+        return 'user';
+    } else if (u === 'scissor' && c === 'scissor') {
+        return 'tie';
+    } else {
+        return 'computer';
+    }
+}
+
+function updateScores() {
+    const you = document.getElementById('youScore');
+    const com = document.getElementById('computerScore');
+
+    you.innerHTML = `${youScore}`;
+    com.innerHTML = `${comScore}`;
+}
+
+function updateSymbols() {
+    const you = document.getElementById('youSymbol');
+    const com = document.getElementById('computerSymbol');
+
+    if (youSymbol) {
+        you.innerHTML = youSymbol;
+    } else {
+        you.innerHTML = 'ready...';
+    }
+
+    if (comSymbol) {
+        com.innerHTML = comSymbol;
+    } else {
+        com.innerHTML = 'waiting...';
+    }
+}
+
+function updateLastSymbols() {
+    const you = document.getElementById('youLastSymbol');
+    const com = document.getElementById('computerLastSymbol');
+
+    if (youSymbol) {
+        you.innerHTML = youSymbol;
+    } else {
+        you.innerHTML = '';
+    }
+
+    if (comSymbol) {
+        com.innerHTML = comSymbol;
+    } else {
+        com.innerHTML = '';
+    }
 }
 
 navigator.getUserMedia = navigator.getUserMedia ||
