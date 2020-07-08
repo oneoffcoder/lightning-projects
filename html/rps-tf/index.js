@@ -12,10 +12,12 @@ const VIDEO_WIDTH = document.getElementById('output').clientWidth;
 const VIDEO_HEIGHT = document.getElementById('output').clientHeight;
 const mobile = false;
 const predictionThreshold = 0.999;
+const shootThreshold = 5;
 let youScore = 0;
 let comScore = 0;
 let youSymbol = undefined;
 let comSymbol = undefined;
+let shootCount = 0;
 
 function drawKeypoints(ctx, keypoints) {
     function drawPoint(ctx, y, x, r) {
@@ -142,7 +144,11 @@ const landmarksRealTime = async (video) => {
             const d = captureData(annots);
             const r = predict(d);
             if (r.prob >= predictionThreshold) {
-                if (r.symbol === 'shoot' && youSymbol) {
+                if (r.symbol === 'shoot') {
+                    shootCount++;
+                }
+                
+                if (r.symbol === 'shoot' && shootCount >= shootThreshold && youSymbol) {
                     comSymbol = getComputerSymbol();
                     const winner = getWinner(youSymbol, comSymbol);
                     if (winner === 'user') {
@@ -156,6 +162,7 @@ const landmarksRealTime = async (video) => {
                     updateLastSymbols();
                     youSymbol = undefined;
                     comSymbol = undefined;
+                    shootCount = 0;
                 } else if (r.symbol === 'rock' || r.symbol === 'paper' || r.symbol === 'scissor') {
                     youSymbol = r.symbol;
                 }
