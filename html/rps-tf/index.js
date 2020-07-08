@@ -61,6 +61,10 @@ async function setupCamera() {
     }
 
     const video = document.getElementById('video');
+    video.onloadeddata = (event) => {
+        document.getElementById('loading').innerHTML = '<div class="spinner-grow text-primary null-spinner" role="status"><span class="sr-only">Loading...</span></div>';
+        document.getElementById('gameInfo').style.display = 'block';
+    };
     const stream = await navigator.mediaDevices.getUserMedia({
         'audio': false,
         'video': {
@@ -92,6 +96,7 @@ const main =
         try {
             video = await loadVideo();
         } catch (e) {
+            document.getElementById('loading').innerHTML = '<div class="spinner-grow text-primary null-spinner" role="status"><span class="sr-only">Loading...</span></div>';
             let info = document.getElementById('info');
             info.textContent = e.message;
             info.style.display = 'block';
@@ -190,7 +195,7 @@ function predict(x) {
         }
     }
 
-    return {prob: p, symbol: c};
+    return { prob: p, symbol: c };
 }
 
 function captureData(annots) {
