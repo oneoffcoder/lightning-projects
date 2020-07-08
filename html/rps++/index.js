@@ -68,7 +68,7 @@ async function setupCamera() {
     const video = document.getElementById('video');
     video.onloadeddata = (event) => {
         loaded = true;
-        document.getElementById('gameInfo').style.display = 'block';
+        document.getElementById('gameInfo').classList.remove('d-none');
     };
     const stream = await navigator.mediaDevices.getUserMedia({
         'audio': false,
@@ -123,8 +123,8 @@ const landmarksRealTime = async (video) => {
     const ctx = canvas.getContext('2d');
 
     ctx.clearRect(0, 0, videoWidth, videoHeight);
-    ctx.strokeStyle = 'red';
-    ctx.fillStyle = 'red';
+    ctx.strokeStyle = '#dc3545';
+    ctx.fillStyle = '#dc3545';
 
     ctx.translate(canvas.width, 0);
     ctx.scale(-1, 1);
@@ -574,10 +574,14 @@ function updateLastSymbols() {
 function startProgressBar() {
     function doCheck() {
         const pbar = document.getElementById('pBar');
+        const app = document.getElementById('app');
 
         if (loaded) {
             clearInterval(timer);
             pbar.style = `width: 100%`;
+            pbar.classList.remove('bg-info');
+            pbar.classList.add('bg-danger');
+            app.classList.remove('position-offscreen');
         } else {
             pBarWidth += 10;
             if (pBarWidth > 100) {

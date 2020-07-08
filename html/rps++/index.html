@@ -16,10 +16,6 @@
             font-family: monospace;
         }
 
-        body {
-            margin: 10px;
-        }
-
         .score {
             font-size: 3em;
         }
@@ -35,12 +31,12 @@
             border-radius: 10px;
         }
 
-        .align-self-center {
-            align-self: center;
+        .scard-border {
+            border-right: 3px solid #dc3545;
         }
 
-        .scard.scard-border {
-            border-right: 3px solid #dc3545;
+        .scard {
+            border-radius: 10px;
         }
 
         svg.bi {
@@ -50,6 +46,16 @@
 
         .null-spinner {
             color: #e9ecef !important;
+        }
+
+        .position-offscreen {
+            position: fixed;
+            top:-9999px;
+            left: -9999px;
+            visibility: hidden;
+        }
+        #app {
+            padding-bottom: 10px;
         }
     </style>
 </head>
@@ -65,14 +71,13 @@
             <p>
                 Using artificial intelligence (deep learning) to recognize your hand pose to play RPS
             </p>
-            <div class="progress" style="height: 5px;">
-                <div id="pBar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0"
-                    aria-valuemax="100"></div>
+            <div class="progress bg-light" style="height: 5px;">
+                <div id="pBar" class="progress-bar bg-info" role="progressbar" style="width: 0%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
         </div>
     </div>
-    <div id="info" style='display:none'></div>
-    <div id="app" class="container">
+    <div id="info" class="d-none"></div>
+    <div id="app" class="container position-offscreen">
         <div class="row">
             <div class="col-sm">
                 <div id="canvas-wrapper">
@@ -81,6 +86,7 @@
                         -webkit-transform: scaleX(-1);
                         transform: scaleX(-1);
                         visibility: hidden;
+                        display: none;
                         width: auto;
                         height: auto;
                         position: absolute;
@@ -88,10 +94,10 @@
                     </video>
                 </div>
             </div>
-            <div id="gameInfo" class="col-sm align-self-center" style="display: none;">
+            <div id="gameInfo" class="col-sm align-self-center d-none">
                 <div class="row">
-                    <div class="col-sm">
-                        <div class="scard scard-border text-center" style="width: 18rem;">
+                    <div class="col-sm scard-border">
+                        <div class="scard text-center">
                             <div class="card-img-top">
                                 <svg viewBox="0 0 16 16" class="bi bi-person-badge" fill="currentColor"
                                     xmlns="http://www.w3.org/2000/svg">
@@ -110,7 +116,7 @@
                         </div>
                     </div>
                     <div class="col-sm">
-                        <div class="scard text-center" style="width: 18rem;">
+                        <div class="scard text-center">
                             <div class="card-img-top">
                                 <svg viewBox="0 0 16 16" class="bi bi-cpu-fill" fill="currentColor"
                                     xmlns="http://www.w3.org/2000/svg">
