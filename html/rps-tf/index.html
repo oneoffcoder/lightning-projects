@@ -8,36 +8,35 @@
     <meta name="author" content="Jee Vang, Ph.D.">
     <meta name="organization" content="One-Off Coder">
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0, user-scalable=no">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
-        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <title>Rock, Paper, Scissor++</title>
-
     <style>
-        * {
-            font-family: monospace;
-        }
+    * {
+        font-family: monospace;
+    }
 
-        body {
-            margin: 10px;
-        }
+    body {
+        margin: 10px;
+    }
 
-        .score {
-            font-size: 20px;
-        }
+    .score {
+        font-size: 20px;
+    }
 
-        .last-symbol {
-            color: red;
-            font-size: 15px;
-        }
+    .last-symbol {
+        color: red;
+        font-size: 15px;
+    }
 
-        #canvas-wrapper {
-            position: relative;
-        }
+    #output {
+        width: 100%;
+        height: auto;
+        border-radius: 10px;
+    }
 
-        #canvas-wrapper {
-            display: inline-block;
-            vertical-align: top;
-        }
+    .align-self-center {
+        align-self: center;
+    }
     </style>
 </head>
 
@@ -56,48 +55,61 @@
     </div>
     <div id="info" style='display:none'></div>
     <div id="predictions"></div>
-    <div id="canvas-wrapper">
-        <canvas id="output"></canvas>
-        <video id="video" playsinline style="
-            -webkit-transform: scaleX(-1);
-            transform: scaleX(-1);
-            visibility: hidden;
-            width: auto;
-            height: auto;
-            position: absolute;
-            ">
-        </video>
-    </div>
     <div class="container">
         <div class="row">
             <div class="col-sm">
-                You <span id="youScore" class="score">0</span> <span id="youLastSymbol" class="last-symbol"></span>
+                <div id="canvas-wrapper">
+                    <canvas id="output"></canvas>
+                    <video id="video" playsinline style="
+                        -webkit-transform: scaleX(-1);
+                        transform: scaleX(-1);
+                        visibility: hidden;
+                        width: auto;
+                        height: auto;
+                        position: absolute;
+                        ">
+                    </video>
+                </div>
             </div>
-            <div class="col-sm">
-                Computer <span id="computerScore" class="score">0</span> <span id="computerLastSymbol" class="last-symbol"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm">
-                <div id="youSymbol">ready...</div>
-            </div>
-            <div class="col-sm">
-                <div id="computerSymbol">waiting...</div>
+            <div class="col-sm align-self-center">
+                <div class="row">
+                    <div class="col-sm">
+                        <div class="scard" style="width: 18rem;">
+                            <div class="card-img-top">
+                                <svg width="9.3em" height="9.3em" viewBox="0 0 16 16" class="bi bi-person-badge" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M12 1H4a1 1 0 0 0-1 1v11.755S4 12 8 12s5 1.755 5 1.755V2a1 1 0 0 0-1-1zM4 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H4z" />
+                                    <path fill-rule="evenodd" d="M8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5z" />
+                                </svg>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">Your Score</h5>
+                                <p class="card-text"><span id="youScore" class="score">0</span> <span id="youLastSymbol" class="last-symbol"></span></p>
+                                <div id="youSymbol">ready...</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm">
+                        <div class="scard" style="width: 18rem;">
+                            <div class="card-img-top">
+                                <svg width="9.3em" height="9.3em" viewBox="0 0 16 16" class="bi bi-cpu-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M5.5.5a.5.5 0 0 0-1 0V2A2.5 2.5 0 0 0 2 4.5H.5a.5.5 0 0 0 0 1H2v1H.5a.5.5 0 0 0 0 1H2v1H.5a.5.5 0 0 0 0 1H2v1H.5a.5.5 0 0 0 0 1H2A2.5 2.5 0 0 0 4.5 14v1.5a.5.5 0 0 0 1 0V14h1v1.5a.5.5 0 0 0 1 0V14h1v1.5a.5.5 0 0 0 1 0V14h1v1.5a.5.5 0 0 0 1 0V14a2.5 2.5 0 0 0 2.5-2.5h1.5a.5.5 0 0 0 0-1H14v-1h1.5a.5.5 0 0 0 0-1H14v-1h1.5a.5.5 0 0 0 0-1H14v-1h1.5a.5.5 0 0 0 0-1H14A2.5 2.5 0 0 0 11.5 2V.5a.5.5 0 0 0-1 0V2h-1V.5a.5.5 0 0 0-1 0V2h-1V.5a.5.5 0 0 0-1 0V2h-1V.5zm1 4.5A1.5 1.5 0 0 0 5 6.5v3A1.5 1.5 0 0 0 6.5 11h3A1.5 1.5 0 0 0 11 9.5v-3A1.5 1.5 0 0 0 9.5 5h-3zm0 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 0-.5-.5h-3z" />
+                                </svg>
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">CPU Score</h5>
+                                <p class="card-text"><span id="computerScore" class="score">0</span> <span id="computerLastSymbol" class="last-symbol"></span></p>
+                                <div id="computerSymbol">ready...</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.10.2/underscore-min.js"
-        crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
-        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
-        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.10.2/underscore-min.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tensorflow-models/handpose"></script>
     <script src="./index.js"></script>

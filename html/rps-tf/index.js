@@ -8,8 +8,8 @@ let videoWidth, videoHeight,
     };
 let model;
 const models = getModels();
-const VIDEO_WIDTH = 640;
-const VIDEO_HEIGHT = 500;
+const VIDEO_WIDTH = document.getElementById('output').clientWidth;
+const VIDEO_HEIGHT = document.getElementById('output').clientHeight;
 const mobile = false;
 const predictionThreshold = 0.999;
 let youScore = 0;
