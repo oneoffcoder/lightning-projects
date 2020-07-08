@@ -18,6 +18,9 @@ let comScore = 0;
 let youSymbol = undefined;
 let comSymbol = undefined;
 let shootCount = 0;
+let loaded = false;
+let timer = undefined;
+let pBarWidth = 0;
 
 function drawKeypoints(ctx, keypoints) {
     function drawPoint(ctx, y, x, r) {
@@ -64,7 +67,7 @@ async function setupCamera() {
 
     const video = document.getElementById('video');
     video.onloadeddata = (event) => {
-        document.getElementById('loading').innerHTML = '<div class="spinner-grow text-primary null-spinner" role="status"><span class="sr-only">Loading...</span></div>';
+        loaded = true;
         document.getElementById('gameInfo').style.display = 'block';
     };
     const stream = await navigator.mediaDevices.getUserMedia({
@@ -98,7 +101,7 @@ const main =
         try {
             video = await loadVideo();
         } catch (e) {
-            document.getElementById('loading').innerHTML = '<div class="spinner-grow text-primary null-spinner" role="status"><span class="sr-only">Loading...</span></div>';
+            loaded = true;
             let info = document.getElementById('info');
             info.textContent = e.message;
             info.style.display = 'block';
@@ -147,7 +150,7 @@ const landmarksRealTime = async (video) => {
                 if (r.symbol === 'shoot') {
                     shootCount++;
                 }
-                
+
                 if (r.symbol === 'shoot' && shootCount >= shootThreshold && youSymbol) {
                     comSymbol = getComputerSymbol();
                     const winner = getWinner(youSymbol, comSymbol);
@@ -567,6 +570,27 @@ function updateLastSymbols() {
         com.innerHTML = '';
     }
 }
+
+function startProgressBar() {
+    function doCheck() {
+        const pbar = document.getElementById('pBar');
+
+        if (loaded) {
+            clearInterval(timer);
+            pbar.style = `width: 100%`;
+        } else {
+            pBarWidth += 10;
+            if (pBarWidth > 100) {
+                pBarWidth = 0;
+            }
+            pbar.style = `width: ${pBarWidth}%`;
+        }
+    }
+    
+    timer = setInterval(doCheck, 500);
+}
+
+startProgressBar();
 
 navigator.getUserMedia = navigator.getUserMedia ||
     navigator.webkitGetUserMedia || navigator.mozGetUserMedia;
