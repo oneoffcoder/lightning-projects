@@ -12,4 +12,4 @@
 * [game-of-life](game-of-life): Conway's Game of Life.
 * [morse-code](morse-code): Morse code.
 * [sign-language](sign-language): Learn sign language alphabets.
-* [rps-tf](rps-tf): Rock, Paper, Scissor re-invented with a double dose of artificial intelligence; hand pose recognition with deep learning and hand pose prediction with logistic regression.
+* [rps++](rps++): Rock, Paper, Scissor re-invented with a double dose of artificial intelligence; hand pose recognition with deep learning and hand pose prediction with logistic regression.
