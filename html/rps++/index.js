@@ -544,13 +544,13 @@ function updateSymbols() {
     if (youSymbol) {
         you.innerHTML = youSymbol;
     } else {
-        you.innerHTML = 'ready <span class="text-danger">...</span>';
+        you.innerHTML = 'ready ...';
     }
 
     if (comSymbol) {
         com.innerHTML = comSymbol;
     } else {
-        com.innerHTML = 'waiting <span class="text-danger">...</span>';
+        com.innerHTML = 'waiting ...';
     }
 }
 
@@ -559,13 +559,13 @@ function updateLastSymbols() {
     const com = document.getElementById('computerLastSymbol');
 
     if (youSymbol) {
-        you.innerHTML = `<br>You choose: ${youSymbol}`;
+        you.innerHTML = `You choose: <span class="text-danger animate__animated animate__rubberBand">${youSymbol}</span>`;
     } else {
         you.innerHTML = '';
     }
 
     if (comSymbol) {
-        com.innerHTML = `<br>CPU choose: ${comSymbol}`;
+        com.innerHTML = `CPU choose: <span class="text-danger animate__animated animate__rubberBand">${comSymbol}</span>`;
     } else {
         com.innerHTML = '';
     }
@@ -590,7 +590,6 @@ function startProgressBar() {
             pbar.style = `width: ${pBarWidth}%`;
         }
     }
-    
     timer = setInterval(doCheck, 100);
 }
 

@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
         integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.0.0/animate.min.css"/>
     <title>Rock, Paper, Scissor++</title>
     <style>
         * {
@@ -56,6 +57,12 @@
         }
         #app {
             padding-bottom: 10px;
+        }
+
+        .animate__animated {
+            display: inline-block;
+            font-weight: bold;
+            animation-duration: .75s; /* don't forget to set a duration! */
         }
     </style>
 </head>
@@ -109,8 +116,11 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">Your Score</h5>
-                                <p class="card-text"><span id="youScore" class="score text-danger">0</span><span
-                                        id="youLastSymbol" class="last-symbol"></span></p>
+                                <p class="card-text">
+                                    <span id="youScore" class="score text-danger">0</span>
+                                    <br>
+                                    <span id="youLastSymbol" class="last-symbol"></span>
+                                    </p>
                                 <div id="youSymbol">ready <span class="text-danger">...</span></div>
                             </div>
                         </div>
@@ -126,8 +136,11 @@
                             </div>
                             <div class="card-body">
                                 <h5 class="card-title">CPU Score</h5>
-                                <p class="card-text"><span id="computerScore" class="score text-danger">0</span><span
-                                        id="computerLastSymbol" class="last-symbol"></span></p>
+                                <p class="card-text">
+                                    <span id="computerScore" class="score text-danger">0</span>
+                                    <br>
+                                    <span id="computerLastSymbol" class="last-symbol"></span>
+                                    </p>
                                 <div id="computerSymbol">ready <span class="text-danger">...</span></div>
                             </div>
                         </div>
