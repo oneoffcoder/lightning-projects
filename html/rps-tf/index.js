@@ -587,7 +587,7 @@ function startProgressBar() {
         }
     }
     
-    timer = setInterval(doCheck, 500);
+    timer = setInterval(doCheck, 100);
 }
 
 startProgressBar();
