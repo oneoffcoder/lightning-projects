@@ -529,13 +529,13 @@ function updateSymbols() {
     if (youSymbol) {
         you.innerHTML = youSymbol;
     } else {
-        you.innerHTML = 'ready...';
+        you.innerHTML = 'ready <span class="text-danger">...</span>';
     }
 
     if (comSymbol) {
         com.innerHTML = comSymbol;
     } else {
-        com.innerHTML = 'waiting...';
+        com.innerHTML = 'waiting <span class="text-danger">...</span>';
     }
 }
 
@@ -544,13 +544,13 @@ function updateLastSymbols() {
     const com = document.getElementById('computerLastSymbol');
 
     if (youSymbol) {
-        you.innerHTML = youSymbol;
+        you.innerHTML = `<br>You choose: ${youSymbol}`;
     } else {
         you.innerHTML = '';
     }
 
     if (comSymbol) {
-        com.innerHTML = comSymbol;
+        com.innerHTML = `<br>CPU choose: ${comSymbol}`;
     } else {
         com.innerHTML = '';
     }
