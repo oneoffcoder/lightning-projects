@@ -15,7 +15,6 @@
         }
 
         body {
-            margin: 10px;
         }
 
         .center {
@@ -24,13 +23,22 @@
 
         .color-table {
             margin: auto;
-            width: 80%;
-            border-collapse: collapse;
+            width: calc(100vw - 17px);
         }
 
         .color-cell {
-            width: 40px;
-            height: 40px;
+            width: calc((100vw / 25) - 9px);
+            height: calc((100vw / 25) - 9px);
+            border-radius: 9%;
+            padding: 3px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 4px;
+            transform: scale(1, 1);
+            transition-duration: .3s;
+        }
+        .color-cell:hover {
+            transform: scale(1.15, 1.15);
         }
     </style>
 </head>
@@ -78,10 +86,12 @@
                 const tr = table.insertRow(r);
                 for (let c = 0; c < nCols; c++) {
                     const td = tr.insertCell(c);
-                    td.id = `${r}-${c}`;
-                    td.classList.add('color-cell');
-                    td.style.background = getRandomColor();
-                    cells.push(td);
+                    const node = document.createElement('div');
+                    node.id = `${r}-${c}`;
+                    node.classList.add('color-cell');
+                    node.style.background = getRandomColor();
+                    td.appendChild(node);
+                    cells.push(node);
                 }
             }
 
