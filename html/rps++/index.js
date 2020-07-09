@@ -533,8 +533,8 @@ function updateScores() {
     const you = document.getElementById('youScore');
     const com = document.getElementById('computerScore');
 
-    you.innerHTML = `${youScore}`;
-    com.innerHTML = `${comScore}`;
+    you.innerHTML = `<span class="animate__animated animate__heartBeat">${youScore}</span>`;
+    com.innerHTML = `<span class="animate__animated animate__heartBeat">${comScore}</span>`;
 }
 
 function updateSymbols() {
